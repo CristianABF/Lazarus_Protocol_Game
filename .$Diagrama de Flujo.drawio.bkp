@@ -1,12 +1,9 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+<mxfile host="app.diagrams.net">
   <diagram name="Página-1" id="c1CXUtfNTVM-M1A_cb6x">
-    <mxGraphModel dx="1819" dy="1889" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="6k2TZq07grF4McjUd88r-1" edge="1" parent="1" source="OoeLpkTrXaTRF18pTU-l-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="1fWgmdKOB5KFy0tjVIvv-33">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="OoeLpkTrXaTRF18pTU-l-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="240" width="240" x="320" y="240" as="geometry" />
         </mxCell>
@@ -605,9 +602,6 @@
         </mxCell>
         <mxCell id="uGvE3jLcd7Qc5dxwo6im-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Salud permanente del Núcleo = 0%" vertex="1">
           <mxGeometry height="50" width="160" x="3390" y="-90" as="geometry" />
-        </mxCell>
-        <mxCell id="6k2TZq07grF4McjUd88r-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Click en &quot;Cargar Partida&quot;" vertex="1">
-          <mxGeometry height="30" width="150" x="580" y="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -36,7 +36,6 @@ public class PlayerFirstPerson : MonoBehaviour
     private CharacterController controller;
     private AudioSource audioSource;
     private Animator animator;
-    private InputManager inputManager;
 
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -64,9 +63,6 @@ public class PlayerFirstPerson : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         animator = GetComponentInChildren<Animator>();
 
-        // inicializa referenci InpuManager
-        inputManager = new InputManager();
-
         if (cameraTransform != null)
         {
             defaultCameraY = cameraTransform.localPosition.y;
@@ -80,21 +76,21 @@ public class PlayerFirstPerson : MonoBehaviour
     private void OnEnable()
     {
         // habilitamos el mapa de acciones "Player"
-        inputManager.Player.Enable();
-        inputManager.Player.Jump.performed += OnJump;
+        InputController.Input.Player.Enable();
+        InputController.Input.Player.Jump.performed += OnJump;
 
-        inputManager.Player.Sprint.performed += OnSprintStart;
-        inputManager.Player.Sprint.canceled += OnSprintCanceled;
+        InputController.Input.Player.Sprint.performed += OnSprintStart;
+        InputController.Input.Player.Sprint.canceled += OnSprintCanceled;
         
     }
     private void OnDisable()
     {
-        inputManager.Player.Jump.performed -= OnJump;
+        InputController.Input.Player.Jump.performed -= OnJump;
 
-        inputManager.Player.Sprint.performed -= OnSprintStart;
-        inputManager.Player.Sprint.canceled -= OnSprintCanceled;
+        InputController.Input.Player.Sprint.performed -= OnSprintStart;
+        InputController.Input.Player.Sprint.canceled -= OnSprintCanceled;
         
-        inputManager.Player.Disable();
+        InputController.Input.Player.Disable();
     }
 
     private void OnSprintStart(InputAction.CallbackContext context) { isSprinting = true;}
@@ -121,8 +117,8 @@ public class PlayerFirstPerson : MonoBehaviour
     private void ReadInputs()
     {
         // se leen directamente los valores que devuelve el InputSystem
-        moveInput = inputManager.Player.Move.ReadValue<Vector2>();
-        lookInput = inputManager.Player.Look.ReadValue<Vector2>();
+        moveInput = InputController.Input.Player.Move.ReadValue<Vector2>();
+        lookInput = InputController.Input.Player.Look.ReadValue<Vector2>();
     }
 
     private void Move()
@@ -143,7 +139,7 @@ public class PlayerFirstPerson : MonoBehaviour
 
         float currentSpeed = (isSprinting && moveInput.y > 0) ? sprintSpeed : walkSpeed;
         Vector3 moveDirection = transform.right * moveInput.x + transform.forward * moveInput.y;
-        controller.Move(moveDirection * currentSpeed * Time.deltaTime);
+        controller.Move(currentSpeed * Time.deltaTime * moveDirection);
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
@@ -250,16 +246,6 @@ public class PlayerFirstPerson : MonoBehaviour
         if (clip != null && audioSource != null)
         {
             audioSource.PlayOneShot(clip);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (inputManager != null)
-        {
-            inputManager.Player.Disable();
-            inputManager.Disable();
-            inputManager.Dispose();
         }
     }
 }

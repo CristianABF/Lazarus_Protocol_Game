@@ -17,26 +17,23 @@ public class Gun : MonoBehaviour
     private bool isFiring;
     //private AudioSource gunSound;
     private Ammo ammo;
-    private InputManager inputManager;
 
     private void Awake()
     {
-        inputManager = new InputManager();
-        inputManager.Player.Enable();
         //gunSound = GetComponent<AudioSource>();
         ammo = GetComponent<Ammo>();
     }
 
     private void OnEnable()
     {
-        inputManager.Player.Shoot.performed += Shoot;
-        inputManager.Player.Shoot.canceled += Shoot_canceled;
+        InputController.Input.Player.Shoot.performed += Shoot;
+        InputController.Input.Player.Shoot.canceled += Shoot_canceled;
     }
 
     private void OnDisable()
     {
-        inputManager.Player.Shoot.performed -= Shoot;
-        inputManager.Player.Shoot.canceled -= Shoot_canceled;
+        InputController.Input.Player.Shoot.performed -= Shoot;
+        InputController.Input.Player.Shoot.canceled -= Shoot_canceled;
     }
 
     private void Update()
@@ -68,25 +65,24 @@ public class Gun : MonoBehaviour
             return;
         }
 
-        RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
-    {
-            if (hit.transform.CompareTag("Enemy"))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit, range))
         {
+            if (hit.transform.CompareTag("Enemy"))
+            {
                 Component damageable = hit.transform.GetComponent(typeof(IDamageable));
 
-            if (damageable)
-            {
+                if (damageable)
+                {
                     GameFunctions.Attack(damageable, damage);
 
-                // Validar si el enemigo tiene Partículas
-                ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
+                    // Validar si el enemigo tiene Partículas
+                    ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
                     if (ps != null) ps.Play();
 
-                // Validar si el enemigo tiene la IA
-                EnemyAI enemy = hit.transform.GetComponent<EnemyAI>();
+                    // Validar si el enemigo tiene la IA
+                    EnemyAI enemy = hit.transform.GetComponent<EnemyAI>();
                     if (enemy != null) enemy.OnDamageTaken();
-            }
+                }
             }
         }
     }
@@ -113,15 +109,5 @@ public class Gun : MonoBehaviour
     private void Recoil()
     {
         cameraRoot.Rotate(recoilSpeed, 0, 0);
-    }
-
-    private void OnDestroy()
-    {
-        if (inputManager != null)
-        {
-            inputManager.Player.Disable();
-            inputManager.Disable();
-            inputManager.Dispose();
-        }
     }
 }

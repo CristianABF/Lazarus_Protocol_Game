@@ -32,8 +32,11 @@ public class Gun : MonoBehaviour
 
     private void OnDisable()
     {
-        InputController.Input.Player.Shoot.performed -= Shoot;
-        InputController.Input.Player.Shoot.canceled -= Shoot_canceled;
+        if (InputController.Input != null)
+        {
+            InputController.Input.Player.Shoot.performed -= Shoot;
+            InputController.Input.Player.Shoot.canceled -= Shoot_canceled;
+        }
     }
 
     private void Update()

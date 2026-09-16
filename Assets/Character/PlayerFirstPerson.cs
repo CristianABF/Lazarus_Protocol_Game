@@ -85,12 +85,12 @@ public class PlayerFirstPerson : MonoBehaviour
     }
     private void OnDisable()
     {
-        InputController.Input.Player.Jump.performed -= OnJump;
-
-        InputController.Input.Player.Sprint.performed -= OnSprintStart;
-        InputController.Input.Player.Sprint.canceled -= OnSprintCanceled;
-        
-        InputController.Input.Player.Disable();
+        if (InputController.Input != null)
+        {
+            InputController.Input.Player.Jump.performed -= OnJump;
+            InputController.Input.Player.Sprint.performed -= OnSprintStart;
+            InputController.Input.Player.Sprint.canceled -= OnSprintCanceled;
+        }
     }
 
     private void OnSprintStart(InputAction.CallbackContext context) { isSprinting = true;}

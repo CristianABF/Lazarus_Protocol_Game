@@ -24,7 +24,10 @@ public class Ammo : MonoBehaviour
 
     private void OnDisable()
     {
-        InputController.Input.Player.Reload.performed -= Reload;
+        if (InputController.Input != null)
+        {
+            InputController.Input.Player.Reload.performed -= Reload;
+        }
     }
 
     public int GetCurrentAmmo()

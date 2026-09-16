@@ -8,7 +8,7 @@ public class HoldObject : MonoBehaviour
     private Transform cameraTransform;
 
     [Header("Configuracion")]
-    [SerializeField] private float pickUpRange = 3f;    // Distancia m�xima para alcanzar el objeto
+    [SerializeField] private float pickUpRange = 3f;    // Distancia maxima para alcanzar el objeto
     [SerializeField] private float moveForce = 250f;    // Fuerza con la que el objeto sigue el punto de agarre
 
     private Rigidbody heldObjRb;
@@ -16,7 +16,7 @@ public class HoldObject : MonoBehaviour
 
     void Start()
     {
-        // busca automáticamente la cámara principal en la escena
+        // busca automaticamente la camara principal en la escena
         if (Camera.main != null)
         {
             cameraTransform = Camera.main.transform;
@@ -28,7 +28,7 @@ public class HoldObject : MonoBehaviour
     }
     void Update()
     {
-        // Al presionar la tecla 'E' (o el bot�n que prefieras)
+        // Al presionar la tecla 'E' (o el boton que prefieras)
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (heldObj == null)
@@ -51,7 +51,7 @@ public class HoldObject : MonoBehaviour
     void TryPickUpObject()
     {
         RaycastHit hit;
-        // Lanzamos un rayo desde el centro de la c�mara hacia adelante
+        // Lanzamos un rayo desde el centro de la camara hacia adelante
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickUpRange))
         {
             // Verificamos que el objeto tenga la etiqueta "Pickable" y un Rigidbody
@@ -62,10 +62,10 @@ public class HoldObject : MonoBehaviour
 
                 // Desactivamos la gravedad y las colisiones con el jugador si es necesario para evitar bugs
                 heldObjRb.useGravity = false;
-                heldObjRb.linearDamping = 10; // A�ade resistencia para que no oscile salvajemente
+                heldObjRb.linearDamping = 10; // agrega resistencia para que no oscile salvajemente
                 heldObjRb.constraints = RigidbodyConstraints.FreezeRotation; // Evita que ruede solo en el aire
 
-                // Hacemos que el objeto sea hijo del punto de agarre (opcional, o moverlo por f�sicas)
+                // Hacemos que el objeto sea hijo del punto de agarre (opcional, o moverlo por fisicas)
                 heldObj.transform.parent = holdPoint;
             }
         }

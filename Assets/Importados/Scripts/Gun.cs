@@ -93,6 +93,8 @@ public class Gun : MonoBehaviour
 
     private void Shoot(InputAction.CallbackContext context)
     {
+        if (PauseControl.isPaused) return;
+
         if (isAutomatic && ammo.GetCurrentAmmo() > 0)
         {
             isFiring = true;
@@ -111,5 +113,15 @@ public class Gun : MonoBehaviour
     private void Recoil()
     {
         cameraRoot.Rotate(recoilSpeed, 0, 0);
+    }
+
+    private void OnDestroy()
+    {
+        if (inputManager != null)
+        {
+            inputManager.Player.Disable();
+            inputManager.Disable();
+            inputManager.Dispose();
+        }
     }
 }

@@ -63,4 +63,14 @@ public class Ammo : MonoBehaviour
     {
         ammoAmount = reloadAmount;
     }
+
+    private void OnDestroy()
+    {
+        if (inputManager != null)
+        {
+            inputManager.Player.Disable();
+            inputManager.Disable();
+            inputManager.Dispose();
+        }
+    }
 }

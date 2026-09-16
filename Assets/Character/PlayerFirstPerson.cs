@@ -11,7 +11,7 @@ public class PlayerFirstPerson : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 1.2f;
 
-    [Header("Cámara/Mirada")]
+    [Header("Camara/Mirada")]
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private float mouseSensitivity = 0.1f;
     [SerializeField] private float topClamp = 85f;
@@ -82,23 +82,33 @@ public class PlayerFirstPerson : MonoBehaviour
         // habilitamos el mapa de acciones "Player"
         inputManager.Player.Enable();
         inputManager.Player.Jump.performed += OnJump;
-        inputManager.Player.Sprint.performed += ctx => isSprinting = true;
-        inputManager.Player.Sprint.canceled += ctx => isSprinting = false;
+
+        inputManager.Player.Sprint.performed += OnSprintStart;
+        inputManager.Player.Sprint.canceled += OnSprintCanceled;
         
     }
     private void OnDisable()
     {
-        inputManager.Player.Sprint.performed -= ctx => isSprinting = true;
-        inputManager.Player.Sprint.canceled -= ctx => isSprinting = false;
         inputManager.Player.Jump.performed -= OnJump;
+
+        inputManager.Player.Sprint.performed -= OnSprintStart;
+        inputManager.Player.Sprint.canceled -= OnSprintCanceled;
+        
         inputManager.Player.Disable();
     }
 
+    private void OnSprintStart(InputAction.CallbackContext context) { isSprinting = true;}
+    private void OnSprintCanceled(InputAction.CallbackContext context) { isSprinting = false;}
+
     private void Update()
     {
+        if (PauseControl.isPaused)
+        {
+            return;
+        }
         // lectura continua de dtos tipo Vector2 (Polled Inputs)
         ReadInputs();
-        // Procesa la rotación de cámara
+        // Procesa la rotacion de camara
         Look();
         // Procesa el desplazamiento del personaje
         Move();
@@ -141,11 +151,11 @@ public class PlayerFirstPerson : MonoBehaviour
 
     private void Look()
     {
-        // rotación horizontal del jugador
+        // rotacion horizontal del jugador
         float mouseX = lookInput.x * mouseSensitivity;
         transform.Rotate(Vector3.up * mouseX);
 
-        // rotación vertical de la cámara
+        // rotacion vertical de la camara
         float mouseY = lookInput.y * mouseSensitivity;
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, bottomClamp, topClamp);
@@ -175,7 +185,7 @@ public class PlayerFirstPerson : MonoBehaviour
         //float forwardAmount = moveInput.y * speedMultiplier;
         float turnAmount = moveInput.x * speedMultiplier;
 
-        // enviar parámetros al Animator Controller (mismos nombres que en ThirdPersonCharacter
+        // enviar parametros al Animator Controller (mismos nombres que en ThirdPersonCharacter
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
         animator.SetBool("OnGround", isGrounded);
@@ -188,7 +198,7 @@ public class PlayerFirstPerson : MonoBehaviour
 
     private void HandleHeadBobAndFootsteps()
     {
-        // Si no se está moviendo en el suelo, reseteamos contadores
+        // Si no se esta moviendo en el suelo, reseteamos contadores
         if (!isGrounded || moveInput.magnitude < 0.1f)
         {
             timer = 0f;
@@ -200,7 +210,7 @@ public class PlayerFirstPerson : MonoBehaviour
             return;
         }
 
-        // 1. Lógica del Head Bob (movimiento de cámara)
+        // logica del Head Bob (movimiento de cámara)
         if (useHeadBob && cameraTransform != null)
         {
             float speedMultiplier = isSprinting ? 1.4f : 1f;
@@ -210,7 +220,7 @@ public class PlayerFirstPerson : MonoBehaviour
             cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, newY, cameraTransform.localPosition.z);
         }
 
-        // 2. Lógica de Pasos (Footsteps)
+        // logica de pasos (Footsteps)
         float currentStepInterval = (isSprinting && moveInput.y > 0) ? (stepInterval * runstepLenghten) : stepInterval;
         stepCycle += Time.deltaTime;
 
@@ -225,11 +235,11 @@ public class PlayerFirstPerson : MonoBehaviour
     {
         if (footstepSounds == null || footstepSounds.Length == 0) return;
 
-        // selecciona un índice aleatorio de las pistas de pisadas
+        // selecciona un indice aleatorio de las pistas de pisadas
         int n = Random.Range(0, footstepSounds.Length);
         audioSource.PlayOneShot(footstepSounds[n]);
 
-        // para evitar repetición de pista
+        // para evitar repeticion de pista
         AudioClip selectedClip = footstepSounds[n];
         footstepSounds[n] = footstepSounds[0];
         footstepSounds[0] = selectedClip;
@@ -240,6 +250,16 @@ public class PlayerFirstPerson : MonoBehaviour
         if (clip != null && audioSource != null)
         {
             audioSource.PlayOneShot(clip);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (inputManager != null)
+        {
+            inputManager.Player.Disable();
+            inputManager.Disable();
+            inputManager.Dispose();
         }
     }
 }

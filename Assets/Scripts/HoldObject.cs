@@ -4,12 +4,12 @@ using UnityEngine;
 public class HoldObject : MonoBehaviour
 {
     [Header("Referencias")]
-    [SerializeField] private Transform holdPoint;       // Objeto vac�o hijo de la c�mara donde se sostendr� el objeto
+    [SerializeField] private Transform holdPoint;       // Objeto vacio hijo de la camara donde se sostendra el objeto
     private Transform cameraTransform;
 
     [Header("Configuracion")]
-    [SerializeField] private float pickUpRange = 3f;    // Distancia maxima para alcanzar el objeto
-    [SerializeField] private float moveForce = 250f;    // Fuerza con la que el objeto sigue el punto de agarre
+    [SerializeField] private float pickUpRange = 3.0f;    // Distancia maxima para alcanzar el objeto
+    [SerializeField] private float throwForce = 1.0f;
 
     private Rigidbody heldObjRb;
     private GameObject heldObj;
@@ -40,12 +40,6 @@ public class HoldObject : MonoBehaviour
                 DropObject();
             }
         }
-
-        // Si tenemos un objeto en la mano, aplicamos fisica para moverlo suavemente hacia el punto de agarre
-        if (heldObj != null)
-        {
-            MoveObject();
-        }
     }
 
     void TryPickUpObject()
@@ -60,50 +54,62 @@ public class HoldObject : MonoBehaviour
                 heldObj = hit.transform.gameObject;
                 heldObjRb = heldObj.GetComponent<Rigidbody>();
 
-                // Desactivamos la gravedad y las colisiones con el jugador si es necesario para evitar bugs
-                heldObjRb.useGravity = false;
-                heldObjRb.linearDamping = 10; // agrega resistencia para que no oscile salvajemente
-                heldObjRb.constraints = RigidbodyConstraints.FreezeRotation; // Evita que ruede solo en el aire
-                heldObj.GetComponent<Collider>().enabled = false;
+                // convertimos a cinematico para fijarlo al holdpoint
+                heldObjRb.isKinematic = true;
 
-                // Hacemos que el objeto sea hijo del punto de agarre (opcional, o moverlo por fisicas)
-                heldObj.transform.parent = holdPoint;
+                // desactivamos colisiones para evitar empujones con el jugador
+                Collider objCollider = heldObj.GetComponent<Collider>();
+                if (objCollider != null) objCollider.enabled = false;
+
+                // emparentar y fijar posicion y rotacion
+                heldObj.transform.SetParent(holdPoint);
+                heldObj.transform.localPosition = Vector3.zero;
+                heldObj.transform.localRotation = Quaternion.identity;
+
+                // activar Gun y Ammo si el objeto tiene estos scripts
+                Gun gun = heldObj.GetComponent<Gun>();
+                if (gun != null) gun.enabled = true;
+                Ammo ammo = heldObj.GetComponent<Ammo>();
+                if (ammo != null) ammo.enabled = true;
             }
         }
     }
-
-    void MoveObject()
-    {
-        // Movemos el objeto suavemente hacia la posici�n del holdPoint usando fuerzas de f�sicas
-        if (Vector3.Distance(heldObj.transform.position, holdPoint.position) > 0.1f)
-        {
-            Vector3 moveDirection = (holdPoint.position - heldObj.transform.position);
-            heldObjRb.linearVelocity = moveDirection * moveForce * Time.deltaTime;
-        }
-        else
-        {
-            heldObjRb.linearVelocity = Vector3.zero;
-            heldObj.transform.position = holdPoint.position;
-            heldObj.transform.rotation = holdPoint.rotation;
-        }
-    }
-
     void DropObject()
     {
         if (heldObjRb != null)
         {
-            // Restauramos las propiedades fisicas originales
-            heldObjRb.useGravity = true;
-            heldObjRb.linearDamping = 1;
-            heldObjRb.constraints = RigidbodyConstraints.None;
+            // desactivar Gun y Ammo para que no se escuchen eventos de disparo
+            Gun gun = heldObj.GetComponent<Gun>();
+            if (gun != null) gun.enabled = false;
+            Ammo ammo = heldObj.GetComponent<Ammo>();
+            if (ammo != null) ammo.enabled = false;
 
-            heldObj.GetComponent<Collider>().enabled = true;
+            // desvinculamos del HoldPoint antes de reactivar fisicas
+            heldObj.transform.SetParent(null);
 
-            // Quitamos la jerarqu�a
-            heldObj.transform.parent = null;
+            // reactivamos las colisiones primero
+            Collider objCollider = heldObj.GetComponent<Collider>();
+            if (objCollider != null) objCollider.enabled = true;
+
+            // restauramos el Rigidbody y la gravedad
+            if (heldObjRb != null)
+            {
+                heldObjRb.isKinematic = false;
+                heldObjRb.useGravity = true;
+
+                // limpiamos invercias o velocidades residuales
+                heldObjRb.linearVelocity = Vector3.zero;
+                heldObjRb.angularVelocity = Vector3.zero;
+
+                // forzamos al motor de fisica a procesarlo de inmediato
+                heldObjRb.WakeUp();
+
+                // (Opcional) leve impulso hacia adelante al soltarlo
+                if (throwForce > 0f) heldObjRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
+            }
+
+            heldObj = null;
+            heldObjRb = null;
         }
-
-        heldObj = null;
-        heldObjRb = null;
     }
 }

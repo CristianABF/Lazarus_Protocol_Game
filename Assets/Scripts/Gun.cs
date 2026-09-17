@@ -17,7 +17,7 @@ public class Gun : MonoBehaviour
     [SerializeField] private float laserDuration = 0.05f;
 
     private float attackTime;
-    private float recoilSpeed = -2f;
+    private float recoilSpeed = 0f;
     private bool isFiring;
     private AudioSource gunSound;
     private Ammo ammo;
@@ -68,6 +68,7 @@ public class Gun : MonoBehaviour
     {
         if (ammo != null) ammo.ReduceCurrentAmmo();
         if (cameraRoot != null) Recoil();
+        if (gunSound != null) gunSound.Play();
 
         if (fpsCam == null)
         {

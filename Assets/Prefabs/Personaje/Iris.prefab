@@ -272,6 +272,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: leftLeg
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 178201c752b239b46a975fe2c02bc06a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9217760477127054705, guid: 178201c752b239b46a975fe2c02bc06a, type: 3}
       propertyPath: m_Name
       value: Head

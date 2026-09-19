@@ -28,10 +28,11 @@ public class Gun : MonoBehaviour, IPickable
         gunSound = GetComponent<AudioSource>();
         ammo = GetComponent<Ammo>();
 
-        // ammo y gun empiezan apagadas si estan en el piso
+        // las lineas de abajo se desactivaron temporalmente en un intento de corregir un error del unity
+        /* ammo y gun empiezan apagadas si estan en el piso
         this.enabled = false;
         if (ammo != null) ammo.enabled = false;
-
+        */
         laserLine = GetComponent<LineRenderer>();
         laserLine.enabled = false;
     }
@@ -40,7 +41,7 @@ public class Gun : MonoBehaviour, IPickable
     public void OnPickedUp()
     {
         this.enabled = true;
-        if (ammo != null) ammo.enabled = false;
+        if (ammo != null) ammo.enabled = true;
     }
 
     public void OnDropped()
@@ -128,7 +129,16 @@ public class Gun : MonoBehaviour, IPickable
     private IEnumerator ShootLaser()
     {
         laserLine.enabled = true;
-        yield return new WaitForSeconds(laserDuration);
+        float timer = 0f;
+
+        while (timer < laserDuration)
+        {
+            // mantiene el punto 0 pegado al cañon del arma en cada frame
+            laserLine.SetPosition(0, firePoint != null ? firePoint.position : transform.position);
+
+            timer += Time.deltaTime;
+            yield return null; // espera al siguiente frame antes de repetir
+        }
         laserLine.enabled = false;
     }
 

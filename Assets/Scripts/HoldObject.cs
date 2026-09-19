@@ -11,8 +11,8 @@ public class HoldObject : MonoBehaviour
     [SerializeField] private float pickUpRange = 3.0f;    // Distancia maxima para alcanzar el objeto
     [SerializeField] private float throwForce = 1.0f;
 
-    private Rigidbody heldObjRb;
-    private GameObject heldObj;
+    private Rigidbody heldObjRb; // rigidbody del objeto agarrado
+    private GameObject heldObj; // hace referencia al objeto agarrado
 
     void Start()
     {
@@ -68,7 +68,7 @@ public class HoldObject : MonoBehaviour
 
                 // busca si el objeto tiene algún script que implemente la interfaz
                 IPickable pickableItem = heldObj.GetComponent<IPickable>();
-                if (pickableItem != null) pickableItem.OnpickedUp(); //avisa al objeto que fue agarrado
+                if (pickableItem != null) pickableItem.OnPickedUp(); //avisa al objeto que fue agarrado
             }
         }
     }

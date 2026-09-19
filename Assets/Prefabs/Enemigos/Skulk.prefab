@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseRange: 10
-  distance: 0.5
+  distance: 1
   damage: 3
   attackRate: 1.5
   reloadSpeed: 3.3

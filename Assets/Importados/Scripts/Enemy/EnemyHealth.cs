@@ -17,10 +17,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         if (health <= 0 && !isDead)
         {
-            // you are dead
-            // "play death animation"
-            Destroy(gameObject, 4f);
             isDead = true;
+            GetComponent<EnemyAI>().enabled = false;
+            GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+            // para activar animacion de muerte cuando haya una
+            //GetComponentInChildren<Animator>().SetTrigger("die");
+            Destroy(gameObject, 0f);
         }
     }
 

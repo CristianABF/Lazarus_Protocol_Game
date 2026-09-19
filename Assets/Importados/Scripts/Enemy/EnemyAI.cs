@@ -14,16 +14,16 @@ public class EnemyAI : MonoBehaviour
     private float distanceToTarget = Mathf.Infinity;
     private bool isProvoked = false;
     private Transform target;
-    private float damage = 10f;
+    [SerializeField] private float damage = 10f;
 
     [Header("Attack Speed")]
-    private float attackRate = 2f;
+    [SerializeField]private float attackRate = 2f;
     private float lastAttack = 0f;
 
     [Header("Reload")]
-    private float reloadSpeed = 3.3f;
-    private int ammoAmount = 5;
-    private int reloadAmount = 5;
+    [SerializeField]private float reloadSpeed = 3.3f;
+    [SerializeField]private int ammoAmount = 5;
+    [SerializeField]private int reloadAmount = 5;
     private bool isReloading = false;
 
     private void Start()
@@ -42,7 +42,7 @@ public class EnemyAI : MonoBehaviour
         }
         else if (distanceToTarget <= chaseRange)
         {
-            isProvoked = false;
+            isProvoked = true;
         }
     }
 

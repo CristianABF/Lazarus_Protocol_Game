@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    public float playerHealth = 100f;
+    public float maxHealth = 100f;
+    public float playerHealth;
     private bool isDead = false;
 
     private void Awake()
     {
-        playerHealth = 100f;
+        playerHealth = maxHealth;
     }
 
     private void Update()

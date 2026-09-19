@@ -3378,8 +3378,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.017977685
+        time: 0.99451447
+        value: 0.008990258
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3428,7 +3428,7 @@ LineRenderer:
     generateLightingData: 0
   m_MaskInteraction: 0
   m_UseWorldSpace: 1
-  m_Loop: 0
+  m_Loop: 1
   m_ApplyActiveColorSpace: 1
 --- !u!54 &1636489795
 Rigidbody:

@@ -66,11 +66,9 @@ public class HoldObject : MonoBehaviour
                 heldObj.transform.localPosition = Vector3.zero;
                 heldObj.transform.localRotation = Quaternion.identity;
 
-                // activar Gun y Ammo si el objeto tiene estos scripts
-                Gun gun = heldObj.GetComponent<Gun>();
-                if (gun != null) gun.enabled = true;
-                Ammo ammo = heldObj.GetComponent<Ammo>();
-                if (ammo != null) ammo.enabled = true;
+                // busca si el objeto tiene algún script que implemente la interfaz
+                IPickable pickableItem = heldObj.GetComponent<IPickable>();
+                if (pickableItem != null) pickableItem.OnpickedUp(); //avisa al objeto que fue agarrado
             }
         }
     }
@@ -78,12 +76,6 @@ public class HoldObject : MonoBehaviour
     {
         if (heldObjRb != null)
         {
-            // desactivar Gun y Ammo para que no se escuchen eventos de disparo
-            Gun gun = heldObj.GetComponent<Gun>();
-            if (gun != null) gun.enabled = false;
-            Ammo ammo = heldObj.GetComponent<Ammo>();
-            if (ammo != null) ammo.enabled = false;
-
             // desvinculamos del HoldPoint antes de reactivar fisicas
             heldObj.transform.SetParent(null);
 
@@ -107,6 +99,9 @@ public class HoldObject : MonoBehaviour
                 // (Opcional) leve impulso hacia adelante al soltarlo
                 if (throwForce > 0f) heldObjRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
             }
+
+            IPickable pickableItem = heldObj.GetComponent<IPickable>();
+            if (pickableItem != null) pickableItem.OnDropped(); // avisa al objeto que fue soltado
 
             heldObj = null;
             heldObjRb = null;

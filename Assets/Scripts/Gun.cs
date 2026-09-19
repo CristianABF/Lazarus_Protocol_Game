@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Gun : MonoBehaviour
+public class Gun : MonoBehaviour, IPickable
 {
     [SerializeField] private float damage = 20f;
     [SerializeField] private float fireRate = 0.1f;
@@ -27,8 +27,26 @@ public class Gun : MonoBehaviour
     {
         gunSound = GetComponent<AudioSource>();
         ammo = GetComponent<Ammo>();
+
+        // ammo y gun empiezan apagadas si estan en el piso
+        this.enabled = false;
+        if (ammo != null) ammo.enabled = false;
+
         laserLine = GetComponent<LineRenderer>();
         laserLine.enabled = false;
+    }
+
+    // metodos de la interfaz
+    public void OnPickedUp()
+    {
+        this.enabled = true;
+        if (ammo != null) ammo.enabled = false;
+    }
+
+    public void OnDropped()
+    {
+        this.enabled = false;
+        if (ammo != null) ammo.enabled = false;
     }
 
     private void OnEnable()

@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf332187618083f47957bde0b6f1fbd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseRange: 5
+  chaseRange: 100
   distance: 1
   damage: 30
   attackRate: 3

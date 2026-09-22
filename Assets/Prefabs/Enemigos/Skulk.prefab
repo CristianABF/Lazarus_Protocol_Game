@@ -467,7 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf332187618083f47957bde0b6f1fbd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseRange: 10
+  chaseRange: 100
   distance: 1
   damage: 3
   attackRate: 1.5

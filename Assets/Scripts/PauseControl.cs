@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 public class PauseControl : MonoBehaviour
 {
     public GameObject pauseMenuUI;
+    public GameObject pauseBlurVolume;
     public static bool isPaused = false;
     
     // Update is called once per frame
@@ -19,6 +20,7 @@ public class PauseControl : MonoBehaviour
     public void Resume()
     {
         pauseMenuUI.SetActive(false); // oculta el canvas
+        if (pauseBlurVolume != null) pauseBlurVolume.SetActive (false);
         Time.timeScale = 1f; // el tiempo vuelve a la normalidad
         isPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -33,6 +35,7 @@ public class PauseControl : MonoBehaviour
     void Pause()
     {
         pauseMenuUI.SetActive(true); // muestra el canvas
+        if (pauseBlurVolume != null) pauseBlurVolume.SetActive(true);
         Time.timeScale = 0f; // congela el tiempo
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;

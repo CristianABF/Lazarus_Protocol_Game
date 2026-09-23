@@ -1,4 +1,5 @@
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,7 @@ public class PlayerFirstPerson : MonoBehaviour
     [SerializeField] private float sprintSpeed = 8.5f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 1.2f;
+    [SerializeField] private bool canJump = false;
 
     [Header("Camara/Mirada")]
     [SerializeField] private Transform cameraTransform;
@@ -49,6 +51,12 @@ public class PlayerFirstPerson : MonoBehaviour
     private bool wasGrounded;
     private bool isSprinting;
 
+    // Animator
+    private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int ShootHash = Animator.StringToHash("Shoot");
+    private static readonly int ReloadHash = Animator.StringToHash("Reload");
+    private static readonly int OnGroundHash = Animator.StringToHash("OnGround");
+
     private void Start()
     {
         if (headBone != null)
@@ -68,7 +76,7 @@ public class PlayerFirstPerson : MonoBehaviour
             defaultCameraY = cameraTransform.localPosition.y;
         }
 
-        // opcional bloquear el cursor al centro del juego
+        // (opcional) bloquear el cursor al centro del juego
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -77,11 +85,13 @@ public class PlayerFirstPerson : MonoBehaviour
     {
         // habilitamos el mapa de acciones "Player"
         InputController.Input.Player.Enable();
-        InputController.Input.Player.Jump.performed += OnJump;
 
+        InputController.Input.Player.Jump.performed += OnJump;
         InputController.Input.Player.Sprint.performed += OnSprintStart;
         InputController.Input.Player.Sprint.canceled += OnSprintCanceled;
-        
+
+        InputController.Input.Player.Shoot.performed += OnShoot;
+        InputController.Input.Player.Reload.performed += OnReload;
     }
     private void OnDisable()
     {
@@ -90,6 +100,9 @@ public class PlayerFirstPerson : MonoBehaviour
             InputController.Input.Player.Jump.performed -= OnJump;
             InputController.Input.Player.Sprint.performed -= OnSprintStart;
             InputController.Input.Player.Sprint.canceled -= OnSprintCanceled;
+
+            InputController.Input.Player.Shoot.performed -= OnShoot;
+            InputController.Input.Player.Reload.performed -= OnReload;
         }
     }
 
@@ -98,11 +111,7 @@ public class PlayerFirstPerson : MonoBehaviour
 
     private void Update()
     {
-        if (PauseControl.isPaused)
-        {
-            return;
-        }
-        // lectura continua de dtos tipo Vector2 (Polled Inputs)
+        if (PauseControl.isPaused) return;
         ReadInputs();
         // Procesa la rotacion de camara
         Look();
@@ -164,6 +173,7 @@ public class PlayerFirstPerson : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
+        if (!canJump) return;
         if (isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -171,11 +181,29 @@ public class PlayerFirstPerson : MonoBehaviour
         }
     }
 
+    private void OnShoot(InputAction.CallbackContext context)
+    {
+        if (animator != null) animator.SetTrigger(ShootHash);
+    }
+    private void OnReload(InputAction.CallbackContext context)
+    {
+        if (animator != null) animator.SetTrigger(ReloadHash);
+    }
     private void UpdateAnimator()
     {
         if (animator == null) return;
 
-        // calcular magnitud de movimiento considerando si corre
+        // determinacion directa del valor segun la entrada de movimiento
+        float targetSpeed = 0f;
+        if (moveInput.magnitude > 0.1f)
+        { 
+            targetSpeed = (isSprinting && moveInput.y > 0) ? 1.0f : 0.5f;
+        }
+
+        // envio atenuado (Damp Time = 0.1f) para transicion uniforme en el Blend Tree
+        animator.SetFloat(SpeedHash, targetSpeed, 0.1f, Time.deltaTime);
+        animator.SetBool(OnGroundHash, isGrounded);
+        /*calcular magnitud de movimiento considerando si corre
         float speedMultiplier = (isSprinting && moveInput.y > 0) ? 1f : 0.5f;
         float forwardAmount = Mathf.Abs(moveInput.y) * speedMultiplier;
         //float forwardAmount = moveInput.y * speedMultiplier;
@@ -185,11 +213,12 @@ public class PlayerFirstPerson : MonoBehaviour
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
         animator.SetBool("OnGround", isGrounded);
-
+        
         if (!isGrounded)
         {
             animator.SetFloat("Jump", velocity.y);
         }
+        */
     }
 
     private void HandleHeadBobAndFootsteps()

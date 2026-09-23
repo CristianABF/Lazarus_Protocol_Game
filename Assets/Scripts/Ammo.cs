@@ -17,19 +17,6 @@ public class Ammo : MonoBehaviour
         maxAmmo = ammoAmount;
     }
 
-    private void OnEnable()
-    {
-        InputController.Input.Player.Reload.performed += Reload;
-    }
-
-    private void OnDisable()
-    {
-        if (InputController.Input != null)
-        {
-            InputController.Input.Player.Reload.performed -= Reload;
-        }
-    }
-
     public int GetCurrentAmmo()
     {
         return ammoAmount;
@@ -50,7 +37,7 @@ public class Ammo : MonoBehaviour
         return maxAmmo;
     }
 
-    private void Reload(InputAction.CallbackContext obj)
+    public void ExecuteReload()
     {
         if (clips > 0)
         {

@@ -5,6 +5,7 @@ public class HoldObject : MonoBehaviour
 {
     [Header("Referencias")]
     [SerializeField] private Transform holdPoint;       // Objeto vacio hijo de la camara donde se sostendra el objeto
+    [SerializeField] private Animator animator;
     private Transform cameraTransform;
 
     [Header("Configuracion")]
@@ -13,6 +14,7 @@ public class HoldObject : MonoBehaviour
 
     private Rigidbody heldObjRb; // rigidbody del objeto agarrado
     private GameObject heldObj; // hace referencia al objeto agarrado
+    private static readonly int HasWeaponHash = Animator.StringToHash("HasWeapon");
 
     void Start()
     {
@@ -25,6 +27,8 @@ public class HoldObject : MonoBehaviour
         {
             Debug.LogError("No se encontró ninguna 'Main Camera' en la escena.");
         }
+
+        if (animator == null) animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -69,6 +73,8 @@ public class HoldObject : MonoBehaviour
                 // busca si el objeto tiene algún script que implemente la interfaz
                 IPickable pickableItem = heldObj.GetComponent<IPickable>();
                 if (pickableItem != null) pickableItem.OnPickedUp(); //avisa al objeto que fue agarrado
+
+                if (animator != null) animator.SetBool(HasWeaponHash, true);
             }
         }
     }
@@ -89,7 +95,7 @@ public class HoldObject : MonoBehaviour
                 heldObjRb.isKinematic = false;
                 heldObjRb.useGravity = true;
 
-                // limpiamos invercias o velocidades residuales
+                // limpiamos inercias o velocidades residuales
                 heldObjRb.linearVelocity = Vector3.zero;
                 heldObjRb.angularVelocity = Vector3.zero;
 
@@ -103,6 +109,7 @@ public class HoldObject : MonoBehaviour
             IPickable pickableItem = heldObj.GetComponent<IPickable>();
             if (pickableItem != null) pickableItem.OnDropped(); // avisa al objeto que fue soltado
 
+            if (animator != null) animator.SetBool (HasWeaponHash, false);
             heldObj = null;
             heldObjRb = null;
         }

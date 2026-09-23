@@ -22337,8 +22337,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9148889753176711047, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
+      propertyPath: bobAmount
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148889753176711047, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
       propertyPath: walkSpeed
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9148889753176711047, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
+      propertyPath: useHeadBob
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9148889753176711047, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
       propertyPath: sprintSpeed

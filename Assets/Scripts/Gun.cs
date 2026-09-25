@@ -5,6 +5,11 @@ using UnityEngine.InputSystem;
 
 public class Gun : MonoBehaviour, IPickable
 {
+    [Header("Sincronizacion del Cargador")]
+    [SerializeField] private GameObject gunMagazine;
+    [SerializeField] private GameObject handMagazine;
+
+    [Header("Configuración del Arma")]
     [SerializeField] private float damage = 20f;
     [SerializeField] private float fireRate = 0.1f;
     [SerializeField] private bool isAutomatic;
@@ -12,7 +17,8 @@ public class Gun : MonoBehaviour, IPickable
 
     [SerializeField] private Transform cameraRoot;
     public Camera fpsCam;
-    [SerializeField] private Transform firePoint; //el cañon del arma
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private Animator playerAnimator;
 
     [SerializeField] private float laserDuration = 0.05f;
 
@@ -27,12 +33,6 @@ public class Gun : MonoBehaviour, IPickable
     {
         gunSound = GetComponent<AudioSource>();
         ammo = GetComponent<Ammo>();
-
-        // las lineas de abajo se desactivaron temporalmente en un intento de corregir un error del unity
-        /* ammo y gun empiezan apagadas si estan en el piso
-        this.enabled = false;
-        if (ammo != null) ammo.enabled = false;
-        */
         laserLine = GetComponent<LineRenderer>();
         laserLine.enabled = false;
     }
@@ -88,6 +88,8 @@ public class Gun : MonoBehaviour, IPickable
         if (ammo != null) ammo.ReduceCurrentAmmo();
         if (cameraRoot != null) Recoil();
         if (gunSound != null) gunSound.Play();
+
+        if (playerAnimator != null) playerAnimator.SetTrigger("Shoot");
 
         if (fpsCam == null)
         {
@@ -164,5 +166,23 @@ public class Gun : MonoBehaviour, IPickable
     private void Recoil()
     {
         cameraRoot.Rotate(recoilSpeed, 0, 0);
+    }
+
+    public void Animation_DetachMagazine()
+    {
+        if (gunMagazine != null) gunMagazine.SetActive(false);
+        if (handMagazine != null) handMagazine.SetActive(true);
+    }
+
+    public void Animation_AttachMagazine()
+    {
+        // Regresa el cargador al arma y oculta el de la mano
+        if (gunMagazine != null) gunMagazine.SetActive(true);
+        if (handMagazine != null) handMagazine.SetActive(false);
+    }
+
+    public void Animation_FinishReload()
+    {
+        if (ammo != null) ammo.ExecuteReload();
     }
 }

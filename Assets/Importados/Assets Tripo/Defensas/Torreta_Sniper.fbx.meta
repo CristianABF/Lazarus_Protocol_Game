@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 8c6b436379286e94e96205d2b10c390e
+guid: 599c3216ca004a7439d8d8bea6cbb19d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_1e2e816e
+    second: {fileID: 2100000, guid: 8de95db6c002dce498fcf44fbe8b9743, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -68,13 +73,13 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
+    normalSmoothAngle: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
-    normalSmoothingSource: 0
+    normalSmoothingSource: 2
   referencedClips: []
   importAnimation: 1
   humanDescription:

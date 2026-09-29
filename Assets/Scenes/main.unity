@@ -17013,13 +17013,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-<<<<<<< HEAD
-    m_Font: {fileID: 12800000, guid: b51a3e520f9164da198dc59c8acfccd6, type: 3}
-    m_FontSize: 14
-=======
     m_Font: {fileID: 12800000, guid: 10b8b0c28e7d24e4abd0c6f7df70d169, type: 3}
     m_FontSize: 16
->>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0

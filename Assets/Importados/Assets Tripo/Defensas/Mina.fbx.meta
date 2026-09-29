@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Mina.fbx.meta
 guid: d692bfcf8697ea349b2c7d767fb8e724
 ModelImporter:
   serializedVersion: 22200
@@ -9,6 +10,13 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: tripo_mat_65bd61a0
     second: {fileID: 2100000, guid: 95445aa55ab83e943a2ae929df88bab9, type: 2}
+=======
+guid: 471440cf2450d904eaf00198d7484f2f
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Mina.fbx.meta
   materials:
     materialImportMode: 2
     materialName: 0
@@ -73,13 +81,22 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Mina.fbx.meta
     normalSmoothAngle: 0
     normalImportMode: 1
+=======
+    normalSmoothAngle: 60
+    normalImportMode: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Mina.fbx.meta
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Mina.fbx.meta
     normalSmoothingSource: 2
+=======
+    normalSmoothingSource: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Mina.fbx.meta
   referencedClips: []
   importAnimation: 1
   humanDescription:

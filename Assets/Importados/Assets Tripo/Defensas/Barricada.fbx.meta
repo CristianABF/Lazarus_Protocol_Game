@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Barricada.fbx.meta
 guid: 8c6b436379286e94e96205d2b10c390e
 ModelImporter:
   serializedVersion: 22200
@@ -9,6 +10,13 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: tripo_mat_d88f6c9b
     second: {fileID: 2100000, guid: 71c64373477e175488b2fadd8f170dd5, type: 2}
+=======
+guid: cabf95ba0720f294dac13d560a1f5e19
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Barricada.fbx.meta
   materials:
     materialImportMode: 2
     materialName: 0
@@ -73,13 +81,22 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Barricada.fbx.meta
     normalSmoothAngle: 0
     normalImportMode: 1
+=======
+    normalSmoothAngle: 60
+    normalImportMode: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Barricada.fbx.meta
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Barricada.fbx.meta
     normalSmoothingSource: 2
+=======
+    normalSmoothingSource: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Barricada.fbx.meta
   referencedClips: []
   importAnimation: 1
   humanDescription:

@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Torreta_Sniper.fbx.meta
 guid: 599c3216ca004a7439d8d8bea6cbb19d
 ModelImporter:
   serializedVersion: 22200
@@ -9,6 +10,13 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: tripo_mat_1e2e816e
     second: {fileID: 2100000, guid: 8de95db6c002dce498fcf44fbe8b9743, type: 2}
+=======
+guid: 7c185c87181c95f4485563d77b4a073d
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Torreta_Sniper.fbx.meta
   materials:
     materialImportMode: 2
     materialName: 0
@@ -73,13 +81,22 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Torreta_Sniper.fbx.meta
     normalSmoothAngle: 0
     normalImportMode: 1
+=======
+    normalSmoothAngle: 60
+    normalImportMode: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Torreta_Sniper.fbx.meta
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Torreta_Sniper.fbx.meta
     normalSmoothingSource: 2
+=======
+    normalSmoothingSource: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Torreta_Sniper.fbx.meta
   referencedClips: []
   importAnimation: 1
   humanDescription:

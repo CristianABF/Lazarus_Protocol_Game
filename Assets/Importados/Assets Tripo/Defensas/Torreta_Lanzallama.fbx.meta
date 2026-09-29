@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Torreta_Lanzallama.fbx.meta
 guid: 97e4766c0271a1946b33fc6401f6870b
 ModelImporter:
   serializedVersion: 22200
@@ -9,6 +10,13 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Material.001
     second: {fileID: 2100000, guid: 036a8898fcb19174bbfaec01e7555702, type: 2}
+=======
+guid: b8a16588e7b3a634db383fbdce85b2b7
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Torreta_Lanzallama.fbx.meta
   materials:
     materialImportMode: 2
     materialName: 0
@@ -73,13 +81,22 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Torreta_Lanzallama.fbx.meta
     normalSmoothAngle: 0
     normalImportMode: 1
+=======
+    normalSmoothAngle: 60
+    normalImportMode: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Torreta_Lanzallama.fbx.meta
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
+<<<<<<< HEAD:Assets/Importados/Assets Tripo/Defensas/Torreta_Lanzallama.fbx.meta
     normalSmoothingSource: 2
+=======
+    normalSmoothingSource: 0
+>>>>>>> dc11d1c28cbc0bc56d7bb5044e489783b2c242d3:Assets/Importados/Assets Tripo/Torretas/Torreta_Lanzallama.fbx.meta
   referencedClips: []
   importAnimation: 1
   humanDescription:

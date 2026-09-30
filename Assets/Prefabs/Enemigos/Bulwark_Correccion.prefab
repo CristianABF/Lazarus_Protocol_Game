@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bulwark_Correccion
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1d6880db69a53b9458fb2fdc043f940a, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 1d6880db69a53b9458fb2fdc043f940a, type: 3}
       propertyPath: m_Controller
       value: 

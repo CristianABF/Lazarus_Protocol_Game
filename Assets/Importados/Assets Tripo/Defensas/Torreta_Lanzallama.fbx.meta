@@ -8,17 +8,10 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.001
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Torreta_Lanzallama.fbx.meta
-    second: {fileID: 2100000, guid: a5a24871eb4a4a74a9c512e08eb4362a, type: 2}
+    second: {fileID: 2100000, guid: 2e97b60609ecf3944968a6265ea7636e, type: 2}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
-=======
-    second: {fileID: 2100000, guid: 036a8898fcb19174bbfaec01e7555702, type: 2}
-  materials:
-    materialImportMode: 1
-    materialName: 3
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Torreta_Lanzallama.fbx.meta
     materialSearch: 1
     materialLocation: 1
   animations:
@@ -48,15 +41,15 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
-    useSRGBMaterialColor: 0
+    useSRGBMaterialColor: 1
     sortHierarchyByName: 1
-    importPhysicalCameras: 0
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
-    nodeNameCollisionStrategy: 0
-    fileIdsGeneration: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -73,26 +66,22 @@ ModelImporter:
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
-    secondaryUVMarginMethod: 0
+    secondaryUVMarginMethod: 1
     secondaryUVMinLightmapResolution: 40
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Torreta_Lanzallama.fbx.meta
     normalSmoothAngle: 60
-=======
-    normalSmoothAngle: 0
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Torreta_Lanzallama.fbx.meta
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
-    normalSmoothingSource: 2
+    normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []
@@ -111,12 +100,12 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 1
+  animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
-  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
-  remapMaterialsIfMaterialImportModeIsNone: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

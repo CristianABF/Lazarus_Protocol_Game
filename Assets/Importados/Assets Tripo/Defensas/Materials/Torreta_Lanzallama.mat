@@ -26,11 +26,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Materials/Torreta_Lanzallama.mat
-        m_Texture: {fileID: 2800000, guid: 6ad7421b668850b43ae6d99a977553ef, type: 3}
-=======
         m_Texture: {fileID: 2800000, guid: 729240d1869420749b84e7c453f4b64d, type: 3}
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Materials/Torreta_Lanzallama.mat
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -54,11 +50,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Materials/Torreta_Lanzallama.mat
-        m_Texture: {fileID: 2800000, guid: 6ad7421b668850b43ae6d99a977553ef, type: 3}
-=======
         m_Texture: {fileID: 2800000, guid: 729240d1869420749b84e7c453f4b64d, type: 3}
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Materials/Torreta_Lanzallama.mat
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -129,11 +121,7 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Materials/Torreta_Lanzallama.mat
---- !u!114 &4867508813866108065
-=======
 --- !u!114 &2547583917299688571
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Materials/Torreta_Lanzallama.mat
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

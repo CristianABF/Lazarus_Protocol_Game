@@ -26,11 +26,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Materials/Textura_Torreta_Sniper.mat
-        m_Texture: {fileID: 2800000, guid: 7ec42297b0b7ff440993edcf4f4d4cdb, type: 3}
-=======
         m_Texture: {fileID: 2800000, guid: c33f31b0f27e91444a9409d12f9c6d43, type: 3}
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Materials/Textura_Torreta_Sniper.mat
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -54,11 +50,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Materials/Textura_Torreta_Sniper.mat
-        m_Texture: {fileID: 2800000, guid: 7ec42297b0b7ff440993edcf4f4d4cdb, type: 3}
-=======
         m_Texture: {fileID: 2800000, guid: c33f31b0f27e91444a9409d12f9c6d43, type: 3}
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Materials/Textura_Torreta_Sniper.mat
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -129,11 +121,7 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
-<<<<<<< HEAD:Assets/Importados/Assets Tripo/Torretas/Materials/Textura_Torreta_Sniper.mat
---- !u!114 &2168289604469135715
-=======
 --- !u!114 &1505296470775610540
->>>>>>> 6d8c503e29948ee3f122a766b0348d8937793569:Assets/Importados/Assets Tripo/Defensas/Materials/Textura_Torreta_Sniper.mat
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

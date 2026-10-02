@@ -187,7 +187,9 @@ public class PlayerFirstPerson : MonoBehaviour
     }
     private void OnReload(InputAction.CallbackContext context)
     {
-        if (animator != null) animator.SetTrigger(ReloadHash);
+        //if (animator != null) animator.SetTrigger(ReloadHash);
+        Gun currentGun = GetComponentInChildren<Gun>();
+        if (currentGun != null) currentGun.Reload();
     }
     private void UpdateAnimator()
     {

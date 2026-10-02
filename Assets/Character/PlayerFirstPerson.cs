@@ -77,8 +77,8 @@ public class PlayerFirstPerson : MonoBehaviour
         }
 
         // (opcional) bloquear el cursor al centro del juego
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     private void OnEnable()

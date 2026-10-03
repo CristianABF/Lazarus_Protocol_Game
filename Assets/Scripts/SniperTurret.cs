@@ -4,29 +4,20 @@ public class SniperTurret : TurretBase
 {
     [Header("Parámetros Sniper")]
     [SerializeField] private float highDamage = 80f;
+    [SerializeField] private GameObject bulletPrefab;
 
     protected override void Attack()
     {
-        if (target == null || firePoint == null) return;
+        if (target == null || firePoint == null || bulletPrefab == null) return;
+
+        GameObject bulletGO = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
         Vector3 direction = (target.position - firePoint.position).normalized;
+        bulletGO.transform.rotation = Quaternion.LookRotation(direction);
 
-        if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, range, enemyLayer))
+        if (bulletGO.TryGetComponent(out Bullet bullet))
         {
-            if (hit.transform.CompareTag("Enemy") || hit.transform.root.CompareTag("Enemy"))
-            {
-                Component damageable = hit.transform.GetComponentInParent(typeof(IDamageable));
-                if (damageable != null)
-                {
-                    GameFunctions.Attack(damageable, highDamage);
-                }
-
-                ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
-                if (ps != null) ps.Play();
-
-                EnemyAI enemy = hit.transform.GetComponentInParent<EnemyAI>();
-                if (enemy != null) enemy.OnDamageTaken();
-            }
+            bullet.Setup(highDamage);
         }
     }
 }

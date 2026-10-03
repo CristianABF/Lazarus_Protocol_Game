@@ -254,11 +254,12 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
-  range: 15
+  range: 14
   rotationSpeed: 7
   fireRate: 5
   rotationYOffset: 0
   damage: 15
+  bulletPrefab: {fileID: 2989000923634411228, guid: 44cdcd55c8562cc46b31e272eb09fc5b, type: 3}
 --- !u!1 &6967564813084082839
 GameObject:
   m_ObjectHideFlags: 0

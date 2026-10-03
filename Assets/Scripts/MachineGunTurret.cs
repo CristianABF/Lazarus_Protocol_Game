@@ -4,31 +4,23 @@ public class MachineGunTurret : TurretBase
 {
     [Header("Parámetros Metralleta")]
     [SerializeField] private float damage = 10f;
+    [SerializeField] private GameObject bulletPrefab; // Prefab de la Bala
 
     protected override void Attack()
     {
-        if (target == null || firePoint == null) return;
+        if (target == null || firePoint == null || bulletPrefab == null) return;
 
+        // 1. Instanciar la bala en la posición y rotación del firePoint
+        GameObject bulletGO = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        // 2. Orientar la bala exactamente hacia la posición del enemigo (centro/pecho)
         Vector3 direction = (target.position - firePoint.position).normalized;
+        bulletGO.transform.rotation = Quaternion.LookRotation(direction);
 
-        if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, range, enemyLayer))
+        // 3. Pasar el daño configurado en la torreta a la bala
+        if (bulletGO.TryGetComponent(out Bullet bullet))
         {
-            if (hit.transform.CompareTag("Enemy") || hit.transform.root.CompareTag("Enemy"))
-            {
-                Component damageable = hit.transform.GetComponentInParent(typeof(IDamageable));
-                if (damageable != null)
-                {
-                    GameFunctions.Attack(damageable, damage);
-                }
-
-                // Dispara partículas o efectos de impacto en el enemigo si los tiene
-                ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
-                if (ps != null) ps.Play();
-
-                // Notifica a la IA del enemigo
-                EnemyAI enemy = hit.transform.GetComponentInParent<EnemyAI>();
-                if (enemy != null) enemy.OnDamageTaken();
-            }
+            bullet.Setup(damage);
         }
     }
 }

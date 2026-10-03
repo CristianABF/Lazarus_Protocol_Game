@@ -2,19 +2,30 @@ using UnityEngine;
 
 public class SniperTurret : TurretBase
 {
-    [Header("Parametros Sniper")]
+    [Header("Parámetros Sniper")]
     [SerializeField] private float highDamage = 80f;
 
     protected override void Attack()
     {
-        if (target == null) return;
+        if (target == null || firePoint == null) return;
 
-        // Disparo de alto impacto a gran distancia
-        if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, range, enemyLayer))
+        Vector3 direction = (target.position - firePoint.position).normalized;
+
+        if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, range, enemyLayer))
         {
-            if (hit.collider.TryGetComponent(out IDamageable enemy))
+            if (hit.transform.CompareTag("Enemy") || hit.transform.root.CompareTag("Enemy"))
             {
-                enemy.TakeDamage(highDamage);
+                Component damageable = hit.transform.GetComponentInParent(typeof(IDamageable));
+                if (damageable != null)
+                {
+                    GameFunctions.Attack(damageable, highDamage);
+                }
+
+                ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
+                if (ps != null) ps.Play();
+
+                EnemyAI enemy = hit.transform.GetComponentInParent<EnemyAI>();
+                if (enemy != null) enemy.OnDamageTaken();
             }
         }
     }

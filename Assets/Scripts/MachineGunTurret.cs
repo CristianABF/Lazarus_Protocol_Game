@@ -2,20 +2,32 @@ using UnityEngine;
 
 public class MachineGunTurret : TurretBase
 {
-    [Header("Parametros Metralleta")]
+    [Header("Parámetros Metralleta")]
     [SerializeField] private float damage = 10f;
 
     protected override void Attack()
     {
-        if (target == null) return;
+        if (target == null || firePoint == null) return;
 
-        // Disparo mediante Raycast (o instanciar prefab de Bala)
-        if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, range, enemyLayer))
+        Vector3 direction = (target.position - firePoint.position).normalized;
+
+        if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, range, enemyLayer))
         {
-            // Reemplaza 'IDamageable' o 'EnemyHealth' según el script en uso
-            if (hit.collider.TryGetComponent(out IDamageable enemy))
+            if (hit.transform.CompareTag("Enemy") || hit.transform.root.CompareTag("Enemy"))
             {
-                enemy.TakeDamage(damage);
+                Component damageable = hit.transform.GetComponentInParent(typeof(IDamageable));
+                if (damageable != null)
+                {
+                    GameFunctions.Attack(damageable, damage);
+                }
+
+                // Dispara partículas o efectos de impacto en el enemigo si los tiene
+                ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
+                if (ps != null) ps.Play();
+
+                // Notifica a la IA del enemigo
+                EnemyAI enemy = hit.transform.GetComponentInParent<EnemyAI>();
+                if (enemy != null) enemy.OnDamageTaken();
             }
         }
     }

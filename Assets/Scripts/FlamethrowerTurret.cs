@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FlamethrowerTurret : TurretBase
 {
-    [Header("Parametros Lanzallamas")]
+    [Header("Parámetros Lanzallamas")]
     [SerializeField] private float continuousDamagePerSecond = 20f;
     [SerializeField] private ParticleSystem flameParticles;
 
@@ -10,25 +10,39 @@ public class FlamethrowerTurret : TurretBase
     {
         base.Update();
 
-        // Control visual de las particulas de fuego
-        if (target != null && flameParticles != null)
+        // Control visual de partículas de fuego según la presencia del objetivo
+        if (target != null)
         {
-            if (!flameParticles.isPlaying) flameParticles.Play();
+            if (flameParticles != null && !flameParticles.isPlaying)
+            {
+                flameParticles.Play();
+            }
         }
-        else if (flameParticles != null && flameParticles.isPlaying)
+        else
         {
-            flameParticles.Stop();
+            if (flameParticles != null && flameParticles.isPlaying)
+            {
+                flameParticles.Stop();
+            }
         }
     }
 
     protected override void Attack()
     {
-        // Para daño continuom, calculamos el daño multiplicando por Time.deltaTime
-        if (target != null)
+        if (target == null) return;
+
+        if (target.CompareTag("Enemy") || target.root.CompareTag("Enemy"))
         {
-            if (target.TryGetComponent(out IDamageable enemy))
+            Component damageable = target.GetComponentInParent(typeof(IDamageable));
+            if (damageable != null)
             {
-                enemy.TakeDamage(continuousDamagePerSecond * Time.deltaTime);
+                GameFunctions.Attack(damageable, continuousDamagePerSecond * Time.deltaTime);
+            }
+
+            EnemyAI enemy = target.GetComponentInParent<EnemyAI>();
+            if (enemy != null)
+            {
+                enemy.OnDamageTaken();
             }
         }
     }

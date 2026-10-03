@@ -26341,6 +26341,10 @@ PrefabInstance:
       propertyPath: m_Volume
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 1951436290511257713, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 311
+      objectReference: {fileID: 0}
     - target: {fileID: 2002316800958742364, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
       propertyPath: animator
       value: 

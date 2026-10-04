@@ -168,6 +168,14 @@ public class Gun : MonoBehaviour, IPickable
         cameraRoot.Rotate(recoilSpeed, 0, 0);
     }
 
+    public void Reload()
+    {
+        if (ammo != null)
+        {
+            ammo.ExecuteReload();
+        }
+    }
+
     public void Animation_DetachMagazine()
     {
         if (gunMagazine != null) gunMagazine.SetActive(false);

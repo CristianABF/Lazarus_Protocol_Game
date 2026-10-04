@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using TMPro; // Necesario para TextMeshPro
 
 public class WaveManager : MonoBehaviour
 {
@@ -10,103 +10,124 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI phaseText;
 
     [Header("Configuración de Enemigos")]
-    [SerializeField] private GameObject[] enemyPrefabs; // Ahora es una lista para múltiples enemigos
+    [SerializeField] private GameObject[] enemyPrefabs; // Lista para múltiples enemigos
     [SerializeField] private Transform[] spawnPoints;
-    public int enemiesPerWave = 3;
+    public int enemiesPerWave = 5;
 
+    // Variables internas de tiempo y fases
     private float timeElapsed = 0f;
     private int currentPhaseIndex = -1;
+    private float phaseTimer = 0f;
+    private bool isWaveActive = false;
 
     [System.Serializable]
     public struct GamePhase
     {
-        public string phaseName;
-        public float startTimeInSeconds;
-        public bool isWave;
+        public string phaseName;       // Ej: "Oleada 1", "¡Sobrevive!"
+        public float phaseDuration;    // Duración de la fase en segundos
+        public int enemiesToSpawn;     // Enemigos a generar en esta fase
     }
 
     [Header("Configuración de Fases")]
-    public List<GamePhase> gamePhases;
+    [SerializeField] private GamePhase[] gamePhases;
 
     void Start()
     {
-        if (gamePhases.Count == 0)
+        // Limpiamos el texto del medio al iniciar
+        if (phaseText != null)
         {
-            gamePhases = new List<GamePhase>
-            {
-                new GamePhase { phaseName = "Preparación inicial", startTimeInSeconds = 0f, isWave = false },
-                new GamePhase { phaseName = "Oleada 1 (Brecha inicial)", startTimeInSeconds = 60f, isWave = true },
-                new GamePhase { phaseName = "Descanso de reabastecimiento", startTimeInSeconds = 150f, isWave = false },
-                new GamePhase { phaseName = "Oleada 2 (Asedio estándar)", startTimeInSeconds = 195f, isWave = true },
-                new GamePhase { phaseName = "Descanso táctico", startTimeInSeconds = 345f, isWave = false },
-                new GamePhase { phaseName = "Oleada 3 (Escalada pesada)", startTimeInSeconds = 375f, isWave = true },
-                new GamePhase { phaseName = "Descanso asfixiante", startTimeInSeconds = 555f, isWave = false },
-                new GamePhase { phaseName = "Oleada 4 (Colapso parcial)", startTimeInSeconds = 575f, isWave = true },
-                new GamePhase { phaseName = "Descanso crítico", startTimeInSeconds = 800f, isWave = false },
-                new GamePhase { phaseName = "Oleada 5 (Supervivencia final)", startTimeInSeconds = 815f, isWave = true }
-            };
+            phaseText.gameObject.SetActive(false);
+        }
+
+        // Si configuraste fases en el Inspector, iniciamos la primera
+        if (gamePhases.Length > 0)
+        {
+            StartNextPhase();
         }
     }
 
     void Update()
     {
+        // 1. Temporizador global que cuenta hacia adelante
         timeElapsed += Time.deltaTime;
         UpdateTimerUI();
-        CheckPhases();
+
+        // 2. Lógica de las fases
+        if (isWaveActive && gamePhases.Length > 0)
+        {
+            phaseTimer -= Time.deltaTime;
+
+            if (phaseTimer <= 0)
+            {
+                StartNextPhase();
+            }
+        }
     }
 
     void UpdateTimerUI()
     {
-        int minutes = Mathf.FloorToInt(timeElapsed / 60);
-        int seconds = Mathf.FloorToInt(timeElapsed % 60);
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
-
-    void CheckPhases()
-    {
-        if (currentPhaseIndex + 1 < gamePhases.Count)
+        if (timerText != null)
         {
-            if (timeElapsed >= gamePhases[currentPhaseIndex + 1].startTimeInSeconds)
-            {
-                currentPhaseIndex++;
-                StartCoroutine(ShowPhaseAnnouncement(gamePhases[currentPhaseIndex].phaseName));
+            // Calcula minutos y segundos
+            int minutes = Mathf.FloorToInt(timeElapsed / 60F);
+            int seconds = Mathf.FloorToInt(timeElapsed % 60F);
 
-                if (gamePhases[currentPhaseIndex].isWave)
-                {
-                    SpawnEnemies();
-                }
-            }
+            // Formatea el texto a "00:00"
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
     }
 
-    void SpawnEnemies()
+    void StartNextPhase()
     {
-        // Verifica que haya al menos un enemigo y un punto de aparición cargados
-        if (enemyPrefabs.Length > 0 && spawnPoints.Length > 0)
+        currentPhaseIndex++;
+
+        // Verificamos que queden fases disponibles
+        if (currentPhaseIndex < gamePhases.Length)
         {
-            for (int i = 0; i < enemiesPerWave; i++)
-            {
-                // Elige un enemigo al azar de tu lista
-                int randomEnemyIndex = Random.Range(0, enemyPrefabs.Length);
-                GameObject selectedEnemy = enemyPrefabs[randomEnemyIndex];
+            GamePhase currentPhase = gamePhases[currentPhaseIndex];
+            phaseTimer = currentPhase.phaseDuration;
+            isWaveActive = true;
 
-                // Elige un punto de aparición al azar de tu lista
-                int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
-                Transform spawnPoint = spawnPoints[randomSpawnIndex];
+            // Mostramos el aviso en el centro durante 3 segundos
+            StartCoroutine(ShowPhaseMessage(currentPhase.phaseName, 3f));
 
-                Instantiate(selectedEnemy, spawnPoint.position, Quaternion.identity);
-            }
+            // Generamos los enemigos de esta oleada
+            SpawnEnemies(currentPhase.enemiesToSpawn);
         }
         else
         {
-            Debug.LogWarning("Faltan asignar los Enemigos o los Spawn Points en el GameManager.");
+            // Ya no hay más fases
+            isWaveActive = false;
+            StartCoroutine(ShowPhaseMessage("¡Supervivencia Completada!", 5f));
         }
     }
 
-    IEnumerator ShowPhaseAnnouncement(string message)
+    void SpawnEnemies(int count)
     {
-        phaseText.text = "¡" + message + "!";
-        yield return new WaitForSeconds(4f);
-        phaseText.text = "";
+        // Verificamos que haya enemigos y puntos de spawn configurados
+        if (enemyPrefabs.Length == 0 || spawnPoints.Length == 0) return;
+
+        for (int i = 0; i < count; i++)
+        {
+            // Elige un enemigo y un punto de spawn al azar
+            GameObject randomEnemy = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+            Transform randomSpawn = spawnPoints[Random.Range(0, spawnPoints.Length)];
+
+            Instantiate(randomEnemy, randomSpawn.position, randomSpawn.rotation);
+        }
+    }
+
+    // Corrutina para mostrar y luego ocultar el texto central
+    IEnumerator ShowPhaseMessage(string message, float displayTime)
+    {
+        if (phaseText != null)
+        {
+            phaseText.text = message;
+            phaseText.gameObject.SetActive(true); // Activa el texto
+
+            yield return new WaitForSeconds(displayTime); // Espera los segundos indicados
+
+            phaseText.gameObject.SetActive(false); // Apaga el texto
+        }
     }
 }

@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 379190200569086624}
   m_Layer: 0
   m_Name: RAM-120
-  m_TagString: Untagged
+  m_TagString: Pickable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

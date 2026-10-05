@@ -5089,11 +5089,11 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
-  range: 6
-  rotationSpeed: 7
-  fireRate: 1
+  range: 8
+  rotationSpeed: 10
+  fireRate: 60
   rotationYOffset: 0
-  continuousDamagePerSecond: 35
+  continuousDamagePerSecond: 52
   flameParticles: {fileID: 7562471967571676285}
 --- !u!1 &7588351908346577643
 GameObject:

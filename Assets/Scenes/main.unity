@@ -221,7 +221,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: d3c545ab0cffd1d47b01302c5e5d522d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.6
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -5949,11 +5949,11 @@ Transform:
   m_GameObject: {fileID: 426705314}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.714, y: 0.511, z: -34.465}
+  m_LocalPosition: {x: -0.2140007, y: 0, z: -59.385002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 931676745}
+  m_Father: {fileID: 1146742509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &429072618
 PrefabInstance:
@@ -6988,45 +6988,46 @@ MonoBehaviour:
   timerText: {fileID: 2039025761}
   phaseText: {fileID: 379017610}
   enemyPrefabs:
-  - {fileID: 4613232132955255664, guid: 0217f2997a5c3664fa1d538ed4f5981b, type: 3}
-  - {fileID: 8190884475731725768, guid: 271fef46e01ddd042aa6b64d7984ba8a, type: 3}
-  - {fileID: 7774770226473848176, guid: e2f77f494c689ed4da3cd5beb92f9536, type: 3}
   - {fileID: 3053914240751053715, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
+  - {fileID: 8190884475731725768, guid: 271fef46e01ddd042aa6b64d7984ba8a, type: 3}
   - {fileID: 6996017544752697759, guid: 284563f3e7822864da1caf299b967a41, type: 3}
   spawnPoints:
-  - {fileID: 2014503428}
+  - {fileID: 242449552}
+  - {fileID: 1194954580}
+  - {fileID: 1003893711}
+  - {fileID: 1311403559}
   enemiesPerWave: 0
   gamePhases:
   - phaseName: Preparacion
-    phaseDuration: 60
+    phaseDuration: 3
     enemiesToSpawn: 0
   - phaseName: Oleada 1
     phaseDuration: 90
-    enemiesToSpawn: 5
+    enemiesToSpawn: 10
   - phaseName: 'Descanso '
     phaseDuration: 45
     enemiesToSpawn: 0
   - phaseName: Oleada 2
     phaseDuration: 150
-    enemiesToSpawn: 10
+    enemiesToSpawn: 20
   - phaseName: Descanso
     phaseDuration: 30
     enemiesToSpawn: 0
   - phaseName: Oleada 3
     phaseDuration: 180
-    enemiesToSpawn: 15
+    enemiesToSpawn: 35
   - phaseName: Descanso
     phaseDuration: 20
     enemiesToSpawn: 0
   - phaseName: Oleada 4
     phaseDuration: 225
-    enemiesToSpawn: 20
+    enemiesToSpawn: 45
   - phaseName: Descanso
     phaseDuration: 15
     enemiesToSpawn: 0
   - phaseName: Oleada 5
     phaseDuration: 385
-    enemiesToSpawn: 40
+    enemiesToSpawn: 60
 --- !u!4 &496824068 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6149369618794104953, guid: bfdc07cf705f416498917945865e722c, type: 3}
@@ -10030,63 +10031,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44daa3e15d1555c49bd3b50281bb4536, type: 3}
---- !u!1001 &745007344
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -9.839986
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.29689968
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -10.256044
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8745258998676758315, guid: 67f94914c701862458127861f95aaed1, type: 3}
-      propertyPath: m_Name
-      value: Torreta_Sniper
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 67f94914c701862458127861f95aaed1, type: 3}
 --- !u!1001 &746041162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11705,7 +11649,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 350, y: 100}
+  m_AnchoredPosition: {x: 250, y: 60}
   m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &861931491
@@ -12525,7 +12469,6 @@ Transform:
   m_Children:
   - {fileID: 792787150}
   - {fileID: 808401106}
-  - {fileID: 426705315}
   - {fileID: 1146742509}
   - {fileID: 872890961}
   - {fileID: 282100447}
@@ -15384,7 +15327,8 @@ Transform:
   m_LocalPosition: {x: -22.5, y: 0.511, z: 24.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 426705315}
   m_Father: {fileID: 931676745}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1150496205
@@ -18136,7 +18080,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 350, y: 100}
+  m_AnchoredPosition: {x: 250, y: 60}
   m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1388245407
@@ -24695,67 +24639,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44daa3e15d1555c49bd3b50281bb4536, type: 3}
---- !u!1001 &1956707755
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 485725488547771449, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: range
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 6519572116349843082, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_Name
-      value: Torreta_Metralladora
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.4542553
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.14938721
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -10.325915
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6993419042693247335, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 301a37d8ad10db3429c80f7ad8a9b654, type: 3}
 --- !u!4 &1957337582 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6149369618794104953, guid: bfdc07cf705f416498917945865e722c, type: 3}
@@ -25780,7 +25663,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 30, y: -30}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!4 &2044625481 stripped
@@ -27290,7 +27173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9148889753176711047, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
       propertyPath: stepInterval
-      value: 0.6
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9211010194206288443, guid: cd288926176ea2f409ef2cd8cac01f30, type: 3}
       propertyPath: m_RenderPostProcessing
@@ -27565,6 +27448,4 @@ SceneRoots:
   - {fileID: 1008764461}
   - {fileID: 1011363776}
   - {fileID: 1212647000}
-  - {fileID: 745007344}
-  - {fileID: 1956707755}
   - {fileID: 562629078}

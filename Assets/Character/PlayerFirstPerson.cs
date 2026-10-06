@@ -56,7 +56,11 @@ public class PlayerFirstPerson : MonoBehaviour
     private static readonly int ShootHash = Animator.StringToHash("Shoot");
     private static readonly int ReloadHash = Animator.StringToHash("Reload");
     private static readonly int OnGroundHash = Animator.StringToHash("OnGround");
+    private static readonly int IsAimingHash = Animator.StringToHash("IsAiming");
+    private static readonly int HasWeaponHash = Animator.StringToHash("HasWeapon");
+    private bool isAiming;
 
+    /*
     private void Start()
     {
         if (headBone != null)
@@ -64,6 +68,7 @@ public class PlayerFirstPerson : MonoBehaviour
             headBone.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         }
     }
+    */
 
     private void Awake()
     {
@@ -89,9 +94,10 @@ public class PlayerFirstPerson : MonoBehaviour
         InputController.Input.Player.Jump.performed += OnJump;
         InputController.Input.Player.Sprint.performed += OnSprintStart;
         InputController.Input.Player.Sprint.canceled += OnSprintCanceled;
-
         InputController.Input.Player.Shoot.performed += OnShoot;
         InputController.Input.Player.Reload.performed += OnReload;
+        InputController.Input.Player.Aim.performed += OnAimStart;
+        InputController.Input.Player.Aim.canceled += OnAimCanceled;
     }
     private void OnDisable()
     {
@@ -100,12 +106,15 @@ public class PlayerFirstPerson : MonoBehaviour
             InputController.Input.Player.Jump.performed -= OnJump;
             InputController.Input.Player.Sprint.performed -= OnSprintStart;
             InputController.Input.Player.Sprint.canceled -= OnSprintCanceled;
-
             InputController.Input.Player.Shoot.performed -= OnShoot;
             InputController.Input.Player.Reload.performed -= OnReload;
+            InputController.Input.Player.Aim.performed -= OnAimStart;
+            InputController.Input.Player.Aim.canceled -= OnAimStart;
         }
     }
 
+    private void OnAimStart(InputAction.CallbackContext context) { isAiming = true; }
+    private void OnAimCanceled(InputAction.CallbackContext context) { isAiming = false; }
     private void OnSprintStart(InputAction.CallbackContext context) { isSprinting = true;}
     private void OnSprintCanceled(InputAction.CallbackContext context) { isSprinting = false;}
 
@@ -205,22 +214,13 @@ public class PlayerFirstPerson : MonoBehaviour
         // envio atenuado (Damp Time = 0.1f) para transicion uniforme en el Blend Tree
         animator.SetFloat(SpeedHash, targetSpeed, 0.1f, Time.deltaTime);
         animator.SetBool(OnGroundHash, isGrounded);
-        /*calcular magnitud de movimiento considerando si corre
-        float speedMultiplier = (isSprinting && moveInput.y > 0) ? 1f : 0.5f;
-        float forwardAmount = Mathf.Abs(moveInput.y) * speedMultiplier;
-        //float forwardAmount = moveInput.y * speedMultiplier;
-        float turnAmount = moveInput.x * speedMultiplier;
 
-        // enviar parametros al Animator Controller (mismos nombres que en ThirdPersonCharacter
-        animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
-        animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
-        animator.SetBool("OnGround", isGrounded);
-        
-        if (!isGrounded)
-        {
-            animator.SetFloat("Jump", velocity.y);
-        }
-        */
+        Gun currentGun = GetComponentInChildren<Gun>();
+        bool hasWeapon = (currentGun != null);
+
+        animator.SetBool(HasWeaponHash, hasWeapon);
+        // Solo apuntamos si realmente tenemos un arma en la mano y presionamos el botón
+        animator.SetBool(IsAimingHash, isAiming && hasWeapon);
     }
 
     private void HandleHeadBobAndFootsteps()

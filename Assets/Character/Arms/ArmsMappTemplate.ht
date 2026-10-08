@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1105 &110500000
+HumanTemplate:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ArmsMappTemplate
+  m_BoneTemplate:
+    Left Index Distal: Index4.L
+    Left Index Intermediate: Index3.L
+    Left Index Proximal: Index2.L
+    Left Little Distal: Little4.L
+    Left Little Intermediate: Little3.L
+    Left Little Proximal: Little2.L
+    Left Middle Distal: Middle4.L
+    Left Middle Intermediate: Middle3.L
+    Left Middle Proximal: Middle2.L
+    Left Ring Distal: Ring4.L
+    Left Ring Intermediate: Ring3.L
+    Left Ring Proximal: Ring2.L
+    Left Thumb Distal: Thumb3.L
+    Left Thumb Intermediate: Thumb2.L
+    Left Thumb Proximal: Thumb1.L
+    LeftHand: Wrist.L
+    LeftLowerArm: LowArm.L
+    LeftUpperArm: UpperArm.L
+    Right Index Distal: Index4.R
+    Right Index Intermediate: Index3.R
+    Right Index Proximal: Index2.R
+    Right Little Distal: Little4.R
+    Right Little Intermediate: Little3.R
+    Right Little Proximal: Little2.R
+    Right Middle Distal: Middle4.R
+    Right Middle Intermediate: Middle3.R
+    Right Middle Proximal: Middle2.R
+    Right Ring Distal: Ring4.R
+    Right Ring Intermediate: Ring3.R
+    Right Ring Proximal: Ring2.R
+    Right Thumb Distal: Thumb3.R
+    Right Thumb Intermediate: Thumb2.R
+    Right Thumb Proximal: Thumb1.R
+    RightHand: Wrist.R
+    RightLowerArm: LowArm.R
+    RightUpperArm: UpperArm.R
+    Spine: Armature.001

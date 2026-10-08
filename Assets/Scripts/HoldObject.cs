@@ -1,24 +1,24 @@
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 public class HoldObject : MonoBehaviour
 {
     [Header("Referencias")]
-    [SerializeField] private Transform holdPoint;       // Objeto vacio hijo de la camara donde se sostendra el objeto
+    [SerializeField] private Transform holdPoint;       // Objeto vacío hijo de la cámara donde se sostendrá el objeto
     [SerializeField] private Animator animator;
     private Transform cameraTransform;
 
-    [Header("Configuracion")]
-    [SerializeField] private float pickUpRange = 3.0f;    // Distancia maxima para alcanzar el objeto
+    [Header("Configuración")]
+    [SerializeField] private float pickUpRange = 3.0f;    // Distancia máxima para alcanzar el objeto
     [SerializeField] private float throwForce = 1.0f;
 
-    private Rigidbody heldObjRb; // rigidbody del objeto agarrado
-    private GameObject heldObj; // hace referencia al objeto agarrado
+    private Rigidbody heldObjRb; // Rigidbody del objeto agarrado
+    private GameObject heldObj;  // Hace referencia al objeto agarrado
     private static readonly int HasWeaponHash = Animator.StringToHash("HasWeapon");
 
-    void Start()
+    private void Start()
     {
-        // busca automaticamente la camara principal en la escena
+        // Busca automáticamente la cámara principal en la escena
         if (Camera.main != null)
         {
             cameraTransform = Camera.main.transform;
@@ -30,26 +30,39 @@ public class HoldObject : MonoBehaviour
 
         if (animator == null) animator = GetComponent<Animator>();
     }
-    void Update()
+
+    private void OnEnable()
     {
-        // Al presionar la tecla 'E' (o el boton que prefieras)
-        if (Input.GetKeyDown(KeyCode.E))
+        // Se asume que en InputController la acción de interactuar/agarrar se llama "Interact"
+        InputController.Input.Player.Interact.performed += OnInteract;
+    }
+
+    private void OnDisable()
+    {
+        if (InputController.Input != null)
         {
-            if (heldObj == null)
-            {
-                TryPickUpObject();
-            }
-            else
-            {
-                DropObject();
-            }
+            InputController.Input.Player.Interact.performed -= OnInteract;
         }
     }
 
-    void TryPickUpObject()
+    private void OnInteract(InputAction.CallbackContext context)
     {
+        if (heldObj == null)
+        {
+            TryPickUpObject();
+        }
+        else
+        {
+            DropObject();
+        }
+    }
+
+    private void TryPickUpObject()
+    {
+        if (cameraTransform == null) return;
+
         RaycastHit hit;
-        // Lanzamos un rayo desde el centro de la camara hacia adelante
+        // Lanzamos un rayo desde el centro de la cámara hacia adelante
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickUpRange))
         {
             // Verificamos que el objeto tenga la etiqueta "Pickable" y un Rigidbody
@@ -58,58 +71,60 @@ public class HoldObject : MonoBehaviour
                 heldObj = hit.transform.gameObject;
                 heldObjRb = heldObj.GetComponent<Rigidbody>();
 
-                // convertimos a cinematico para fijarlo al holdpoint
+                // Convertimos a cinemático para fijarlo al holdPoint
                 heldObjRb.isKinematic = true;
 
-                // desactivamos colisiones para evitar empujones con el jugador
+                // Desactivamos colisiones para evitar colisionar con el jugador
                 Collider objCollider = heldObj.GetComponent<Collider>();
                 if (objCollider != null) objCollider.enabled = false;
 
-                // emparentar y fijar posicion y rotacion
+                // Emparentar y fijar posición y rotación
                 heldObj.transform.SetParent(holdPoint);
                 heldObj.transform.localPosition = Vector3.zero;
                 heldObj.transform.localRotation = Quaternion.identity;
 
-                // busca si el objeto tiene algún script que implemente la interfaz
+                // Busca si el objeto tiene algún script que implemente la interfaz IPickable
                 IPickable pickableItem = heldObj.GetComponent<IPickable>();
-                if (pickableItem != null) pickableItem.OnPickedUp(); //avisa al objeto que fue agarrado
+                if (pickableItem != null) pickableItem.OnPickedUp();
 
                 if (animator != null) animator.SetBool(HasWeaponHash, true);
             }
         }
     }
-    void DropObject()
+
+    private void DropObject()
     {
         if (heldObjRb != null)
         {
-            // desvinculamos del HoldPoint antes de reactivar fisicas
+            // Desvinculamos del HoldPoint antes de reactivar físicas
             heldObj.transform.SetParent(null);
 
-            // reactivamos las colisiones primero
+            // Reactivamos las colisiones primero
             Collider objCollider = heldObj.GetComponent<Collider>();
             if (objCollider != null) objCollider.enabled = true;
 
-            // restauramos el Rigidbody y la gravedad
-            if (heldObjRb != null)
+            // Restauramos el Rigidbody y la gravedad
+            heldObjRb.isKinematic = false;
+            heldObjRb.useGravity = true;
+
+            // Limpiamos inercias o velocidades residuales
+            heldObjRb.linearVelocity = Vector3.zero;
+            heldObjRb.angularVelocity = Vector3.zero;
+
+            // Forzamos al motor de física a procesarlo de inmediato
+            heldObjRb.WakeUp();
+
+            // Leve impulso hacia adelante al soltarlo
+            if (throwForce > 0f && cameraTransform != null)
             {
-                heldObjRb.isKinematic = false;
-                heldObjRb.useGravity = true;
-
-                // limpiamos inercias o velocidades residuales
-                heldObjRb.linearVelocity = Vector3.zero;
-                heldObjRb.angularVelocity = Vector3.zero;
-
-                // forzamos al motor de fisica a procesarlo de inmediato
-                heldObjRb.WakeUp();
-
-                // (Opcional) leve impulso hacia adelante al soltarlo
-                if (throwForce > 0f) heldObjRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
+                heldObjRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
             }
 
             IPickable pickableItem = heldObj.GetComponent<IPickable>();
-            if (pickableItem != null) pickableItem.OnDropped(); // avisa al objeto que fue soltado
+            if (pickableItem != null) pickableItem.OnDropped();
 
-            if (animator != null) animator.SetBool (HasWeaponHash, false);
+            if (animator != null) animator.SetBool(HasWeaponHash, false);
+
             heldObj = null;
             heldObjRb = null;
         }

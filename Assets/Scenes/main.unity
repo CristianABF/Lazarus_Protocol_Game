@@ -17139,11 +17139,11 @@ MonoBehaviour:
   fireRate: 0.09
   isAutomatic: 1
   range: 100
+  bulletPrefab: {fileID: 0}
   cameraRoot: {fileID: 0}
   fpsCam: {fileID: 0}
   firePoint: {fileID: 194117781}
   playerAnimator: {fileID: 0}
-  laserDuration: 0.05
 --- !u!120 &1636489794
 LineRenderer:
   serializedVersion: 2
@@ -21909,6 +21909,10 @@ PrefabInstance:
     - target: {fileID: 2257292951034060475, guid: 549c457f8f6b7a6418e386f1a27e6ba8, type: 3}
       propertyPath: m_Name
       value: Managers
+      objectReference: {fileID: 0}
+    - target: {fileID: 4654475128107671513, guid: 549c457f8f6b7a6418e386f1a27e6ba8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4654475128107671513, guid: 549c457f8f6b7a6418e386f1a27e6ba8, type: 3}
       propertyPath: phaseText

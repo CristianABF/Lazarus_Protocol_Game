@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 2f6877bd9e5725d4d98d1ddd37fe3da3, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -286,7 +286,7 @@ PrefabInstance:
     - target: {fileID: 7316559566802828324, guid: 911174ac76fa2c74b880e0d49e5c2185, type: 3}
       propertyPath: fpsCam
       value: 
-      objectReference: {fileID: 3910244419164467044}
+      objectReference: {fileID: 1833263492}
     - target: {fileID: 7316559566802828324, guid: 911174ac76fa2c74b880e0d49e5c2185, type: 3}
       propertyPath: firePoint
       value: 
@@ -294,7 +294,7 @@ PrefabInstance:
     - target: {fileID: 7316559566802828324, guid: 911174ac76fa2c74b880e0d49e5c2185, type: 3}
       propertyPath: cameraRoot
       value: 
-      objectReference: {fileID: 4972837254723434796}
+      objectReference: {fileID: 983193768}
     - target: {fileID: 7316559566802828324, guid: 911174ac76fa2c74b880e0d49e5c2185, type: 3}
       propertyPath: bulletPrefab
       value: 

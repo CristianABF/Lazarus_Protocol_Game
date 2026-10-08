@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro; // Necesario para TextMeshPro
+using TMPro;
 
 public class WaveManager : MonoBehaviour
 {
@@ -10,22 +10,22 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI phaseText;
 
     [Header("Configuración de Enemigos")]
-    [SerializeField] private GameObject[] enemyPrefabs; // Lista para múltiples enemigos
+    [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private Transform[] spawnPoints;
     public int enemiesPerWave = 5;
 
-    // Variables internas de tiempo y fases
     private float timeElapsed = 0f;
     private int currentPhaseIndex = -1;
     private float phaseTimer = 0f;
+    private float spawnTimer = 0f; // Temporizador para cada enemigo
     private bool isWaveActive = false;
 
     [System.Serializable]
     public struct GamePhase
     {
-        public string phaseName;       // Ej: "Oleada 1", "¡Sobrevive!"
-        public float phaseDuration;    // Duración de la fase en segundos
-        public int enemiesToSpawn;     // Enemigos a generar en esta fase
+        public string phaseName;
+        public float phaseDuration;
+        public float spawnInterval; // Tiempo en segundos entre cada enemigo
     }
 
     [Header("Configuración de Fases")]
@@ -33,13 +33,11 @@ public class WaveManager : MonoBehaviour
 
     void Start()
     {
-        // Limpiamos el texto del medio al iniciar
         if (phaseText != null)
         {
             phaseText.gameObject.SetActive(false);
         }
 
-        // Si configuraste fases en el Inspector, iniciamos la primera
         if (gamePhases.Length > 0)
         {
             StartNextPhase();
@@ -48,7 +46,7 @@ public class WaveManager : MonoBehaviour
 
     void Update()
     {
-        // 1. Temporizador global que cuenta hacia adelante
+        // 1. Temporizador global
         timeElapsed += Time.deltaTime;
         UpdateTimerUI();
 
@@ -57,6 +55,20 @@ public class WaveManager : MonoBehaviour
         {
             phaseTimer -= Time.deltaTime;
 
+            GamePhase currentPhase = gamePhases[currentPhaseIndex];
+
+            // Generación continua de enemigos
+            if (currentPhase.spawnInterval > 0)
+            {
+                spawnTimer -= Time.deltaTime;
+                if (spawnTimer <= 0)
+                {
+                    SpawnEnemies(1); // Genera 1 solo enemigo
+                    spawnTimer = currentPhase.spawnInterval; // Reinicia el reloj
+                }
+            }
+
+            // Cambiar de fase
             if (phaseTimer <= 0)
             {
                 StartNextPhase();
@@ -68,11 +80,8 @@ public class WaveManager : MonoBehaviour
     {
         if (timerText != null)
         {
-            // Calcula minutos y segundos
             int minutes = Mathf.FloorToInt(timeElapsed / 60F);
             int seconds = Mathf.FloorToInt(timeElapsed % 60F);
-
-            // Formatea el texto a "00:00"
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
     }
@@ -81,22 +90,17 @@ public class WaveManager : MonoBehaviour
     {
         currentPhaseIndex++;
 
-        // Verificamos que queden fases disponibles
         if (currentPhaseIndex < gamePhases.Length)
         {
             GamePhase currentPhase = gamePhases[currentPhaseIndex];
             phaseTimer = currentPhase.phaseDuration;
+            spawnTimer = 0f; // Para que el primer enemigo salga de inmediato
             isWaveActive = true;
 
-            // Mostramos el aviso en el centro durante 3 segundos
             StartCoroutine(ShowPhaseMessage(currentPhase.phaseName, 3f));
-
-            // Generamos los enemigos de esta oleada
-            SpawnEnemies(currentPhase.enemiesToSpawn);
         }
         else
         {
-            // Ya no hay más fases
             isWaveActive = false;
             StartCoroutine(ShowPhaseMessage("¡Supervivencia Completada!", 5f));
         }
@@ -104,30 +108,24 @@ public class WaveManager : MonoBehaviour
 
     void SpawnEnemies(int count)
     {
-        // Verificamos que haya enemigos y puntos de spawn configurados
         if (enemyPrefabs.Length == 0 || spawnPoints.Length == 0) return;
 
         for (int i = 0; i < count; i++)
         {
-            // Elige un enemigo y un punto de spawn al azar
             GameObject randomEnemy = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
             Transform randomSpawn = spawnPoints[Random.Range(0, spawnPoints.Length)];
-
             Instantiate(randomEnemy, randomSpawn.position, randomSpawn.rotation);
         }
     }
 
-    // Corrutina para mostrar y luego ocultar el texto central
     IEnumerator ShowPhaseMessage(string message, float displayTime)
     {
         if (phaseText != null)
         {
             phaseText.text = message;
-            phaseText.gameObject.SetActive(true); // Activa el texto
-
-            yield return new WaitForSeconds(displayTime); // Espera los segundos indicados
-
-            phaseText.gameObject.SetActive(false); // Apaga el texto
+            phaseText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(displayTime);
+            phaseText.gameObject.SetActive(false);
         }
     }
 }

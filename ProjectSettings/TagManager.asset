@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pickable
   - Enemy
+  - Core
   layers:
   - Default
   - TransparentFX

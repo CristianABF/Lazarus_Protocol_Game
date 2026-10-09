@@ -13,6 +13,11 @@ public struct BuildableItem
 
 public class WrenchBuilder : MonoBehaviour, IPickable
 {
+    [Header("Referencias de Animación")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string hasWrenchBool = "HasWrench";
+    private int hasWrenchHash;
+
     [Header("Lista de Construcción")]
     public List<BuildableItem> buildableItems;
     private int currentIndex = 0;
@@ -31,12 +36,29 @@ public class WrenchBuilder : MonoBehaviour, IPickable
     private Quaternion currentBuildRotation;
     private bool isValidBuildPosition;
 
+    private void Awake()
+    {
+        // Si no se asignó manualmente en el Inspector, busca el Animator en el personaje o sus padres
+        if (animator == null)
+        {
+            animator = GetComponentInParent<Animator>();
+        }
+        hasWrenchHash = Animator.StringToHash(hasWrenchBool);
+    }
+
     // --- MÉTODOS DE LA INTERFAZ IPICKABLE ---
 
     public void OnPickedUp()
     {
         this.enabled = true;
         isEquipped = true;
+
+        // Activamos la animación en el Animator
+        if (animator != null)
+        {
+            animator.SetBool(hasWrenchHash, true);
+        }
+
         UpdateHologram(); // Instancia el holograma del objeto seleccionado actualmente
     }
 
@@ -45,6 +67,12 @@ public class WrenchBuilder : MonoBehaviour, IPickable
         this.enabled = false;
         isEquipped = false;
         isTryingToBuild = false;
+
+        // Desactivamos la animación en el Animator
+        if (animator != null)
+        {
+            animator.SetBool(hasWrenchHash, false);
+        }
 
         // Destruimos el holograma al soltar la herramienta para liberar memoria
         if (currentHologram != null)
@@ -157,7 +185,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable
             if (turret != null)
             {
                 Destroy(turret.gameObject);
-                // Opcional: Aquí puedes instanciar partículas de explosión o devolver recursos
             }
         }
     }
@@ -166,28 +193,25 @@ public class WrenchBuilder : MonoBehaviour, IPickable
     {
         if (PauseControl.isPaused || !isEquipped || buildableItems.Count == 0) return;
 
-        // Leemos el movimiento de la rueda del ratón
         Vector2 scrollValue = context.ReadValue<Vector2>();
 
-        if (scrollValue.y > 0) // Hacia adelante
+        if (scrollValue.y > 0)
         {
             currentIndex++;
-            if (currentIndex >= buildableItems.Count) currentIndex = 0; // Vuelve al inicio
+            if (currentIndex >= buildableItems.Count) currentIndex = 0;
         }
-        else if (scrollValue.y < 0) // Hacia atrás
+        else if (scrollValue.y < 0)
         {
             currentIndex--;
-            if (currentIndex < 0) currentIndex = buildableItems.Count - 1; // Va al final
+            if (currentIndex < 0) currentIndex = buildableItems.Count - 1;
         }
 
-        // Si hubo movimiento real de la rueda, actualizamos el modelo visual
         if (scrollValue.y != 0)
         {
             UpdateHologram();
         }
     }
 
-    // Reemplaza el holograma actual por el del nuevo objeto seleccionado
     private void UpdateHologram()
     {
         if (currentHologram != null)

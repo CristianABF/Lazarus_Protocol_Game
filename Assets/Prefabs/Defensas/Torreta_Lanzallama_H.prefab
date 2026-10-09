@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7561826539214048024, guid: bc2887aa717d2e34aa7273eb44804815, type: 3}
       propertyPath: m_Name
-      value: Torreta_Lanzallama Variant
+      value: Torreta_Lanzallama_H
       objectReference: {fileID: 0}
     - target: {fileID: 7853737698576687903, guid: bc2887aa717d2e34aa7273eb44804815, type: 3}
       propertyPath: flameParticles
@@ -68,7 +68,8 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 1b2b0e14132808049b590c9ca493c28a, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7853737698576687903, guid: bc2887aa717d2e34aa7273eb44804815, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2325598341417765293, guid: bc2887aa717d2e34aa7273eb44804815, type: 3}
     m_AddedGameObjects: []

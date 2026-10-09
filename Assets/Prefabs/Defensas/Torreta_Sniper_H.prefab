@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.2199247
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2937588
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.979202
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1455070355802380335, guid: 67f94914c701862458127861f95aaed1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -62,9 +62,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1b2b0e14132808049b590c9ca493c28a, type: 2}
     - target: {fileID: 8745258998676758315, guid: 67f94914c701862458127861f95aaed1, type: 3}
       propertyPath: m_Name
-      value: Torreta_Sniper Variant
+      value: Torreta_Sniper_H
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1348702887188121755, guid: 67f94914c701862458127861f95aaed1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

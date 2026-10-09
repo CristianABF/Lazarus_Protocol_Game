@@ -1,10 +1,15 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshObstacle))]
 public class BarricadeObstacle : MonoBehaviour
 {
+    [SerializeField] private float lifetime = 10f; // Tiempo en segundos antes de destruirse
     private NavMeshObstacle navObstacle;
+
+    // Evento para notificar la destrucción
+    public event Action<BarricadeObstacle> OnDestroyed;
 
     private void Awake()
     {
@@ -13,16 +18,21 @@ public class BarricadeObstacle : MonoBehaviour
 
     public void OnPlaced()
     {
-        // Activar el carving para recortar el NavMesh y forzar a los enemigos a recalcular ruta
         navObstacle.enabled = true;
-
-        // Opcional: Notificar a los agentes cercanos para que recalculen su ruta de inmediato
         RecalculateNearbyEnemies();
+
+        // Destruye el GameObject automáticamente al pasar el tiempo de vida
+        Destroy(gameObject, lifetime);
+    }
+
+    private void OnDestroy()
+    {
+        // Notifica a quien esté escuchando que este objeto se eliminó
+        OnDestroyed?.Invoke(this);
     }
 
     private void RecalculateNearbyEnemies()
     {
-        // Busca enemigos en un área cercana y actualiza su destino
         Collider[] hits = Physics.OverlapSphere(transform.position, 15f);
         foreach (var hit in hits)
         {
@@ -30,7 +40,7 @@ public class BarricadeObstacle : MonoBehaviour
             {
                 if (agent.hasPath)
                 {
-                    agent.SetDestination(agent.destination); // Setea de nuevo el destino para forzar la reevaluación
+                    agent.SetDestination(agent.destination);
                 }
             }
         }

@@ -188,16 +188,34 @@ public class WrenchBuilder : MonoBehaviour, IPickable
     {
         BuildableItem currentItem = buildableItems[currentIndex];
 
-        // Verificamos si aún se pueden construir más unidades
         if (currentItem.currentAmount < currentItem.maxAmount && currentItem.realPrefab != null)
         {
-            Instantiate(currentItem.realPrefab, currentBuildPosition, currentBuildRotation);
+            GameObject newObj = Instantiate(currentItem.realPrefab, currentBuildPosition, currentBuildRotation);
 
-            // Modificamos el struct en la lista incrementando la cuenta actual
+            // Aumentamos el contador
             currentItem.currentAmount++;
             buildableItems[currentIndex] = currentItem;
 
-            // Ocultamos el holograma si se alcanzó el límite máximo tras instanciar
+            // Si el objeto tiene el componente BarricadeObstacle, nos suscribimos a su evento
+            if (newObj.TryGetComponent<BarricadeObstacle>(out BarricadeObstacle barricade))
+            {
+                int itemIndex = currentIndex; // Capturamos el índice para la lambda/callback
+
+                barricade.OnDestroyed += (b) =>
+                {
+                    // Al destruirse, reducimos el contador si es mayor a 0
+                    BuildableItem item = buildableItems[itemIndex];
+                    if (item.currentAmount > 0)
+                    {
+                        item.currentAmount--;
+                        buildableItems[itemIndex] = item;
+                    }
+                };
+
+                // Notificamos a la barricada que fue colocada para que inicie el timer
+                barricade.OnPlaced();
+            }
+
             if (currentItem.currentAmount >= currentItem.maxAmount && currentHologram != null)
             {
                 currentHologram.SetActive(false);

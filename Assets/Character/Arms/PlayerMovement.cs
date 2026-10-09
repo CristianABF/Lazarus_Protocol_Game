@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
 
     // Hash de animación optimizado
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int ReloadHash = Animator.StringToHash("Reload");
+    private static readonly int HasWeaponHash = Animator.StringToHash("HasWeapon");
 
     private void Awake()
     {
@@ -47,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         InputController.Input.Player.Jump.performed += OnJump;
         InputController.Input.Player.Sprint.performed += OnSprintStart;
         InputController.Input.Player.Sprint.canceled += OnSprintCanceled;
+        InputController.Input.Player.Reload.performed += OnReload;
     }
 
     private void OnDisable()
@@ -56,12 +59,24 @@ public class PlayerMovement : MonoBehaviour
             InputController.Input.Player.Jump.performed -= OnJump;
             InputController.Input.Player.Sprint.performed -= OnSprintStart;
             InputController.Input.Player.Sprint.canceled -= OnSprintCanceled;
+            InputController.Input.Player.Reload.performed -= OnReload;
         }
     }
 
     private void OnSprintStart(InputAction.CallbackContext context) => isSprinting = true;
     private void OnSprintCanceled(InputAction.CallbackContext context) => isSprinting = false;
 
+    private void OnReload(InputAction.CallbackContext context)
+    {
+        if (PauseControl.isPaused) return;
+
+        // Dispara el trigger de recarga en el Animator (si existe)
+        if (armsAnimator != null) armsAnimator.SetTrigger(ReloadHash);
+
+        // Ejecuta la recarga en el arma que el jugador tenga equipada
+        Gun currentGun = GetComponentInChildren<Gun>();
+        if (currentGun != null) currentGun.Reload();
+    }
     private void Update()
     {
         ReadInputs();
@@ -136,5 +151,9 @@ public class PlayerMovement : MonoBehaviour
 
         // Enviar parámetro suavizado al Animator
         armsAnimator.SetFloat(SpeedHash, targetSpeed, 0.1f, Time.deltaTime);
+
+        // Detectar si el jugador tiene un arma en la mano
+        Gun currentGun = GetComponentInChildren<Gun>();
+        armsAnimator.SetBool(HasWeaponHash, currentGun != null);
     }
 }

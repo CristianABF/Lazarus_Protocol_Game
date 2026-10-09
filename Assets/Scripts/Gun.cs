@@ -15,33 +15,36 @@ public class Gun : MonoBehaviour, IPickable
     [SerializeField] private bool isAutomatic;
     [SerializeField] private float range = 100f;
 
+    [Header("Proyectil")]
+    [SerializeField] private GameObject bulletPrefab; // Prefab de la bala que tiene el script Bullet.cs
+
     [SerializeField] private Transform cameraRoot;
     public Camera fpsCam;
     [SerializeField] private Transform firePoint;
     [SerializeField] private Animator playerAnimator;
-
-    [SerializeField] private float laserDuration = 0.05f;
 
     private float attackTime;
     private float recoilSpeed = 0f;
     private bool isFiring;
     private AudioSource gunSound;
     private Ammo ammo;
-    private LineRenderer laserLine;
 
     private void Awake()
     {
         gunSound = GetComponent<AudioSource>();
         ammo = GetComponent<Ammo>();
-        laserLine = GetComponent<LineRenderer>();
-        laserLine.enabled = false;
     }
 
-    // metodos de la interfaz
+    // Métodos de la interfaz IPickable
     public void OnPickedUp()
     {
         this.enabled = true;
         if (ammo != null) ammo.enabled = true;
+
+        if (fpsCam == null)
+        {
+            fpsCam = Camera.main;
+        }
     }
 
     public void OnDropped()
@@ -93,55 +96,49 @@ public class Gun : MonoBehaviour, IPickable
 
         if (fpsCam == null)
         {
-            Debug.LogError("¡Asigna la fpsCam en el Inspector!");
+            fpsCam = Camera.main;
+            if (fpsCam == null)
+            {
+                Debug.LogError("¡No se encontró 'fpsCam' ni 'Camera.main'!");
+                return;
+            }
+        }
+
+        if (bulletPrefab == null)
+        {
+            Debug.LogError("¡Asigna el bulletPrefab en el Inspector de Gun!");
             return;
         }
-        // inicia el destello visual
-        StartCoroutine(ShootLaser());
-        Vector3 rayOrigin = fpsCam.transform.position;
-        Vector3 rayDirection = fpsCam.transform.forward;
 
-        // punto de inicio del rayo
-        laserLine.SetPosition(0, firePoint != null ? firePoint.position : transform.position);
+        // 1. Calcular el centro exacto de la pantalla de la cámara
+        Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Vector3 targetPoint;
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, range))
+        // Usamos QueryTriggerInteraction.Ignore para ignorar triggers y evitar colisionar con el jugador
+        if (Physics.Raycast(ray, out RaycastHit hit, range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
-            // si impacta, el final del rayo es el punto de impacto exacto
-            laserLine.SetPosition(1, hit.point);
-
-            if (hit.transform.CompareTag("Enemy"))
-            {
-                Component damageable = hit.transform.GetComponent(typeof(IDamageable));
-                if (damageable) GameFunctions.Attack(damageable, damage);
-
-                ParticleSystem ps = hit.transform.GetComponentInChildren<ParticleSystem>();
-                if (ps != null) ps.Play();
-
-                EnemyAI enemy = hit.transform.GetComponent<EnemyAI>();
-                if (enemy != null) enemy.OnDamageTaken();
-            }
+            targetPoint = hit.point;
         }
         else
         {
-            // si no impacta nada, el rayo se dibuja hasta el límite del rango
-            laserLine.SetPosition(1, rayOrigin + (rayDirection * range));
+            targetPoint = ray.GetPoint(range);
         }
-    }
 
-    private IEnumerator ShootLaser()
-    {
-        laserLine.enabled = true;
-        float timer = 0f;
+        // 2. Punto de origen de la bala
+        Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
 
-        while (timer < laserDuration)
+        // 3. Dirección real del disparo hacia el objetivo
+        Vector3 direction = (targetPoint - spawnPosition).normalized;
+        Quaternion bulletRotation = Quaternion.LookRotation(direction);
+
+        // 4. Instanciar la bala y configurar daño
+        GameObject bulletObj = Instantiate(bulletPrefab, spawnPosition, bulletRotation);
+        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
+
+        if (bulletScript != null)
         {
-            // mantiene el punto 0 pegado al cañon del arma en cada frame
-            laserLine.SetPosition(0, firePoint != null ? firePoint.position : transform.position);
-
-            timer += Time.deltaTime;
-            yield return null; // espera al siguiente frame antes de repetir
+            bulletScript.Setup(damage);
         }
-        laserLine.enabled = false;
     }
 
     private void Shoot(InputAction.CallbackContext context)
@@ -184,7 +181,6 @@ public class Gun : MonoBehaviour, IPickable
 
     public void Animation_AttachMagazine()
     {
-        // Regresa el cargador al arma y oculta el de la mano
         if (gunMagazine != null) gunMagazine.SetActive(true);
         if (handMagazine != null) handMagazine.SetActive(false);
     }

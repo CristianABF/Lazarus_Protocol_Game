@@ -10,6 +10,9 @@ public class Ammo : MonoBehaviour
     [SerializeField] private int reloadAmount = 10;
     [SerializeField] private int clips = 5;
 
+    // NUEVO
+    [SerializeField] private int maxClips = 5;
+
     private int maxAmmo;
 
     private void Awake()
@@ -37,6 +40,12 @@ public class Ammo : MonoBehaviour
         return maxAmmo;
     }
 
+    // NUEVO: Permite que agentes externos consulten el límite sin poder modificarlo
+    public int GetMaxClips()
+    {
+        return maxClips;
+    }
+
     public void ExecuteReload()
     {
         if (clips > 0)
@@ -49,5 +58,17 @@ public class Ammo : MonoBehaviour
     private void SetAmmo(int reloadAmount)
     {
         ammoAmount = reloadAmount;
+    }
+
+    // NUEVO: El único método autorizado para alterar la reserva desde afuera
+    public void RecibirCargadores(int cantidadSuministrada)
+    {
+        clips += cantidadSuministrada;
+
+        // Tope matemático estricto
+        if (clips > maxClips)
+        {
+            clips = maxClips;
+        }
     }
 }

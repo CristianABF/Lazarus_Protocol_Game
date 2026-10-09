@@ -30,6 +30,19 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    public void ResetState() {isDead = false;}
-    public bool GetState() {return isDead;}
+    public void ResetState() { isDead = false; }
+    public bool GetState() { return isDead; }
+
+    public void RecibirCuracion(float cantidad)
+    {
+        if (isDead) return; // Evita curar al jugador en el frame que muere
+
+        playerHealth += cantidad;
+
+        // El tope estricto
+        if (playerHealth > maxHealth)
+        {
+            playerHealth = maxHealth;
+        }
+    }
 }

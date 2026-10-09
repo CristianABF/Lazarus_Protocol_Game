@@ -25,6 +25,28 @@ public class EstacionCuracion : MonoBehaviour
         ActualizarBarraVisual(1f); // 1f = 100% de capacidad al inicio
     }
 
+    private void OnEnable()
+    {
+        // Suscripción a la acción de interacción general del juego
+        InputController.Input.Player.Interact.performed += OnInteract;
+    }
+
+    private void OnDisable()
+    {
+        if (InputController.Input != null)
+        {
+            InputController.Input.Player.Interact.performed -= OnInteract;
+        }
+    }
+
+    private void OnInteract(InputAction.CallbackContext context)
+    {
+        if (jugadorEnZona && estaActiva && capacidadActual > 0)
+        {
+            IntentarCuracion();
+        }
+    }
+
     void Update()
     {
         if (!estaActiva)

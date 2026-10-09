@@ -79,9 +79,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "Pick",
                     "type": "Button",
                     "id": "5db243a8-d66f-4476-87ea-4133915780bb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "86496d9f-fd32-4093-ab50-7374fa066014",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -225,6 +234,17 @@
                     "name": "",
                     "id": "731b3236-6656-41aa-9366-48ec5088b042",
                     "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "41c812d1-c62b-4323-ab99-8e74182f1810",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

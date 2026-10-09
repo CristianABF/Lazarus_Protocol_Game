@@ -34,18 +34,18 @@ public class HoldObject : MonoBehaviour
     private void OnEnable()
     {
         // Se asume que en InputController la acción de interactuar/agarrar se llama "Interact"
-        InputController.Input.Player.Interact.performed += OnInteract;
+        InputController.Input.Player.Pick.performed += OnPick;
     }
 
     private void OnDisable()
     {
         if (InputController.Input != null)
         {
-            InputController.Input.Player.Interact.performed -= OnInteract;
+            InputController.Input.Player.Pick.performed -= OnPick;
         }
     }
 
-    private void OnInteract(InputAction.CallbackContext context)
+    private void OnPick(InputAction.CallbackContext context)
     {
         if (heldObj == null)
         {

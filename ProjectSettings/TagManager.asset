@@ -6,20 +6,21 @@ TagManager:
   tags:
   - Pickable
   - Enemy
+  - Core
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Head
+  - Player
   - Water
   - UI
   - Test
   - 
   - Enemy
   - 
-  - Destructible
+  - Destroyable
   - Buildable
-  - 
+  - Barricade
   - 
   - 
   - 

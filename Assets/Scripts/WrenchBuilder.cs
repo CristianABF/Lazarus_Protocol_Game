@@ -9,6 +9,9 @@ public struct BuildableItem
     public string itemName;
     public GameObject realPrefab;
     public GameObject hologramPrefab;
+    public int maxAmount; // Cantidad maxima permitida
+    [HideInInspector]
+    public int currentAmount; // Cantidad construida en tiempo de ejecucion
 }
 
 public class WrenchBuilder : MonoBehaviour, IPickable
@@ -35,6 +38,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable
     private Vector3 currentBuildPosition;
     private Quaternion currentBuildRotation;
     private bool isValidBuildPosition;
+    private float yRotationOffset = 0f;
 
     private void Awake()
     {
@@ -89,10 +93,9 @@ public class WrenchBuilder : MonoBehaviour, IPickable
         {
             InputController.Input.Player.Shoot.performed += TryBuild;
             InputController.Input.Player.Shoot.canceled += CancelBuild;
-
-            // Nuevos inputs
             InputController.Input.Player.ChangeObject.performed += ChangeSelection;
             InputController.Input.Player.Destroy.performed += TryDestroy;
+            InputController.Input.Player.Rotate.performed += RotateObject;
         }
     }
 
@@ -102,9 +105,9 @@ public class WrenchBuilder : MonoBehaviour, IPickable
         {
             InputController.Input.Player.Shoot.performed -= TryBuild;
             InputController.Input.Player.Shoot.canceled -= CancelBuild;
-
             InputController.Input.Player.ChangeObject.performed -= ChangeSelection;
             InputController.Input.Player.Destroy.performed -= TryDestroy;
+            InputController.Input.Player.Rotate.performed -= RotateObject;
         }
     }
 
@@ -127,6 +130,15 @@ public class WrenchBuilder : MonoBehaviour, IPickable
     {
         if (currentHologram == null) return;
 
+        // Si ya alcanzamos el límite de construcción del objeto seleccionado, no mostramos el holograma
+        BuildableItem currentItem = buildableItems[currentIndex];
+        if (currentItem.currentAmount >= currentItem.maxAmount)
+        {
+            isValidBuildPosition = false;
+            currentHologram.SetActive(false);
+            return;
+        }
+
         Vector3 rayOrigin = fpsCam.transform.position;
         Vector3 rayDirection = fpsCam.transform.forward;
 
@@ -135,7 +147,10 @@ public class WrenchBuilder : MonoBehaviour, IPickable
             isValidBuildPosition = true;
 
             currentBuildPosition = hit.point;
-            currentBuildRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+            // Calculamos la rotacion alineada a la superficie + la rotacion offset en x
+            Quaternion surfaceRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            currentBuildRotation = surfaceRotation * Quaternion.Euler(0f, yRotationOffset, 0f);
 
             currentHologram.SetActive(true);
             currentHologram.transform.position = currentBuildPosition;
@@ -150,6 +165,14 @@ public class WrenchBuilder : MonoBehaviour, IPickable
 
     // --- ACCIONES DE LOS CONTROLES ---
 
+    private void RotateObject(InputAction.CallbackContext context)
+    {
+        if (PauseControl.isPaused || !isEquipped) return;
+
+        // Sumamos 90 grados en el eje Y
+        yRotationOffset = (yRotationOffset + 90f) % 360f;
+    }
+
     private void TryBuild(InputAction.CallbackContext context)
     {
         if (PauseControl.isPaused || buildableItems.Count == 0) return;
@@ -163,29 +186,68 @@ public class WrenchBuilder : MonoBehaviour, IPickable
 
     private void BuildObject()
     {
-        GameObject prefabToBuild = buildableItems[currentIndex].realPrefab;
-        if (prefabToBuild != null)
+        BuildableItem currentItem = buildableItems[currentIndex];
+
+        // Verificamos si aún se pueden construir más unidades
+        if (currentItem.currentAmount < currentItem.maxAmount && currentItem.realPrefab != null)
         {
-            Instantiate(prefabToBuild, currentBuildPosition, currentBuildRotation);
+            Instantiate(currentItem.realPrefab, currentBuildPosition, currentBuildRotation);
+
+            // Modificamos el struct en la lista incrementando la cuenta actual
+            currentItem.currentAmount++;
+            buildableItems[currentIndex] = currentItem;
+
+            // Ocultamos el holograma si se alcanzó el límite máximo tras instanciar
+            if (currentItem.currentAmount >= currentItem.maxAmount && currentHologram != null)
+            {
+                currentHologram.SetActive(false);
+            }
         }
     }
 
     private void TryDestroy(InputAction.CallbackContext context)
     {
-        if (PauseControl.isPaused || !isEquipped) return;
+        if (PauseControl.isPaused || !isEquipped || fpsCam == null) return;
 
         Vector3 rayOrigin = fpsCam.transform.position;
         Vector3 rayDirection = fpsCam.transform.forward;
 
-        // Trazamos el rayo buscando solo objetos en la capa de torretas
-        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, buildRange, destroyableLayer))
+        // Ocultamos temporalmente el holograma si está activo para que no interfiera con el Raycast
+        bool hologramWasActive = currentHologram != null && currentHologram.activeSelf;
+        if (hologramWasActive)
         {
-            // Buscamos el script TurretBase en el objeto o sus padres para destruir la torreta completa
-            TurretBase turret = hit.collider.GetComponentInParent<TurretBase>();
-            if (turret != null)
+            currentHologram.SetActive(false);
+        }
+
+        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, buildRange, destroyableLayer, QueryTriggerInteraction.Ignore))
+        {
+            // Obtenemos la raíz del objeto impactado (por si el Raycast choca contra un Collider de un objeto hijo)
+            GameObject targetObject = hit.collider.transform.root.gameObject;
+
+            // Recorremos la lista de objetos construibles para encontrar la coincidencia de nombre y liberar la cuota
+            for (int i = 0; i < buildableItems.Count; i++)
             {
-                Destroy(turret.gameObject);
+                BuildableItem item = buildableItems[i];
+
+                if (item.realPrefab != null && targetObject.name.StartsWith(item.realPrefab.name))
+                {
+                    if (item.currentAmount > 0)
+                    {
+                        item.currentAmount--;
+                        buildableItems[i] = item;
+                    }
+                    break;
+                }
             }
+
+            // Destruimos el objeto raíz (Barricada, Torreta, etc.)
+            Destroy(targetObject);
+        }
+
+        // Reactivamos el holograma si estaba visible previamente
+        if (hologramWasActive && currentHologram != null)
+        {
+            currentHologram.SetActive(true);
         }
     }
 
@@ -208,6 +270,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable
 
         if (scrollValue.y != 0)
         {
+            yRotationOffset = 0f; // Resetea la rotacion al cambiar el objeto
             UpdateHologram();
         }
     }

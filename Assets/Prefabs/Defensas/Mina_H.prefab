@@ -229,7 +229,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3865951271768331518}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mina_H
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -135,7 +135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1176628918429170391}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barricada_H
   m_TagString: Untagged
   m_Icon: {fileID: 0}

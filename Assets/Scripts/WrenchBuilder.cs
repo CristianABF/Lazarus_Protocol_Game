@@ -230,7 +230,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable
         Vector3 rayOrigin = fpsCam.transform.position;
         Vector3 rayDirection = fpsCam.transform.forward;
 
-        // Ocultamos temporalmente el holograma si está activo para que no interfiera con el Raycast
         bool hologramWasActive = currentHologram != null && currentHologram.activeSelf;
         if (hologramWasActive)
         {
@@ -239,30 +238,10 @@ public class WrenchBuilder : MonoBehaviour, IPickable
 
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, buildRange, destroyableLayer, QueryTriggerInteraction.Ignore))
         {
-            // Obtenemos la raíz del objeto impactado (por si el Raycast choca contra un Collider de un objeto hijo)
             GameObject targetObject = hit.collider.transform.root.gameObject;
-
-            // Recorremos la lista de objetos construibles para encontrar la coincidencia de nombre y liberar la cuota
-            for (int i = 0; i < buildableItems.Count; i++)
-            {
-                BuildableItem item = buildableItems[i];
-
-                if (item.realPrefab != null && targetObject.name.StartsWith(item.realPrefab.name))
-                {
-                    if (item.currentAmount > 0)
-                    {
-                        item.currentAmount--;
-                        buildableItems[i] = item;
-                    }
-                    break;
-                }
-            }
-
-            // Destruimos el objeto raíz (Barricada, Torreta, etc.)
             Destroy(targetObject);
         }
 
-        // Reactivamos el holograma si estaba visible previamente
         if (hologramWasActive && currentHologram != null)
         {
             currentHologram.SetActive(true);

@@ -55,10 +55,18 @@ public class EnemyAI : MonoBehaviour
         if (isProvoked)
         {
             EngageTarget();
+
+            // --- NUEVO: Límite de persecución ---
+            // Si está persiguiendo al jugador y este se aleja demasiado (ej. el doble del chaseRange)
+            if (currentTarget == playerTarget && distanceToTarget > chaseRange * 15f)
+            {
+                isProvoked = false;
+                currentTarget = coreTarget; // Vuelve a enfocar el Núcleo
+                Debug.Log("El enemigo ha perdido interés en Aris y regresa al núcleo.");
+            }
         }
         else if (distanceToTarget <= chaseRange)
         {
-            // Se provoca automáticamente si está cerca de su objetivo actual (el núcleo)
             isProvoked = true;
         }
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8023768693715256337}
   - component: {fileID: 6319275828947934609}
   - component: {fileID: 1223824091980089157}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FondoNegro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 2601435399331793821}
   - component: {fileID: 8367650751071810961}
   - component: {fileID: 5474339158509578292}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 2343378625629198843}
   - component: {fileID: 3429828934278133011}
   - component: {fileID: 7952720531601449409}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FondoLuz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,6 +404,10 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: d692bfcf8697ea349b2c7d767fb8e724, type: 3}
       propertyPath: m_Name
       value: MinaExplosiva
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: d692bfcf8697ea349b2c7d767fb8e724, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

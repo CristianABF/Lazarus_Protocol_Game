@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3190581488725052880}
   - component: {fileID: 6463636635279250498}
   - component: {fileID: 3895684352278401304}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Soporte
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 707872934542344095}
   - component: {fileID: 5876275616748283055}
   - component: {fileID: 4443550890057422672}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base_Inmovil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 193353967131245751}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4090321772810004836}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretHead_Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 5294533053468458788}
   - component: {fileID: 5795349966145834861}
   - component: {fileID: 6296286732552931003}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1455070355802380335}
   - component: {fileID: 1348702887188121755}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Torreta_Sniper
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7746618677839653297}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 4240474983383295192}
   - component: {fileID: 5052314298492246391}
   - component: {fileID: 8964278793264231521}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base_Inmovil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 5850914117650395285}
   - component: {fileID: 7562471967571676285}
   - component: {fileID: 1727650281747880117}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FireParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4963,7 +4963,7 @@ GameObject:
   - component: {fileID: 3044305266876177616}
   - component: {fileID: 172228092326884674}
   - component: {fileID: 4704396512721927313}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5049,7 +5049,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6887819179997957122}
   - component: {fileID: 7853737698576687903}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Torreta_Lanzallama
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5106,7 +5106,7 @@ GameObject:
   - component: {fileID: 5638822536663555189}
   - component: {fileID: 4178510746250129452}
   - component: {fileID: 6204348160299373701}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Soporte
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5190,7 +5190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4053510223061887623}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretHead_Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

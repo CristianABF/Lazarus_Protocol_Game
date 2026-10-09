@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7748860198084548533}
   - component: {fileID: 2314460436294617090}
   - component: {fileID: 4069630545242996846}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FondoLuz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 2863294728608192843}
   - component: {fileID: 4615388280974160537}
   - component: {fileID: 8049155063444906398}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 6126060090548143259}
   - component: {fileID: 8712263540043173827}
   - component: {fileID: 4698925541225336387}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FondoNegro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,6 +404,10 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: d692bfcf8697ea349b2c7d767fb8e724, type: 3}
       propertyPath: m_Name
       value: MinaElectrica
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: d692bfcf8697ea349b2c7d767fb8e724, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

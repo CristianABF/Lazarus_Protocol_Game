@@ -25,15 +25,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SwapWeapon",
-                    "type": "Value",
-                    "id": "52664b1a-2cf9-4d99-b64f-ad10fbbc98fe",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Move",
                     "type": "Value",
                     "id": "c7cd5f93-c2ee-45a0-ab28-c15ea6843dc5",
@@ -79,9 +70,27 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ChangeObject",
+                    "type": "Value",
+                    "id": "4d50b9a2-f85f-41c2-ae1c-665d53fde28d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Destroy",
+                    "type": "Button",
+                    "id": "66af0080-cd37-4a57-bfd2-2112efe70474",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Pick",
                     "type": "Button",
-                    "id": "5db243a8-d66f-4476-87ea-4133915780bb",
+                    "id": "41ca105e-1b3d-4edf-b027-404ab2c225d0",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -90,7 +99,16 @@
                 {
                     "name": "Interact",
                     "type": "Button",
-                    "id": "86496d9f-fd32-4093-ab50-7374fa066014",
+                    "id": "54ca8ef3-2926-4473-a8dc-86a52fe81fe3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "11f3cb01-577e-4619-a0cc-9574d05c1e0c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -117,17 +135,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reload",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6473d3c9-f9df-49ac-9377-882f8cd713fb",
-                    "path": "<Mouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SwapWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -232,7 +239,29 @@
                 },
                 {
                     "name": "",
-                    "id": "731b3236-6656-41aa-9366-48ec5088b042",
+                    "id": "05f5e4fb-c3ee-4e18-a095-d0ac14b8be92",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95ab15d8-475d-4813-bcb2-c111332f7d96",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Destroy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09bc5cbe-81f3-4f69-afcd-62aafe8fe2bd",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
@@ -243,12 +272,23 @@
                 },
                 {
                     "name": "",
-                    "id": "41c812d1-c62b-4323-ab99-8e74182f1810",
+                    "id": "4bc4ae6e-2e41-4377-82f7-2bc453e90a5c",
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20614c6f-0fda-47b8-aaed-4b7d42960b2a",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

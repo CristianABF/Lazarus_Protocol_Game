@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3218974366213683928}
   - component: {fileID: 7517054815624909832}
   - component: {fileID: 6221488104186727839}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Soporte
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,8 @@ GameObject:
   - component: {fileID: 4610991513318517859}
   - component: {fileID: 6195845996839544535}
   - component: {fileID: 4596297643813004340}
-  m_Layer: 0
+  - component: {fileID: 7170064692723475324}
+  m_Layer: 10
   m_Name: Base_Inmovil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,6 +174,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7170064692723475324
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373975512846020014}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3055962597390982855, guid: 6ec2461ff818add488a8ff1389a6d850, type: 3}
 --- !u!1 &5279173051299584835
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,7 +205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8315785049170403233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6993419042693247335}
   - component: {fileID: 485725488547771449}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Torreta_Metralladora
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +292,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6124237321747965450}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretHead_Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +327,7 @@ GameObject:
   - component: {fileID: 7961418003883823821}
   - component: {fileID: 2970880424205687804}
   - component: {fileID: 7574249249630271259}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}

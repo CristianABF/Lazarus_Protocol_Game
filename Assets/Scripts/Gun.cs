@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour, IPickable
     [SerializeField] private float fireRate = 0.1f;
     [SerializeField] private bool isAutomatic;
     [SerializeField] private float range = 100f;
+    [SerializeField] private LayerMask layerMaskDisparo; // Capas con las que SI puede colisionar
 
     [Header("Proyectil")]
     [SerializeField] private GameObject bulletPrefab; // Prefab de la bala que tiene el script Bullet.cs
@@ -115,7 +116,7 @@ public class Gun : MonoBehaviour, IPickable
         Vector3 targetPoint;
 
         // Usamos QueryTriggerInteraction.Ignore para ignorar triggers y evitar colisionar con el jugador
-        if (Physics.Raycast(ray, out RaycastHit hit, range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out RaycastHit hit, range, layerMaskDisparo, QueryTriggerInteraction.Ignore))
         {
             targetPoint = hit.point;
         }

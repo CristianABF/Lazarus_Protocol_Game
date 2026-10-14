@@ -137,7 +137,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8063575839072519092}
-  - component: {fileID: 4654475128107671513}
   m_Layer: 0
   m_Name: Managers 1
   m_TagString: Untagged
@@ -163,63 +162,11 @@ Transform:
   - {fileID: 4096014820141816987}
   - {fileID: 1248097302395776104}
   - {fileID: 7342657759563061699}
+  - {fileID: 236409562639062069}
+  - {fileID: 8964635948174682264}
+  - {fileID: 1046264832207687666}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4654475128107671513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2257292951034060475}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c309a5c97c24f1448b8517cdd549871c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
-  phaseText: {fileID: 0}
-  enemyPrefabs:
-  - {fileID: 3053914240751053715, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-  - {fileID: 8190884475731725768, guid: 271fef46e01ddd042aa6b64d7984ba8a, type: 3}
-  - {fileID: 6996017544752697759, guid: 284563f3e7822864da1caf299b967a41, type: 3}
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  enemiesPerWave: 0
-  gamePhases:
-  - phaseName: Preparacion
-    phaseDuration: 3
-    enemiesToSpawn: 0
-  - phaseName: Oleada 1
-    phaseDuration: 90
-    enemiesToSpawn: 10
-  - phaseName: 'Descanso '
-    phaseDuration: 45
-    enemiesToSpawn: 0
-  - phaseName: Oleada 2
-    phaseDuration: 150
-    enemiesToSpawn: 20
-  - phaseName: Descanso
-    phaseDuration: 30
-    enemiesToSpawn: 0
-  - phaseName: Oleada 3
-    phaseDuration: 180
-    enemiesToSpawn: 35
-  - phaseName: Descanso
-    phaseDuration: 20
-    enemiesToSpawn: 0
-  - phaseName: Oleada 4
-    phaseDuration: 225
-    enemiesToSpawn: 45
-  - phaseName: Descanso
-    phaseDuration: 15
-    enemiesToSpawn: 0
-  - phaseName: Oleada 5
-    phaseDuration: 385
-    enemiesToSpawn: 60
 --- !u!1 &2420519451434063032
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,6 +242,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b83aba86de7c0c44a846114f3da0b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2640367867686041775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8964635948174682264}
+  m_Layer: 0
+  m_Name: PlayerRespawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8964635948174682264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2640367867686041775}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.35476446, y: -0.6764513, z: -0.9412978}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8063575839072519092}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5926555033126145626
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +337,93 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 6a68382512f99ed49b7ce54c62b437e0, type: 2}
   m_BuildHeightMesh: 0
+--- !u!1 &7014259711328018258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236409562639062069}
+  - component: {fileID: 9101959141624813514}
+  m_Layer: 0
+  m_Name: WaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &236409562639062069
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014259711328018258}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8063575839072519092}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9101959141624813514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014259711328018258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c309a5c97c24f1448b8517cdd549871c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 0}
+  phaseText: {fileID: 0}
+  enemyPrefabs:
+  - {fileID: 3053914240751053715, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
+  - {fileID: 8190884475731725768, guid: 271fef46e01ddd042aa6b64d7984ba8a, type: 3}
+  - {fileID: 6996017544752697759, guid: 284563f3e7822864da1caf299b967a41, type: 3}
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  enemiesPerWave: 0
+  gamePhases:
+  - phaseName: Preparacion
+    phaseDuration: 30
+    enemiesToSpawn: 0
+  - phaseName: Oleada 1
+    phaseDuration: 90
+    enemiesToSpawn: 10
+  - phaseName: 'Descanso '
+    phaseDuration: 45
+    enemiesToSpawn: 0
+  - phaseName: Oleada 2
+    phaseDuration: 150
+    enemiesToSpawn: 20
+  - phaseName: Descanso
+    phaseDuration: 30
+    enemiesToSpawn: 0
+  - phaseName: Oleada 3
+    phaseDuration: 180
+    enemiesToSpawn: 35
+  - phaseName: Descanso
+    phaseDuration: 20
+    enemiesToSpawn: 0
+  - phaseName: Oleada 4
+    phaseDuration: 225
+    enemiesToSpawn: 45
+  - phaseName: Descanso
+    phaseDuration: 15
+    enemiesToSpawn: 0
+  - phaseName: Oleada 5
+    phaseDuration: 385
+    enemiesToSpawn: 60
 --- !u!1 &7172618016582458290
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,3 +553,52 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &7512458492378144213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1046264832207687666}
+  - component: {fileID: 3780104322662608372}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1046264832207687666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7512458492378144213}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 8.981866, y: -1.8864514, z: 103.379875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8063575839072519092}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3780104322662608372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7512458492378144213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 10fc4df2da32a41aaa32d77bc913491c, type: 2}

@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
     private static readonly int ReloadHash = Animator.StringToHash("Reload");
     private static readonly int HasWeaponHash = Animator.StringToHash("HasWeapon");
+    private static readonly int HasWrenchHash = Animator.StringToHash("HasWrench");
 
     private void Awake()
     {
@@ -155,5 +156,9 @@ public class PlayerMovement : MonoBehaviour
         // Detectar si el jugador tiene un arma en la mano
         Gun currentGun = GetComponentInChildren<Gun>();
         armsAnimator.SetBool(HasWeaponHash, currentGun != null);
+
+        // Detectar si el jugador tiene la llave inglesa activa
+        WrenchBuilder currentWrench = GetComponentInChildren<WrenchBuilder>();
+        armsAnimator.SetBool(HasWrenchHash, currentWrench != null && currentWrench.gameObject.activeInHierarchy);
     }
 }

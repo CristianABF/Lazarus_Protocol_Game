@@ -378,6 +378,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 726098742909188338, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 752409353768986293, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2740020881256920718, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
       propertyPath: m_Name
       value: ZonaA
@@ -434,6 +442,38 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1327567165}
+    - target: {fileID: 7870320884903251387, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7870320884903251387, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7870320884903251387, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 233.9183
+      objectReference: {fileID: 0}
+    - target: {fileID: 7870320884903251387, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -99.3075
+      objectReference: {fileID: 0}
+    - target: {fileID: 8433334960001111194, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8433334960001111194, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8433334960001111194, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 233.9183
+      objectReference: {fileID: 0}
+    - target: {fileID: 8433334960001111194, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -28.1025
+      objectReference: {fileID: 0}
     - target: {fileID: 8652391121307198003, guid: 4c52c56e03ea9db4cb601ede6924b8e3, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

@@ -8,37 +8,62 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private float chaseRange = 5f;
-    [SerializeField] private float distance = 2.5f;
+    [SerializeField] private float attackDistance = 2.5f; // Renombrado para mayor claridad
+    [SerializeField] private float damage = 10f;
+
+    [Header("Attack Speed")]
+    [SerializeField] private float attackRate = 2f;
+    private float lastAttack = 0f;
+
+    [Header("Reload")]
+    [SerializeField] private float reloadSpeed = 3.3f;
+    [SerializeField] private int ammoAmount = 5;
+    [SerializeField] private int reloadAmount = 5;
 
     private NavMeshAgent navMeshAgent;
     private float distanceToTarget = Mathf.Infinity;
     private bool isProvoked = false;
-    private Transform target;
-    [SerializeField] private float damage = 10f;
-
-    [Header("Attack Speed")]
-    [SerializeField]private float attackRate = 2f;
-    private float lastAttack = 0f;
-
-    [Header("Reload")]
-    [SerializeField]private float reloadSpeed = 3.3f;
-    [SerializeField]private int ammoAmount = 5;
-    [SerializeField]private int reloadAmount = 5;
     private bool isReloading = false;
+
+    // Fragmentación del objetivo
+    private Transform playerTarget;
+    private Transform coreTarget;
+    private Transform currentTarget;
 
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        playerTarget = GameObject.FindGameObjectWithTag("Player").transform;
+
+        // Requiere que le asignes el tag "Core" al objeto de tu núcleo en el Inspector
+        GameObject coreObj = GameObject.FindGameObjectWithTag("Core");
+        if (coreObj != null)
+        {
+            coreTarget = coreObj.transform;
+        }
+
+        // El objetivo primario al instanciarse es el núcleo
+        currentTarget = coreTarget;
     }
 
     private void Update()
     {
-        distanceToTarget = Vector3.Distance(target.position, transform.position);
+        if (currentTarget == null) return;
+
+        distanceToTarget = Vector3.Distance(currentTarget.position, transform.position);
 
         if (isProvoked)
         {
             EngageTarget();
+
+            // --- NUEVO: Límite de persecución ---
+            // Si está persiguiendo al jugador y este se aleja demasiado (ej. el doble del chaseRange)
+            if (currentTarget == playerTarget && distanceToTarget > chaseRange * 15f)
+            {
+                isProvoked = false;
+                currentTarget = coreTarget; // Vuelve a enfocar el Núcleo
+                Debug.Log("El enemigo ha perdido interés en Aris y regresa al núcleo.");
+            }
         }
         else if (distanceToTarget <= chaseRange)
         {
@@ -48,6 +73,8 @@ public class EnemyAI : MonoBehaviour
 
     public void OnDamageTaken()
     {
+        // Transición de objetivo al recibir un disparo
+        currentTarget = playerTarget;
         isProvoked = true;
     }
 
@@ -57,7 +84,7 @@ public class EnemyAI : MonoBehaviour
 
         if (!isReloading)
         {
-            if (distanceToTarget > distance)
+            if (distanceToTarget > attackDistance)
             {
                 ChaseTarget();
             }
@@ -77,7 +104,7 @@ public class EnemyAI : MonoBehaviour
 
             if (ammoAmount > 0)
             {
-                target.GetComponent<PlayerBehaviour>().playerHealth -= damage;
+                AplicarDañoAlObjetivo();
                 GetComponentInChildren<Animator>().SetTrigger("shoot");
                 ammoAmount--;
             }
@@ -86,10 +113,21 @@ public class EnemyAI : MonoBehaviour
                 Wait();
                 Reload();
             }
-            else
-            {
-                ChaseTarget();
-            }
+        }
+    }
+
+    private void AplicarDañoAlObjetivo()
+    {
+        // Discriminación estructural para evitar NullReferenceException
+        if (currentTarget.CompareTag("Player"))
+        {
+            PlayerBehaviour playerHealth = currentTarget.GetComponent<PlayerBehaviour>();
+            if (playerHealth != null) playerHealth.playerHealth -= damage;
+        }
+        else if (currentTarget.CompareTag("Core"))
+        {
+            CoreBehaviour core = currentTarget.GetComponent<CoreBehaviour>();
+            if (core != null) core.RecibirDaño(damage);
         }
     }
 
@@ -125,15 +163,13 @@ public class EnemyAI : MonoBehaviour
     {
         GetComponentInChildren<Animator>().SetBool("isRunning", true);
         navMeshAgent.isStopped = false;
-        navMeshAgent.SetDestination(target.position);
+        navMeshAgent.SetDestination(currentTarget.position);
     }
 
     private void FaceTarget()
     {
-        Vector3 direction = (target.position - transform.position).normalized;
-
+        Vector3 direction = (currentTarget.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 }

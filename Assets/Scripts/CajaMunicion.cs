@@ -25,6 +25,25 @@ public class CajaMunicion : MonoBehaviour
         ActualizarBarraVisual(1f);
     }
 
+    private void OnEnable()
+    {
+        //Suscripcion a la accion de interaccion general del juego
+        InputController.Input.Player.Interact.performed += OnInteract;
+    }
+
+    private void OnDisable()
+    {
+        if (InputController.Input != null)
+        {
+            InputController.Input.Player.Interact.performed -= OnInteract;
+        }
+    }
+
+    private void OnInteract(InputAction.CallbackContext context)
+    {
+        // Solo responde si el jugador esta dentro del area, la caja esta activa y tiene suministros
+        if (jugadorEnZona && estaActiva && capacidadActual > 0) IntentarSuministro();
+    }
     void Update()
     {
         // 1. Enfriamiento y regeneración de la caja[cite: 3]

@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour, IPickable
     [SerializeField] private float fireRate = 0.1f;
     [SerializeField] private bool isAutomatic;
     [SerializeField] private float range = 100f;
+    [SerializeField] private LayerMask layerMaskDisparo; // Capas con las que SI puede colisionar
 
     [Header("Proyectil")]
     [SerializeField] private GameObject bulletPrefab; // Prefab de la bala que tiene el script Bullet.cs
@@ -40,6 +41,11 @@ public class Gun : MonoBehaviour, IPickable
     {
         this.enabled = true;
         if (ammo != null) ammo.enabled = true;
+
+        if (fpsCam == null)
+        {
+            fpsCam = Camera.main;
+        }
     }
 
     public void OnDropped()
@@ -91,8 +97,12 @@ public class Gun : MonoBehaviour, IPickable
 
         if (fpsCam == null)
         {
-            Debug.LogError("¡Asigna la fpsCam en el Inspector!");
-            return;
+            fpsCam = Camera.main;
+            if (fpsCam == null)
+            {
+                Debug.LogError("¡No se encontró 'fpsCam' ni 'Camera.main'!");
+                return;
+            }
         }
 
         if (bulletPrefab == null)
@@ -101,11 +111,12 @@ public class Gun : MonoBehaviour, IPickable
             return;
         }
 
-        // 1. Calcular hacia dónde apunta el centro de la pantalla
+        // 1. Calcular el centro exacto de la pantalla de la cámara
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         Vector3 targetPoint;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range))
+        // Usamos QueryTriggerInteraction.Ignore para ignorar triggers y evitar colisionar con el jugador
+        if (Physics.Raycast(ray, out RaycastHit hit, range, layerMaskDisparo, QueryTriggerInteraction.Ignore))
         {
             targetPoint = hit.point;
         }
@@ -114,12 +125,14 @@ public class Gun : MonoBehaviour, IPickable
             targetPoint = ray.GetPoint(range);
         }
 
-        // 2. Calcular la dirección desde el cañón (firePoint) hacia el objetivo
+        // 2. Punto de origen de la bala
         Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
+
+        // 3. Dirección real del disparo hacia el objetivo
         Vector3 direction = (targetPoint - spawnPosition).normalized;
         Quaternion bulletRotation = Quaternion.LookRotation(direction);
 
-        // 3. Instanciar la bala y pasarle el daño
+        // 4. Instanciar la bala y configurar daño
         GameObject bulletObj = Instantiate(bulletPrefab, spawnPosition, bulletRotation);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
 

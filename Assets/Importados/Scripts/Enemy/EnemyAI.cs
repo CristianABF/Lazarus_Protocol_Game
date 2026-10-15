@@ -118,11 +118,14 @@ public class EnemyAI : MonoBehaviour
 
     private void AplicarDañoAlObjetivo()
     {
-        // Discriminación estructural para evitar NullReferenceException
         if (currentTarget.CompareTag("Player"))
         {
-            PlayerBehaviour playerHealth = currentTarget.GetComponent<PlayerBehaviour>();
-            if (playerHealth != null) playerHealth.playerHealth -= damage;
+            PlayerBehaviour jugador = currentTarget.GetComponent<PlayerBehaviour>();
+            if (jugador != null)
+            {
+                // Reemplazamos la vulneración directa por el método encapsulado
+                jugador.RecibirDano(damage);
+            }
         }
         else if (currentTarget.CompareTag("Core"))
         {

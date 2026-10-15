@@ -644,7 +644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseRange: 100
-  distance: 2.5
+  attackDistance: 2.5
   damage: 10
   attackRate: 2
   reloadSpeed: 3.3
@@ -664,6 +664,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
+  chatarraPrefab: {fileID: 3235419021357931752, guid: dc9e7c46ee1c4354d8f17bed43f2c107, type: 3}
+  cantidadChatarra: 5
 --- !u!114 &1815957364227636138
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,6 +8,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public float maxHealth = 50f;
     private bool isDead = false;
 
+    [Header("Botín (Drop)")]
+    public GameObject chatarraPrefab;
+    public int cantidadChatarra;
+
     private void Awake()
     {
         health = maxHealth;
@@ -43,6 +47,17 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (ControladorPartida.Instancia != null)
         {
             ControladorPartida.Instancia.RegistrarEnemigoDerrotado();
+        }
+
+        // --- LÓGICA DE SOLTAR CHATARRA ---
+        if (chatarraPrefab != null && cantidadChatarra > 0)
+        {
+            for (int i = 0; i < cantidadChatarra; i++)
+            {
+                // Variación aleatoria para que las piezas no caigan apiladas exactamente en el mismo pixel
+                Vector3 variacionPosicion = new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, Random.Range(-0.5f, 0.5f));
+                Instantiate(chatarraPrefab, transform.position + variacionPosicion, Quaternion.identity);
+            }
         }
 
         // Se destruye el objeto (dejamos 0.1f para evitar errores de colisión en ese mismo frame)

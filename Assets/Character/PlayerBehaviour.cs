@@ -13,25 +13,48 @@ public class PlayerBehaviour : MonoBehaviour
         playerHealth = maxHealth;
     }
 
-    private void Update()
-    {
-        PlayerDead();
-    }
+//    private void Update()
+//    {
+//        PlayerDead();
+//    }
 
     private void PlayerDead()
     {
-        if (playerHealth <= 0f)
+        // Añadimos la comprobación !isDead para evitar que la función se llame 60 veces por segundo si la vida sigue en 0
+        if (playerHealth <= 0f && !isDead)
         {
             isDead = true;
-            Debug.Log("You have been killed!");
+            Debug.LogWarning("Aris ha caído en combate.");
 
-            playerHealth = 100f;
-            Debug.Log("Salud restaurada");
+            // Le avisamos al árbitro global que la oleada fracasó por muerte del jugador
+            if (ControladorPartida.Instancia != null)
+            {
+                ControladorPartida.Instancia.ProcesarDerrotaOleada();
+            }
         }
     }
 
     public void ResetState() { isDead = false; }
     public bool GetState() { return isDead; }
+
+    public void RecibirDano(float cantidad)
+    {
+        if (isDead) return;
+
+        playerHealth -= cantidad;
+
+        // 1. Notificamos inmediatamente al cerebro global para las estadísticas
+        if (ControladorPartida.Instancia != null)
+        {
+            ControladorPartida.Instancia.RegistrarDanoRecibido(cantidad);
+        }
+
+        // 2. Evaluamos la muerte en el milisegundo exacto del impacto, no en el Update
+        if (playerHealth <= 0f)
+        {
+            PlayerDead();
+        }
+    }
 
     public void RecibirCuracion(float cantidad)
     {

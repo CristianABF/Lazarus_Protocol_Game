@@ -24,6 +24,7 @@ public class EnemyAI : MonoBehaviour
     private float distanceToTarget = Mathf.Infinity;
     private bool isProvoked = false;
     private bool isReloading = false;
+    private bool isStunned = false;
 
     // Fragmentación del objetivo
     private Transform playerTarget;
@@ -48,6 +49,8 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
+        if (isStunned) return;
+
         if (currentTarget == null) return;
 
         distanceToTarget = Vector3.Distance(currentTarget.position, transform.position);
@@ -154,6 +157,22 @@ public class EnemyAI : MonoBehaviour
     public void TargetDetected()
     {
         isProvoked = true;
+    }
+
+    public void SetStunned(bool state)
+    {
+        isStunned = state;
+
+        if (navMeshAgent != null && navMeshAgent.enabled)
+        {
+            navMeshAgent.isStopped = state;
+        }
+
+        Animator anim = GetComponentInChildren<Animator>();
+        if (anim != null)
+        {
+            anim.SetBool("isRunning", false);
+        }
     }
 
     private void Wait()

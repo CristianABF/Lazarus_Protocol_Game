@@ -530,6 +530,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8741070487929858269}
     m_Modifications:
+    - target: {fileID: 1387885752358399450, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390445198458456726, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1511205146578807888, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2868216338370173421, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2868216338370173421, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: scalingMode
       value: 1
@@ -537,6 +553,14 @@ PrefabInstance:
     - target: {fileID: 2868216338370173421, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: moveWithTransform
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3386524234267907138, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4163864361182419710, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -578,9 +602,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4864526502115242929, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817796419928208027, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5911985726732275162, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6897396549639397530, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8464950693656172981, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: m_Name
       value: vfx_Explosion_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 8844155888068548186, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9007829032927410502, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

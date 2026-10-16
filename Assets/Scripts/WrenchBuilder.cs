@@ -196,25 +196,31 @@ public class WrenchBuilder : MonoBehaviour, IPickable
             currentItem.currentAmount++;
             buildableItems[currentIndex] = currentItem;
 
-            // Si el objeto tiene el componente BarricadeObstacle, nos suscribimos a su evento
+            // Si es una barricada, ejecutamos OnPlaced
             if (newObj.TryGetComponent<BarricadeObstacle>(out BarricadeObstacle barricade))
             {
-                int itemIndex = currentIndex; // Capturamos el índice para la lambda/callback
-
-                barricade.OnDestroyed += (b) =>
-                {
-                    // Al destruirse, reducimos el contador si es mayor a 0
-                    BuildableItem item = buildableItems[itemIndex];
-                    if (item.currentAmount > 0)
-                    {
-                        item.currentAmount--;
-                        buildableItems[itemIndex] = item;
-                    }
-                };
-
-                // Notificamos a la barricada que fue colocada para que inicie el timer
                 barricade.OnPlaced();
             }
+
+            // Nos aseguramos de que el objeto tenga el componente notificador
+            BuildableObject buildableObj = newObj.GetComponent<BuildableObject>();
+            if (buildableObj == null)
+            {
+                buildableObj = newObj.AddComponent<BuildableObject>();
+            }
+
+            int itemIndex = currentIndex; // Capturamos el índice actual
+
+            // Escuchamos cuando el objeto se destruya (por clic derecho, temporizador o explosión)
+            buildableObj.OnObjectDestroyed += (obj) =>
+            {
+                BuildableItem item = buildableItems[itemIndex];
+                if (item.currentAmount > 0)
+                {
+                    item.currentAmount--;
+                    buildableItems[itemIndex] = item;
+                }
+            };
 
             if (currentItem.currentAmount >= currentItem.maxAmount && currentHologram != null)
             {
@@ -239,6 +245,9 @@ public class WrenchBuilder : MonoBehaviour, IPickable
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, buildRange, destroyableLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject targetObject = hit.collider.transform.root.gameObject;
+
+            // Al destruir el GameObject, saltará automáticamente el evento OnObjectDestroyed 
+            // y restará 1 a la cuenta de buildableItems sin importar qué tipo de estructura sea.
             Destroy(targetObject);
         }
 

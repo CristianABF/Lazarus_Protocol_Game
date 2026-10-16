@@ -4,14 +4,23 @@ using UnityEngine.UI;
 public class PlayerHealthBar : MonoBehaviour
 {
     [SerializeField] private PlayerBehaviour player;
-    [SerializeField] private Image foreground;
+    [SerializeField] private Image healthImage;
 
-    // Update is called once per frame
+    [Header("Sprites de la barra (de 0% a 100%)")]
+    [SerializeField] private Sprite[] healthSprites;
+
     void Update()
     {
-        if (player != null && foreground != null)
+        if (player != null && healthImage != null && healthSprites.Length > 0 && player.maxHealth > 0)
         {
-            foreground.fillAmount = player.playerHealth / player.maxHealth;
+            // Calcula el porcentaje actual
+            float healthRatio = Mathf.Clamp01(player.playerHealth / player.maxHealth);
+
+            // Mapea el porcentaje al índice del array de sprites
+            int index = Mathf.RoundToInt(healthRatio * (healthSprites.Length - 1));
+
+            // Actualiza la imagen en pantalla
+            healthImage.sprite = healthSprites[index];
         }
     }
 }

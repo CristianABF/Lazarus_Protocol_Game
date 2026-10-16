@@ -378,6 +378,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 634526106926631922, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
+      propertyPath: healthSprites.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 696843947267824456, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
       propertyPath: m_Convex
       value: 1
@@ -470,6 +474,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8028944107567477667, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
+      propertyPath: btnVolverMenu
+      value: 
+      objectReference: {fileID: 1034929277}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4532379393879487632, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
@@ -798,6 +806,17 @@ PrefabInstance:
       addedObject: {fileID: 1978525210}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b12ec83914f4cd44395d75a9f3f1f895, type: 3}
+--- !u!114 &1034929277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6027571841970006830, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
+  m_PrefabInstance: {fileID: 659776721}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1082648556
 GameObject:
   m_ObjectHideFlags: 0

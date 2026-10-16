@@ -358,7 +358,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 2a394b5b7e385d043a4ad292e887f597, type: 2}
     - target: {fileID: 919132149155446097, guid: 6e553b6b200d44e4587f5746790e9af1, type: 3}
       propertyPath: m_Name
-      value: Skulk
+      value: Deprecated
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6e553b6b200d44e4587f5746790e9af1, type: 3}
       propertyPath: m_TagString
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseRange: 100
-  distance: 2
+  attackDistance: 2.5
   damage: 3
   attackRate: 1.5
   reloadSpeed: 3.3
@@ -488,6 +488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 25
   maxHealth: 25
+  chatarraPrefab: {fileID: 3235419021357931752, guid: dc9e7c46ee1c4354d8f17bed43f2c107, type: 3}
+  cantidadChatarra: 1
 --- !u!114 &5182595932530338464
 MonoBehaviour:
   m_ObjectHideFlags: 0

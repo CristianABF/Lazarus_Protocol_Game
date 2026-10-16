@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Obligatorio para recargar los niveles
+using TMPro; // Obligatorio para modificar textos de la UI
+using UnityEngine.SceneManagement;
 
 public class ControladorPartida : MonoBehaviour
 {
@@ -9,15 +10,47 @@ public class ControladorPartida : MonoBehaviour
     public float saludPermanenteNucleo = 100f;
     public float penalidadPorColapso = 15f;
 
+    [Header("Estadísticas de la Oleada Actual (En Vivo)")]
+    public int enemigosDerrotados = 0;
+    public float danoRecibidoTotal = 0f;
+    private float tiempoInicioOleada;
+
     [Header("Pantallas de Fin de Partida")]
     public GameObject pantallaProtocoloLazaro;
     public GameObject pantallaGameOver;
+    public TextMeshProUGUI textoEstadisticasGameOver; // NUEVO: El puente lógico hacia la UI
 
     private void Awake()
     {
-        if (Instancia == null) Instancia = this;
-        else Destroy(gameObject);
+        if (Instancia == null)
+        {
+            Instancia = this;
+            DontDestroyOnLoad(gameObject); // El escudo contra el borrado de escena
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
+
+    private void Start()
+    {
+        // Iniciamos el cronómetro en el instante en que carga el nivel
+        tiempoInicioOleada = Time.time;
+    }
+
+    // --- NUEVOS RECEPTORES DE DATOS ---
+    public void RegistrarEnemigoDerrotado()
+    {
+        enemigosDerrotados++;
+    }
+
+    public void RegistrarDanoRecibido(float cantidad)
+    {
+        danoRecibidoTotal += cantidad;
+    }
+
+    // ----------------------------------
 
     public void ProcesarDerrotaOleada()
     {
@@ -30,6 +63,7 @@ public class ControladorPartida : MonoBehaviour
         if (saludPermanenteNucleo <= 0f)
         {
             Debug.LogWarning("Salud permanente al 0%. Game Over Definitivo.");
+            ActualizarTextoEstadisticas(); // Inyecta la matemática antes de mostrar el panel
             if (pantallaGameOver != null) pantallaGameOver.SetActive(true);
         }
         else
@@ -39,20 +73,46 @@ public class ControladorPartida : MonoBehaviour
         }
     }
 
-    // --- NUEVO: VÍAS DE ESCAPE PARA LOS BOTONES DE UI ---
+    // --- VÍAS DE ESCAPE ---
 
-    // Conecta esta función al botón "Continuar / Reiniciar" del panel Protocolo Lázaro
     public void EjecutarReinicioTactico()
     {
-        Time.timeScale = 1f; // Vital: si no descongelas el tiempo, el nivel recargará paralizado
-        // Recarga exactamente la escena en la que estás ahora mismo
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Conecta esta función al botón "Volver al Menú" del panel Game Over
+    public void RendirseYMostrarGameOver()
+    {
+        if (pantallaProtocoloLazaro != null) pantallaProtocoloLazaro.SetActive(false);
+
+        ActualizarTextoEstadisticas(); // Inyecta la matemática antes de mostrar el panel
+
+        if (pantallaGameOver != null) pantallaGameOver.SetActive(true);
+    }
+
     public void RegresarAlMenuPrincipal(string nombreEscenaMenu)
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(nombreEscenaMenu);
+    }
+
+    // --- EL MOTOR DE DIBUJADO DE ESTADÍSTICAS ---
+    private void ActualizarTextoEstadisticas()
+    {
+        if (textoEstadisticasGameOver == null) return;
+
+        // Calcula el tiempo real transcurrido
+        float tiempoSobrevivido = Time.time - tiempoInicioOleada;
+        int minutos = Mathf.FloorToInt(tiempoSobrevivido / 60f);
+        int segundos = Mathf.FloorToInt(tiempoSobrevivido % 60f);
+        string tiempoFormateado = string.Format("{0:00}:{1:00} MIN", minutos, segundos);
+
+        // Reescribe el texto estático con las variables dinámicas
+        textoEstadisticasGameOver.text =
+            "       --- ESTADÍSTICAS FINALES ---\n\n" +
+            $"Tiempo total:             {tiempoFormateado}\n" +
+            $"Salud restante:           0%\n" +
+            $"Enemigos derrotados:      {enemigosDerrotados}\n" +
+            $"Daño recibido:            {danoRecibidoTotal}";
     }
 }

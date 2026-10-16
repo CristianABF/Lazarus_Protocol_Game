@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 6929530209808923247}
   - component: {fileID: 6453715547064099251}
   - component: {fileID: 4912952731083269593}
+  - component: {fileID: 5907762705553172858}
   m_Layer: 10
   m_Name: Mina_Electrica
   m_TagString: Untagged
@@ -387,11 +388,11 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4912952731083269593
 MonoBehaviour:
@@ -405,14 +406,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854885475141755488205091980dcfdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerRadius: 2.5
+  triggerRadius: 3
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
   explosionEffect: {fileID: 8324049637894943386}
   soundEffect: {fileID: 8300000, guid: 2a9e86fb0bfec2d46b5fd6628868f2f0, type: 3}
-  totalDamage: 30
-  timeBetweenTicks: 0.5
+  totalDamage: 60
+  stunRadius: 4
+  timeBetweenTicks: 1
+  vfxLifetime: 3
+--- !u!114 &5907762705553172858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6951046956331133198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfc5329e97e7cf440abb94de461e7a32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7108447358665991728
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +548,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1526104509720408023, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -541,7 +556,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.395
+      value: 0.26
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -549,23 +564,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9789613
-      objectReference: {fileID: 0}
-    - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
-      propertyPath: m_LocalRotation.x
       value: 0.021038543
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.9789613
+      objectReference: {fileID: 0}
+    - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.14381853
+      value: 0.1432077
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.1432077
+      value: 0.14381853
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3796568457877498773, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -581,35 +596,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4421975641831661760, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5734486144881329698, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: looping
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: stopAction
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: scalingMode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: ShapeModule.type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: ShapeModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5748945079150391416, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
+      propertyPath: ShapeModule.alignToDirection
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6260870924592338900, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7679160830366356233, guid: c50f9e2c685970e4c8ebcd5fc8c7b3e4, type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

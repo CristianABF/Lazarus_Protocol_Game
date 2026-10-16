@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8741070487929858269}
   - component: {fileID: 1112645146186560097}
   - component: {fileID: 6732810974422577860}
+  - component: {fileID: -1411891050891930199}
   m_Layer: 10
   m_Name: Mina_Explosiva
   m_TagString: Untagged
@@ -50,11 +51,11 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6732810974422577860
 MonoBehaviour:
@@ -68,13 +69,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b47323677af6253479b8e7293d103502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerRadius: 2.5
+  triggerRadius: 1
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
   explosionEffect: {fileID: 8464950693656172981, guid: 83ad694f134ab954580473212156b35a, type: 3}
   soundEffect: {fileID: 8300000, guid: 2fb749b70f64fdf48853782a7da2db6e, type: 3}
   damage: 50
+  explosionRadius: 4
+  vfxLifetime: 2.5
+--- !u!114 &-1411891050891930199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4962725930185792636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfc5329e97e7cf440abb94de461e7a32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5796389179542844593
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,6 +558,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2868216338370173421, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: stopAction
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2868216338370173421, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: lengthInSec
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2868216338370173421, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
@@ -563,12 +586,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.7442087
+      objectReference: {fileID: 0}
+    - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.7442087
+      objectReference: {fileID: 0}
+    - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.7442087
+      objectReference: {fileID: 0}
+    - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.021
       objectReference: {fileID: 0}
     - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3475516
+      value: -0.066951
       objectReference: {fileID: 0}
     - target: {fileID: 4638377481891691631, guid: 83ad694f134ab954580473212156b35a, type: 3}
       propertyPath: m_LocalPosition.z

@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // Obligatorio para manipular botones por código
+using UnityEngine.UI;
 using TMPro;
 
 public class EnlazadorUI : MonoBehaviour
@@ -16,7 +16,9 @@ public class EnlazadorUI : MonoBehaviour
     public Button btnRendirse;
     public Button btnComenzarAsedio;
 
-    // Ajusta el nombre exacto de tu escena de menú aquí si es distinto
+    // NUEVO: El botón final que vive en el panel de Game Over
+    public Button btnVolverMenu;
+
     private string nombreEscenaMenu = "Menu_principal";
 
     private void Start()
@@ -34,17 +36,18 @@ public class EnlazadorUI : MonoBehaviour
                 textoSaldoBilletera.text = $"CRÉDITOS: {ControladorPartida.Instancia.creditosActuales} PTS";
             }
 
-            // 2. Reconectar las vías de escape de los botones
+            // 2. Reconectar las vías de escape
             if (btnActivarLazaro != null)
             {
-                btnActivarLazaro.onClick.RemoveAllListeners(); // Purgar la basura del editor
+                btnActivarLazaro.onClick.RemoveAllListeners();
                 btnActivarLazaro.onClick.AddListener(ControladorPartida.Instancia.AbrirTiendaMejoras);
             }
 
             if (btnRendirse != null)
             {
                 btnRendirse.onClick.RemoveAllListeners();
-                btnRendirse.onClick.AddListener(() => ControladorPartida.Instancia.RegresarAlMenuPrincipal(nombreEscenaMenu));
+                // CORRECCIÓN: Rendirse ahora solo abre la pantalla de estadísticas
+                btnRendirse.onClick.AddListener(ControladorPartida.Instancia.RendirseYMostrarGameOver);
             }
 
             if (btnComenzarAsedio != null)
@@ -53,7 +56,14 @@ public class EnlazadorUI : MonoBehaviour
                 btnComenzarAsedio.onClick.AddListener(ControladorPartida.Instancia.EjecutarReinicioTactico);
             }
 
-            Debug.Log("Enlazador UI: Paneles y botones reconectados al cerebro inmortal.");
+            // NUEVO: El botón de Game Over asume la responsabilidad de cambiar de escena
+            if (btnVolverMenu != null)
+            {
+                btnVolverMenu.onClick.RemoveAllListeners();
+                btnVolverMenu.onClick.AddListener(() => ControladorPartida.Instancia.RegresarAlMenuPrincipal(nombreEscenaMenu));
+            }
+
+            Debug.Log("Enlazador UI: Flujo de derrota reconectado correctamente.");
         }
     }
 }

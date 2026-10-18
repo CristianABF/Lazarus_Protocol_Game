@@ -9,9 +9,12 @@ public class PauseControl : MonoBehaviour
     public GameObject pauseBlurVolume;
 
     [Header("Sub-Menús (Arrastrar desde la jerarquía)")]
-    public GameObject listaBotones; // Arrastrar el objeto "ListaBotones"
-    public GameObject panelGuardar; // Arrastrar "Panel_Guardar"
-    public GameObject panelAjustes; // Arrastrar "Panel_Ajustes"
+    public GameObject listaBotones;
+    public GameObject panelGuardar;
+    public GameObject panelAjustes;
+
+    [Header("HUD")]
+    public PlayerHealthBar hudSalud; // Arrastrar la barra de salud desde la jerarquía
 
     public static bool isPaused = false;
 
@@ -19,13 +22,11 @@ public class PauseControl : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // Al presionar ESC, si está pausado cierra todo, sino pausa.
             if (isPaused) Resume();
             else Pause();
         }
     }
 
-    // 1. CONTINUAR
     public void Resume()
     {
         pauseMenuUI.SetActive(false); // oculta el canvas
@@ -35,6 +36,12 @@ public class PauseControl : MonoBehaviour
         if (listaBotones != null) listaBotones.SetActive(false);
         if (panelGuardar != null) panelGuardar.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
+
+        // MOSTRAR LA VIDA AL REANUDAR EL JUEGO
+        if (hudSalud != null)
+        {
+            hudSalud.SetHUDVisible(true);
+        }
 
         Time.timeScale = 1f; // el tiempo vuelve a la normalidad
         isPaused = false;
@@ -58,27 +65,30 @@ public class PauseControl : MonoBehaviour
         if (panelGuardar != null) panelGuardar.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
 
+        // OCULTAR LA VIDA AL PONER PAUSA
+        if (hudSalud != null)
+        {
+            hudSalud.SetHUDVisible(false);
+        }
+
         Time.timeScale = 0f; // congela el tiempo
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    // 2. GUARDAR PARTIDA
     public void AbrirGuardar()
     {
         listaBotones.SetActive(false);
         panelGuardar.SetActive(true);
     }
 
-    // 3. AJUSTES
     public void AbrirAjustes()
     {
         listaBotones.SetActive(false);
         panelAjustes.SetActive(true);
     }
 
-    // BOTÓN VOLVER (Para usarlo dentro de Guardar o Ajustes)
     public void VolverMenuPausa()
     {
         panelGuardar.SetActive(false);
@@ -86,14 +96,12 @@ public class PauseControl : MonoBehaviour
         listaBotones.SetActive(true);
     }
 
-    // 4. MENÚ PRINCIPAL
     public void IrMenuPrincipal(string nombreEscenaMenu)
     {
-        Time.timeScale = 1f; // OBLIGATORIO: Si no devuelves el tiempo a 1, el menú principal cargará congelado
+        Time.timeScale = 1f;
         SceneManager.LoadScene(nombreEscenaMenu);
     }
 
-    // 5. SALIR
     public void SalirJuego()
     {
         Debug.Log("Saliendo de Lazarus Protocol...");

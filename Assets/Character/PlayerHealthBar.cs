@@ -8,6 +8,7 @@ public class PlayerHealthBar : MonoBehaviour
     [Header("Referencias de Salud")]
     [SerializeField] private PlayerBehaviour player;
     [SerializeField] private Image foreground;
+    [SerializeField] private CanvasGroup canvasGroup; // Referencia para ocultar/mostrar el HUD
 
     [Header("Efecto Barra de Daño (Blanca)")]
     [SerializeField] private Image damageBar;
@@ -23,6 +24,15 @@ public class PlayerHealthBar : MonoBehaviour
     private Coroutine damageCoroutine;
     private Coroutine shakeCoroutine;
     private float lastPlayerHealth;
+
+    void Awake()
+    {
+        // Si no se asigna desde el inspector, intenta obtenerlo automáticamente
+        if (canvasGroup == null)
+        {
+            canvasGroup = GetComponent<CanvasGroup>();
+        }
+    }
 
     void Start()
     {
@@ -68,13 +78,29 @@ public class PlayerHealthBar : MonoBehaviour
         }
     }
 
+    // Método público para alternar la visibilidad de la vida
+    public void SetHUDVisible(bool visible)
+    {
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = visible ? 1f : 0f;
+            canvasGroup.blocksRaycasts = visible;
+            canvasGroup.interactable = visible;
+        }
+        else
+        {
+            gameObject.SetActive(visible);
+        }
+    }
+
     private IEnumerator ProcessDamageBar(float targetRatio)
     {
         yield return new WaitForSeconds(damageDelay);
 
         while (Mathf.Abs(currentDamageFill - targetRatio) > 0.001f)
         {
-            currentDamageFill = Mathf.MoveTowards(currentDamageFill, targetRatio, damageShrinkSpeed * Time.deltaTime);
+            // Usamos unscaledDeltaTime por si el juego entra en pausa mientras la barra blanca reduce su tamaño
+            currentDamageFill = Mathf.MoveTowards(currentDamageFill, targetRatio, damageShrinkSpeed * Time.unscaledDeltaTime);
             if (damageBar != null)
             {
                 damageBar.fillAmount = currentDamageFill;
@@ -96,7 +122,6 @@ public class PlayerHealthBar : MonoBehaviour
 
     private IEnumerator DoShake()
     {
-        // Guardamos las posiciones originales de todos los elementos
         List<Vector2> startPositions = new List<Vector2>();
         for (int i = 0; i < elementsToShake.Count; i++)
         {
@@ -114,7 +139,6 @@ public class PlayerHealthBar : MonoBehaviour
             float randomY = Random.Range(-1f, 1f) * shakeAmount;
             Vector2 offset = new Vector2(randomX, randomY);
 
-            // Aplicamos la misma desviación a todos los elementos del grupo
             for (int i = 0; i < elementsToShake.Count; i++)
             {
                 if (elementsToShake[i] != null)
@@ -127,7 +151,6 @@ public class PlayerHealthBar : MonoBehaviour
             yield return null;
         }
 
-        // Restablecemos la posición inicial de cada uno
         for (int i = 0; i < elementsToShake.Count; i++)
         {
             if (elementsToShake[i] != null)
@@ -136,4 +159,5 @@ public class PlayerHealthBar : MonoBehaviour
             }
         }
     }
+
 }

@@ -11,12 +11,13 @@ public class EnlazadorUI : MonoBehaviour
     public TextMeshProUGUI textoEstadisticasNuevo;
     public TextMeshProUGUI textoSaldoBilletera;
 
+    [Header("Referencia de Salud")]
+    public PlayerHealthBar hudSalud; // Arrastrar la barra de salud aquí
+
     [Header("Botones a Reconectar Dinámicamente")]
     public Button btnActivarLazaro;
     public Button btnRendirse;
     public Button btnComenzarAsedio;
-
-    // NUEVO: El botón final que vive en el panel de Game Over
     public Button btnVolverMenu;
 
     private string nombreEscenaMenu = "Menu_principal";
@@ -40,14 +41,21 @@ public class EnlazadorUI : MonoBehaviour
             if (btnActivarLazaro != null)
             {
                 btnActivarLazaro.onClick.RemoveAllListeners();
-                btnActivarLazaro.onClick.AddListener(ControladorPartida.Instancia.AbrirTiendaMejoras);
+                btnActivarLazaro.onClick.AddListener(() =>
+                {
+                    OcultarHUDVida();
+                    ControladorPartida.Instancia.AbrirTiendaMejoras();
+                });
             }
 
             if (btnRendirse != null)
             {
                 btnRendirse.onClick.RemoveAllListeners();
-                // CORRECCIÓN: Rendirse ahora solo abre la pantalla de estadísticas
-                btnRendirse.onClick.AddListener(ControladorPartida.Instancia.RendirseYMostrarGameOver);
+                btnRendirse.onClick.AddListener(() =>
+                {
+                    OcultarHUDVida();
+                    ControladorPartida.Instancia.RendirseYMostrarGameOver();
+                });
             }
 
             if (btnComenzarAsedio != null)
@@ -56,7 +64,6 @@ public class EnlazadorUI : MonoBehaviour
                 btnComenzarAsedio.onClick.AddListener(ControladorPartida.Instancia.EjecutarReinicioTactico);
             }
 
-            // NUEVO: El botón de Game Over asume la responsabilidad de cambiar de escena
             if (btnVolverMenu != null)
             {
                 btnVolverMenu.onClick.RemoveAllListeners();
@@ -64,6 +71,30 @@ public class EnlazadorUI : MonoBehaviour
             }
 
             Debug.Log("Enlazador UI: Flujo de derrota reconectado correctamente.");
+        }
+    }
+
+    private void Update()
+    {
+        // Detecta si cualquiera de los paneles especiales está activo para ocultar el HUD de salud
+        if (hudSalud != null)
+        {
+            bool algunPanelActivo = (panelLazaroNuevo != null && panelLazaroNuevo.activeSelf) ||
+                                   (panelGameOverNuevo != null && panelGameOverNuevo.activeSelf) ||
+                                   (panelMejorasNuevo != null && panelMejorasNuevo.activeSelf);
+
+            if (algunPanelActivo)
+            {
+                hudSalud.SetHUDVisible(false);
+            }
+        }
+    }
+
+    public void OcultarHUDVida()
+    {
+        if (hudSalud != null)
+        {
+            hudSalud.SetHUDVisible(false);
         }
     }
 }

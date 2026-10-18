@@ -9,6 +9,14 @@ public class EstacionCuracion : MonoBehaviour
     public float cantidadPorInteraccion = 25f;
     public float tiempoRecarga = 10f;
 
+    [Header("Efectos Visuales (VFX)")]
+    [Tooltip("Asigna aquí un Prefab de partículas. Se instanciará en el jugador cuando reciba curación.")]
+    public GameObject vfxCuracionPrefab;
+    [Tooltip("Desplazamiento para ajustar la altura o posición del VFX respecto al jugador.")]
+    public Vector3 offsetVfx = new Vector3(0f, 1f, 0f); // 1 metro hacia arriba por defecto
+    [Tooltip("Opcional: Si querés reproducir un ParticleSystem que forma parte de la estación.")]
+    public ParticleSystem vfxEstacion;
+
     [Header("Interfaz Física (Arrastrar desde Hierarchy)")]
     public TMP_Text textoBarraRecarga;
 
@@ -28,7 +36,10 @@ public class EstacionCuracion : MonoBehaviour
     private void OnEnable()
     {
         // Suscripción a la acción de interacción general del juego
-        InputController.Input.Player.Interact.performed += OnInteract;
+        if (InputController.Input != null)
+        {
+            InputController.Input.Player.Interact.performed += OnInteract;
+        }
     }
 
     private void OnDisable()
@@ -107,6 +118,9 @@ public class EstacionCuracion : MonoBehaviour
         capacidadActual -= curacionReal;
         scriptJugador.RecibirCuracion(curacionReal);
 
+        // --- ACTIVACIÓN DEL VFX DE CURACIÓN ---
+        ReproducirEfectoCuracion();
+
         // Si se vacía, la barra comienza a vaciarse visualmente a 0
         if (capacidadActual <= 0)
         {
@@ -116,19 +130,40 @@ public class EstacionCuracion : MonoBehaviour
         }
     }
 
-    // --- NUEVO: MOTOR DE DIBUJADO DE LA BARRA ---
+    private void ReproducirEfectoCuracion()
+    {
+        // 1. Instanciar un prefab en la posición con offset y rotación del jugador
+        if (vfxCuracionPrefab != null && scriptJugador != null)
+        {
+            // Sumamos el offset a la posición actual del jugador
+            Vector3 posicionConOffset = scriptJugador.transform.position + scriptJugador.transform.TransformDirection(offsetVfx);
+
+            GameObject vfxInstance = Instantiate(vfxCuracionPrefab, posicionConOffset, scriptJugador.transform.rotation);
+
+            // Emparentar para que el efecto siga al jugador
+            vfxInstance.transform.SetParent(scriptJugador.transform);
+
+            // Destruir el objeto clonado tras 2 segundos
+            Destroy(vfxInstance, 2f);
+        }
+
+        // 2. Si tenés un ParticleSystem local en el GameObject de la estación
+        if (vfxEstacion != null)
+        {
+            vfxEstacion.Play();
+        }
+    }
+
+    // --- MOTOR DE DIBUJADO DE LA BARRA ---
     private void ActualizarBarraVisual(float porcentaje)
     {
         if (textoBarraRecarga == null) return;
 
         int bloquesTotales = 10;
-        // Multiplica el porcentaje por 10 y redondea para saber cuántos cuadros pintar
         int bloquesLlenos = Mathf.Clamp(Mathf.RoundToInt(porcentaje * bloquesTotales), 0, bloquesTotales);
 
-        // Construye el string combinando el bloque lleno (█) y el tramado (▒)
         string barras = new string('█', bloquesLlenos) + new string('▒', bloquesTotales - bloquesLlenos);
 
-        // Aplica color verde si está lista para usarse, o rojo si está recargando
         if (estaActiva)
         {
             textoBarraRecarga.text = $"<color=#00FF00>{barras}</color>";

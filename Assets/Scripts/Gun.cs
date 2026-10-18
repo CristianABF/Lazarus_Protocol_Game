@@ -150,7 +150,8 @@ public class Gun : MonoBehaviour, IPickable, IEquipableUI
 
         if (bulletScript != null)
         {
-            bulletScript.Setup(damage);
+            // Pasamos el transform de la cámara o la referencia directa que ya tienes al jugador
+            bulletScript.Setup(damage, playerAnimator != null ? playerAnimator.transform : transform.root);
         }
     }
 

@@ -74,11 +74,16 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public void OnDamageTaken()
+    public void OnDamageTaken(Transform attacker = null)
     {
-        // Transición de objetivo al recibir un disparo
-        currentTarget = playerTarget;
-        isProvoked = true;
+        if (attacker == null) return;
+
+        // Comprueba si el atacante o cualquiera de sus padres tiene el tag "Player"
+        if (attacker.CompareTag("Player") || attacker.GetComponentInParent<PlayerBehaviour>() != null)
+        {
+            currentTarget = playerTarget;
+            isProvoked = true;
+        }
     }
 
     private void EngageTarget()

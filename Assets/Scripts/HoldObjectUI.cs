@@ -79,7 +79,7 @@ public class HoldObjectUI : MonoBehaviour
                     textoNombreEstructura.text = equipable.GetNombreObjeto();
 
                 if (textoCapacidadEstructuras != null)
-                    textoCapacidadEstructuras.text = $"Disponible: {equipable.GetCantidadDisponible()}/{equipable.GetCantidadMaxima()}";
+                    textoCapacidadEstructuras.text = $"Colocados: {equipable.GetCantidadDisponible()}/{equipable.GetCantidadMaxima()}";
                 break;
 
             default:

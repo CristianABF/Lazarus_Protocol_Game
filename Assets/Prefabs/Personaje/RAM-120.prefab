@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 1070728233300563106}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.002, y: 0.211, z: 0.656}
+  m_LocalPosition: {x: -0.002, y: 0.213, z: 0.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -255,6 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunMagazine: {fileID: 0}
   handMagazine: {fileID: 0}
+  nombreArma: RAM-120
   damage: 19
   fireRate: 0.08
   isAutomatic: 1

@@ -129,4 +129,9 @@ public class HoldObject : MonoBehaviour
             heldObjRb = null;
         }
     }
+
+    public GameObject GetHeldObject()
+    {
+        return heldObj;
+    }
 }

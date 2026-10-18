@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Gun : MonoBehaviour, IPickable
+public class Gun : MonoBehaviour, IPickable, IEquipableUI
 {
     [Header("Sincronizacion del Cargador")]
     [SerializeField] private GameObject gunMagazine;
     [SerializeField] private GameObject handMagazine;
 
     [Header("Configuración del Arma")]
+    [SerializeField] private string nombreArma = "RAM-120";
     [SerializeField] private float damage = 20f;
     [SerializeField] private float fireRate = 0.1f;
     [SerializeField] private bool isAutomatic;
@@ -29,6 +30,17 @@ public class Gun : MonoBehaviour, IPickable
     private bool isFiring;
     private AudioSource gunSound;
     private Ammo ammo;
+
+    // --- IMPLEMENTACIÓN DE IEquipableUI ---
+    public TipoObjetoUI GetTipoObjeto() => TipoObjetoUI.Arma;
+    public string GetNombreObjeto() => nombreArma;
+
+    public int GetMunicionActual() => ammo != null ? ammo.GetCurrentAmmo() : 0;
+    public int GetMaxMunicion() => ammo != null ? ammo.GetMaxAmmo() : 0;
+    public int GetCargadores() => ammo != null ? ammo.GetCurrentClips() : 0;
+
+    public int GetCantidadDisponible() => 0;
+    public int GetCantidadMaxima() => 0;
 
     private void Awake()
     {

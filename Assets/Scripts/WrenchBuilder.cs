@@ -9,12 +9,12 @@ public struct BuildableItem
     public string itemName;
     public GameObject realPrefab;
     public GameObject hologramPrefab;
-    public int maxAmount; // Cantidad maxima permitida
+    public int maxAmount; // Cantidad máxima permitida
     [HideInInspector]
-    public int currentAmount; // Cantidad construida en tiempo de ejecucion
+    public int currentAmount; // Cantidad construida en tiempo de ejecución
 }
 
-public class WrenchBuilder : MonoBehaviour, IPickable
+public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 {
     [Header("Referencias de Animación")]
     [SerializeField] private Animator animator;
@@ -148,7 +148,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable
 
             currentBuildPosition = hit.point;
 
-            // Calculamos la rotacion alineada a la superficie + la rotacion offset en x
+            // Calculamos la rotación alineada a la superficie + la rotación offset en Y
             Quaternion surfaceRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
             currentBuildRotation = surfaceRotation * Quaternion.Euler(0f, yRotationOffset, 0f);
 
@@ -276,7 +276,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable
 
         if (scrollValue.y != 0)
         {
-            yRotationOffset = 0f; // Resetea la rotacion al cambiar el objeto
+            yRotationOffset = 0f; // Resetea la rotación al cambiar el objeto
             UpdateHologram();
         }
     }
@@ -294,4 +294,40 @@ public class WrenchBuilder : MonoBehaviour, IPickable
             currentHologram.SetActive(false);
         }
     }
+
+    // --- IMPLEMENTACIÓN DE LA INTERFAZ IEquipableUI ---
+
+    public TipoObjetoUI GetTipoObjeto() => TipoObjetoUI.Herramienta;
+
+    public string GetNombreObjeto()
+    {
+        if (buildableItems != null && buildableItems.Count > currentIndex)
+        {
+            return buildableItems[currentIndex].itemName;
+        }
+        return "Llave Inglesa";
+    }
+
+    public int GetCantidadDisponible()
+    {
+        if (buildableItems != null && buildableItems.Count > currentIndex)
+        {
+            return buildableItems[currentIndex].currentAmount;
+        }
+        return 0;
+    }
+
+    public int GetCantidadMaxima()
+    {
+        if (buildableItems != null && buildableItems.Count > currentIndex)
+        {
+            return buildableItems[currentIndex].maxAmount;
+        }
+        return 0;
+    }
+
+    // Métodos vacíos requeridos por la interfaz para armas
+    public int GetMunicionActual() => 0;
+    public int GetMaxMunicion() => 0;
+    public int GetCargadores() => 0;
 }

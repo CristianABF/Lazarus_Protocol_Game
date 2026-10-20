@@ -881,4 +881,7 @@ MonoBehaviour:
   capacidadMaxima: 100
   cantidadPorInteraccion: 25
   tiempoRecarga: 60
+  vfxCuracionPrefab: {fileID: 339158821923109191, guid: 108ca465382c11742bd2c91fe4fdb13f, type: 3}
+  offsetVfx: {x: 0, y: 0.4, z: 0}
+  vfxEstacion: {fileID: 0}
   textoBarraRecarga: {fileID: 2046767232216580372}

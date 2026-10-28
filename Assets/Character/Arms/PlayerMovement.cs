@@ -43,6 +43,25 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        LockCursor();
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus)
+        {
+            LockCursor();
+        }
+    }
+
+    private void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void OnEnable()
     {
         InputController.Input.Player.Enable();

@@ -41,7 +41,23 @@ public class PlayerMovement : MonoBehaviour
         {
             armsAnimator = GetComponentInChildren<Animator>();
         }
+    }
 
+    void Start()
+    {
+        LockCursor();
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus)
+        {
+            LockCursor();
+        }
+    }
+
+    private void LockCursor()
+    {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

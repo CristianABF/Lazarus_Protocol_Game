@@ -32,6 +32,9 @@ public class Ammo : MonoBehaviour
 
     public void ReduceCurrentAmmo()
     {
+        // Si el truco está encendido, abortamos la resta de balas
+        if (CheatManager.municionInfinitaActiva) return;
+
         ammoAmount--;
     }
 

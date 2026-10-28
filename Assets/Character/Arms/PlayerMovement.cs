@@ -41,6 +41,9 @@ public class PlayerMovement : MonoBehaviour
         {
             armsAnimator = GetComponentInChildren<Animator>();
         }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void OnEnable()

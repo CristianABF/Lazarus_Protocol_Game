@@ -21,7 +21,13 @@ public abstract class TurretBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        // Busca objetivos periódicamente para optimizar rendimiento
+        // 1. INYECCIÓN DE MEJORAS DESDE LA BÓVEDA INMORTAL
+        if (ControladorPartida.Instancia != null)
+        {
+            fireRate /= ControladorPartida.Instancia.factorRecargaTorretas;
+        }
+
+        // 2. Busca objetivos periódicamente para optimizar rendimiento
         InvokeRepeating(nameof(UpdateTarget), 0f, 0.5f);
     }
 

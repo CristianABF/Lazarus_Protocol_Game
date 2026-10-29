@@ -46,6 +46,17 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         LockCursor();
+
+        // --- INYECCIÓN DE LA BÓVEDA (RAMA VELOCIDAD) ---
+        if (ControladorPartida.Instancia != null)
+        {
+            // La bóveda guarda el porcentaje extra (ej. 0.15f para 15%)
+            // Multiplicamos la velocidad nativa por (1 + porcentaje)
+            walkSpeed *= (1f + ControladorPartida.Instancia.velocidadCaminarExtra);
+            sprintSpeed *= (1f + ControladorPartida.Instancia.velMaximaCaminarExtra);
+
+            Debug.Log($"Velocidad de Aris calibrada. Caminar: {walkSpeed} | Correr: {sprintSpeed}");
+        }
     }
 
     void OnApplicationFocus(bool hasFocus)

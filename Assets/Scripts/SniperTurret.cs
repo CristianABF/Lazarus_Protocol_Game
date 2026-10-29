@@ -20,4 +20,13 @@ public class SniperTurret : TurretBase
             bullet.Setup(highDamage);
         }
     }
+    protected override void Start()
+    {
+        base.Start(); // Obligatorio para ejecutar la lógica de recarga del padre
+
+        if (ControladorPartida.Instancia != null)
+        {
+            highDamage *= ControladorPartida.Instancia.factorDañoTorretas;
+        }
+    }
 }

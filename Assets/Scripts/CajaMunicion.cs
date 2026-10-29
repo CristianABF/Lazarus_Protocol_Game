@@ -21,8 +21,14 @@ public class CajaMunicion : MonoBehaviour
 
     void Start()
     {
-        capacidadActual = capacidadCargadores;
+        capacidadActual = capacidadCargadores; // O capacidadCargadores
         ActualizarBarraVisual(1f);
+
+        if (ControladorPartida.Instancia != null)
+        {
+            // factorRecargaEstaciones es 1 por defecto. Si es 0.7 (30% más rápido), se multiplica.
+            tiempoRecarga *= ControladorPartida.Instancia.factorRecargaEstaciones;
+        }
     }
 
     private void OnEnable()

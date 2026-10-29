@@ -29,8 +29,14 @@ public class EstacionCuracion : MonoBehaviour
 
     void Start()
     {
-        capacidadActual = capacidadMaxima;
-        ActualizarBarraVisual(1f); // 1f = 100% de capacidad al inicio
+        capacidadActual = capacidadMaxima; // O capacidadCargadores
+        ActualizarBarraVisual(1f);
+
+        if (ControladorPartida.Instancia != null)
+        {
+            // factorRecargaEstaciones es 1 por defecto. Si es 0.7 (30% más rápido), se multiplica.
+            tiempoRecarga *= ControladorPartida.Instancia.factorRecargaEstaciones;
+        }
     }
 
     private void OnEnable()

@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 2839845826627107422}
   - component: {fileID: 4673282453569360392}
   - component: {fileID: 5607467203693469712}
+  - component: {fileID: 269877998773184000}
   m_Layer: 0
   m_Name: MiniNucleo
   m_TagString: Untagged
@@ -253,6 +254,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   valorChatarra: 1
+  velocidadRotacion: 50
+--- !u!54 &269877998773184000
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871980859019691252}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3707621385524976501
 GameObject:
   m_ObjectHideFlags: 0

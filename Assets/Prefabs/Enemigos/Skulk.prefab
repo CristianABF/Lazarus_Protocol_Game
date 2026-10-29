@@ -537,7 +537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 25
   maxHealth: 25
-  chatarraPrefab: {fileID: 1871980859019691252, guid: 91232de7a96f7774f9e005b18532502f, type: 3}
+  chatarraPrefab: {fileID: 3818369697824768596, guid: 3c94705c4127d284aaeb2b1ae8a14415, type: 3}
   cantidadChatarra: 1
 --- !u!114 &4002469067804897188
 MonoBehaviour:

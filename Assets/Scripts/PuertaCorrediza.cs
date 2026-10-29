@@ -73,6 +73,7 @@ public class PuertaCorrediza : MonoBehaviour
         if (estaRota || estaFallando) return;
 
         if (other.CompareTag("Player")) estaAbierta = true;
+        else if (other.CompareTag("Enemy")) estaAbierta = true;
     }
 
     private void OnTriggerExit(Collider other)
@@ -80,6 +81,7 @@ public class PuertaCorrediza : MonoBehaviour
         if (estaRota || estaFallando) return;
 
         if (other.CompareTag("Player")) estaAbierta = false;
+        else if (other.CompareTag("Enemy")) estaAbierta = false;
     }
 
 }

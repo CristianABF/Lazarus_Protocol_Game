@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,12 +7,15 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public struct BuildableItem
 {
+    public string id;            // Identificador único (ej: "Turret_Flamethrower", "Mine_Electric")
     public string itemName;
     public GameObject realPrefab;
     public GameObject hologramPrefab;
-    public int maxAmount; // Cantidad máxima permitida
-    [HideInInspector]
-    public int currentAmount; // Cantidad construida en tiempo de ejecución
+    public int maxAmount;
+    [HideInInspector] public int currentAmount;
+
+    [Header("Desbloqueo")]
+    public bool isUnlocked;     // Determina si el jugador ya puede seleccionar y construir esto
 }
 
 public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
@@ -29,6 +33,11 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     [SerializeField] private float buildRange = 10f;
     [SerializeField] private LayerMask buildableLayer;     // Capa del Suelo
     [SerializeField] private LayerMask destroyableLayer;   // Capa de las Torretas construidas
+
+    [Header("Materiales / Colores del Holograma")]
+    [SerializeField] private Material validHologramMaterial;
+    [SerializeField] private Material invalidHologramMaterial;
+
     public Camera fpsCam;
 
     private GameObject currentHologram;
@@ -40,6 +49,10 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     private bool isValidBuildPosition;
     private float yRotationOffset = 0f;
 
+    private void Start()
+    {
+        GetNextUnlockedIndex(0);
+    }
     private void Awake()
     {
         // Si no se asignó manualmente en el Inspector, busca el Animator en el personaje o sus padres
@@ -48,6 +61,16 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             animator = GetComponentInParent<Animator>();
         }
         hasWrenchHash = Animator.StringToHash(hasWrenchBool);
+    }
+    private void SetHologramMaterial(Material mat)
+    {
+        if (currentHologram == null || mat == null) return;
+
+        Renderer[] renderers = currentHologram.GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.material = mat;
+        }
     }
 
     // --- MÉTODOS DE LA INTERFAZ IPICKABLE ---
@@ -61,6 +84,11 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         if (animator != null)
         {
             animator.SetBool(hasWrenchHash, true);
+        }
+
+        if (buildableItems.Count > 0 && !!buildableItems[currentIndex].isUnlocked)
+        {
+            GetNextUnlockedIndex(1);
         }
 
         UpdateHologram(); // Instancia el holograma del objeto seleccionado actualmente
@@ -130,9 +158,9 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     {
         if (currentHologram == null) return;
 
-        // Si ya alcanzamos el límite de construcción del objeto seleccionado, no mostramos el holograma
         BuildableItem currentItem = buildableItems[currentIndex];
-        if (currentItem.currentAmount >= currentItem.maxAmount)
+
+        if (!currentItem.isUnlocked)
         {
             isValidBuildPosition = false;
             currentHologram.SetActive(false);
@@ -144,17 +172,26 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, buildRange, buildableLayer))
         {
-            isValidBuildPosition = true;
+            currentHologram.SetActive(true);
 
             currentBuildPosition = hit.point;
-
-            // Calculamos la rotación alineada a la superficie + la rotación offset en Y
             Quaternion surfaceRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
             currentBuildRotation = surfaceRotation * Quaternion.Euler(0f, yRotationOffset, 0f);
 
-            currentHologram.SetActive(true);
             currentHologram.transform.position = currentBuildPosition;
             currentHologram.transform.rotation = currentBuildRotation;
+
+            // Si sobrepasa la cantidad máxima
+            if (currentItem.currentAmount >= currentItem.maxAmount)
+            {
+                isValidBuildPosition = false;
+                SetHologramMaterial(invalidHologramMaterial);
+            }
+            else
+            {
+                isValidBuildPosition = true;
+                SetHologramMaterial(validHologramMaterial);
+            }
         }
         else
         {
@@ -188,7 +225,13 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     {
         BuildableItem currentItem = buildableItems[currentIndex];
 
-        if (currentItem.currentAmount < currentItem.maxAmount && currentItem.realPrefab != null)
+        if (!currentItem.isUnlocked || currentItem.currentAmount >= currentItem.maxAmount)
+        {
+            Debug.LogWarning($"[WrenchBuilder] No se puede construir {currentItem.itemName}. Desbloqueado: {currentItem.isUnlocked}, Cantidad: {currentItem.currentAmount}/{currentItem.maxAmount}");
+            return;
+        }
+
+        if (currentItem.realPrefab != null)
         {
             GameObject newObj = Instantiate(currentItem.realPrefab, currentBuildPosition, currentBuildRotation);
 
@@ -209,9 +252,9 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
                 buildableObj = newObj.AddComponent<BuildableObject>();
             }
 
-            int itemIndex = currentIndex; // Capturamos el índice actual
+            int itemIndex = currentIndex;
 
-            // Escuchamos cuando el objeto se destruya (por clic derecho, temporizador o explosión)
+            // Escuchamos cuando el objeto se destruya
             buildableObj.OnObjectDestroyed += (obj) =>
             {
                 BuildableItem item = buildableItems[itemIndex];
@@ -224,7 +267,8 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
             if (currentItem.currentAmount >= currentItem.maxAmount && currentHologram != null)
             {
-                currentHologram.SetActive(false);
+                // Cambia el holograma a rojo o lo oculta si se alcanzó el tope
+                SetHologramMaterial(invalidHologramMaterial);
             }
         }
     }
@@ -257,27 +301,67 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         }
     }
 
+    public void UnlockItem(string id)
+    {
+        for (int i = 0; i < buildableItems.Count; i++)
+        {
+            if (buildableItems[i].id == id)
+            {
+                BuildableItem item = buildableItems[i];
+                item.isUnlocked = true;
+                buildableItems[i] = item;
+
+                // Si desbloqueamos el ítem que estaba seleccionado, refrescamos el holograma
+                if (i == currentIndex)
+                {
+                    UpdateHologram();
+                }
+
+                Debug.Log($"[WrenchBuilder] Construcción desbloqueada: {item.itemName}");
+                break;
+            }
+        }
+    }
+
     private void ChangeSelection(InputAction.CallbackContext context)
     {
         if (PauseControl.isPaused || !isEquipped || buildableItems.Count == 0) return;
 
         Vector2 scrollValue = context.ReadValue<Vector2>();
 
+        int previousIndex = currentIndex;
+
         if (scrollValue.y > 0)
         {
-            currentIndex++;
-            if (currentIndex >= buildableItems.Count) currentIndex = 0;
+            GetNextUnlockedIndex(1);
         }
         else if (scrollValue.y < 0)
         {
-            currentIndex--;
-            if (currentIndex < 0) currentIndex = buildableItems.Count - 1;
+            GetNextUnlockedIndex(-1);
         }
 
-        if (scrollValue.y != 0)
+        if (scrollValue.y != 0 && previousIndex != currentIndex)
         {
-            yRotationOffset = 0f; // Resetea la rotación al cambiar el objeto
+            yRotationOffset = 0f;
             UpdateHologram();
+        }
+    }
+
+    // Avanza o retrocede en la lista saltando los objetos bloqueados
+    private void GetNextUnlockedIndex(int direction)
+    {
+        int attempts = 0;
+        while (attempts < buildableItems.Count)
+        {
+            currentIndex += direction;
+
+            if (currentIndex >= buildableItems.Count) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = buildableItems.Count - 1;
+
+            if (buildableItems[currentIndex].isUnlocked)
+                return; // Encontró uno válido unlocked
+
+            attempts++;
         }
     }
 
@@ -330,4 +414,32 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     public int GetMunicionActual() => 0;
     public int GetMaxMunicion() => 0;
     public int GetCargadores() => 0;
+
+    public void IncreaseMaxAmount(string id, int extraAmount, int absoluteMaxLimit)
+    {
+        for (int i = 0; i < buildableItems.Count; i++)
+        {
+            if (buildableItems[i].id == id)
+            {
+                BuildableItem item = buildableItems[i];
+
+                if (item.maxAmount >= absoluteMaxLimit)
+                {
+                    Debug.Log($"[WrenchBuilder] {item.itemName} ya alcanzó su límite máximo absoluto ({absoluteMaxLimit}).");
+                    return;
+                }
+
+                item.maxAmount = Mathf.Min(item.maxAmount + extraAmount, absoluteMaxLimit);
+                buildableItems[i] = item;
+
+                Debug.Log($"[WrenchBuilder] Límite aumentado para {item.itemName}. Nuevo máximo: {item.maxAmount}/{absoluteMaxLimit}");
+
+                if (i == currentIndex)
+                {
+                    UpdateHologramPosition();
+                }
+                break;
+            }
+        }
+    }
 }

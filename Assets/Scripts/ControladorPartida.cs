@@ -6,6 +6,7 @@ using System.Collections.Generic; // NUEVO: Obligatorio para usar listas (List<>
 public class ControladorPartida : MonoBehaviour
 {
     public static ControladorPartida Instancia;
+    public static System.Action<int> OnEnemyKilled;
 
     [Header("Meta-Progresión de la Nave")]
     public float saludPermanenteNucleo = 100f;
@@ -106,6 +107,7 @@ public class ControladorPartida : MonoBehaviour
     public void RegistrarEnemigoDerrotado()
     {
         enemigosDerrotados++;
+        OnEnemyKilled?.Invoke(enemigosDerrotados);
     }
 
     public void RegistrarDanoRecibido(float cantidad)

@@ -289,8 +289,121 @@ PrefabInstance:
     - {fileID: 3961440542801167706, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7083929329637896371, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 682204875}
   m_SourcePrefab: {fileID: 100100000, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
+--- !u!1 &682204874 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7083929329637896371, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
+  m_PrefabInstance: {fileID: 682204873}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &682204875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682204874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a45dcf01b1314954f805d6b52118e250, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wrenchBuilder: {fileID: 3074439549305377137}
+  phaseUnlockConditions:
+  - itemIdToUnlock: m_electrica
+    requiredPhase: 3
+    isUnlocked: 0
+  - itemIdToUnlock: m_explosiva
+    requiredPhase: 3
+    isUnlocked: 0
+  - itemIdToUnlock: t_metralladora
+    requiredPhase: 2
+    isUnlocked: 0
+  - itemIdToUnlock: t_lanzallamas
+    requiredPhase: 4
+    isUnlocked: 0
+  - itemIdToUnlock: t_sniper
+    requiredPhase: 5
+    isUnlocked: 0
+  killsUpgradeConditions:
+  - itemIdToUpgrade: barricada
+    requiredKills: 50
+    extraMaxAmount: 1
+    absoluteMaxLimit: 4
+    isApplied: 0
+  - itemIdToUpgrade: barricada
+    requiredKills: 200
+    extraMaxAmount: 1
+    absoluteMaxLimit: 4
+    isApplied: 0
+  - itemIdToUpgrade: barricada
+    requiredKills: 600
+    extraMaxAmount: 1
+    absoluteMaxLimit: 4
+    isApplied: 0
+  - itemIdToUpgrade: t_metralladora
+    requiredKills: 100
+    extraMaxAmount: 1
+    absoluteMaxLimit: 3
+    isApplied: 0
+  - itemIdToUpgrade: t_metralladora
+    requiredKills: 265
+    extraMaxAmount: 1
+    absoluteMaxLimit: 3
+    isApplied: 0
+  - itemIdToUpgrade: m_electrica
+    requiredKills: 185
+    extraMaxAmount: 1
+    absoluteMaxLimit: 6
+    isApplied: 0
+  - itemIdToUpgrade: m_electrica
+    requiredKills: 290
+    extraMaxAmount: 1
+    absoluteMaxLimit: 6
+    isApplied: 0
+  - itemIdToUpgrade: m_electrica
+    requiredKills: 500
+    extraMaxAmount: 1
+    absoluteMaxLimit: 6
+    isApplied: 0
+  - itemIdToUpgrade: m_electrica
+    requiredKills: 700
+    extraMaxAmount: 2
+    absoluteMaxLimit: 6
+    isApplied: 0
+  - itemIdToUpgrade: m_explosiva
+    requiredKills: 300
+    extraMaxAmount: 1
+    absoluteMaxLimit: 4
+    isApplied: 0
+  - itemIdToUpgrade: m_explosiva
+    requiredKills: 670
+    extraMaxAmount: 1
+    absoluteMaxLimit: 4
+    isApplied: 0
+  - itemIdToUpgrade: m_explosiva
+    requiredKills: 810
+    extraMaxAmount: 1
+    absoluteMaxLimit: 4
+    isApplied: 0
+  - itemIdToUpgrade: t_lanzallamas
+    requiredKills: 600
+    extraMaxAmount: 1
+    absoluteMaxLimit: 3
+    isApplied: 0
+  - itemIdToUpgrade: t_lanzallamas
+    requiredKills: 1000
+    extraMaxAmount: 1
+    absoluteMaxLimit: 3
+    isApplied: 0
+  - itemIdToUpgrade: t_sniper
+    requiredKills: 1500
+    extraMaxAmount: 1
+    absoluteMaxLimit: 2
+    isApplied: 0
 --- !u!1 &872282416021662390 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7480637184095015068, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
@@ -325,6 +438,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: validHologramMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 1b2b0e14132808049b590c9ca493c28a, type: 2}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: invalidHologramMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: b8dcb1cf601f4694085fa909df90f51b, type: 2}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[0].id
+      value: barricada
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[1].id
+      value: m_electrica
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[2].id
+      value: m_explosiva
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[3].id
+      value: t_lanzallamas
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[4].id
+      value: t_metralladora
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[5].id
+      value: t_sniper
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[0].maxAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[1].maxAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[2].maxAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[3].maxAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[4].maxAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[5].maxAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: buildableItems.Array.data[0].isUnlocked
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 502753930409852023, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -365,6 +538,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5212553702381898577, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7525024524165517359, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: m_Name
       value: ZonaA
@@ -383,6 +560,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 310563889}
   m_SourcePrefab: {fileID: 100100000, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+--- !u!114 &3074439549305377137 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 358466483516219952, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3074439549305377136}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028d3453e2673a64c8d02619c6e7fdef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3852164090424847040
 PrefabInstance:
   m_ObjectHideFlags: 0

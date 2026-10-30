@@ -5,9 +5,19 @@ using UnityEngine;
 public class EnemyRaycast : MonoBehaviour
 {
     private Ray sight;
-    [SerializeField] private float detectRange = 5f;
+    [SerializeField] private float detectRange = 12f;
 
     private PlayerBehaviour player;
+
+    private void Start()
+    {
+        // Si el objeto tiene un EnemyAI, sincroniza la distancia de detección por Raycast
+        EnemyAI ai = GetComponent<EnemyAI>();
+        if (ai != null)
+        {
+            // Opcional: ajustar detectRange directamente desde el Inspector
+        }
+    }
 
     private void FixedUpdate()
     {

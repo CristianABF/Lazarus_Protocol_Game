@@ -9,6 +9,12 @@ public class CajaMunicion : MonoBehaviour
     public int cargadoresPorInteraccion = 2;
     public float tiempoRecarga = 15f;
 
+    [Header("Configuración de Audio")]
+    [Tooltip("AudioSource de la caja de munición.")]
+    [SerializeField] private AudioSource audioSource;
+    [Tooltip("AudioClip que sonará cuando la caja quede vacía y comience a recargar.")]
+    [SerializeField] private AudioClip audioSinMunicion;
+
     [Header("Interfaz Física (World Space)")]
     public TMP_Text textoBarraRecarga;
 
@@ -21,19 +27,23 @@ public class CajaMunicion : MonoBehaviour
 
     void Start()
     {
-        capacidadActual = capacidadCargadores; // O capacidadCargadores
+        capacidadActual = capacidadCargadores;
         ActualizarBarraVisual(1f);
 
         if (ControladorPartida.Instancia != null)
         {
-            // factorRecargaEstaciones es 1 por defecto. Si es 0.7 (30% más rápido), se multiplica.
             tiempoRecarga *= ControladorPartida.Instancia.factorRecargaEstaciones;
+        }
+
+        // Auto-asignación si no se arrastró en el Inspector
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
         }
     }
 
     private void OnEnable()
     {
-        //Suscripcion a la accion de interaccion general del juego
         InputController.Input.Player.Interact.performed += OnInteract;
     }
 
@@ -47,12 +57,11 @@ public class CajaMunicion : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext context)
     {
-        // Solo responde si el jugador esta dentro del area, la caja esta activa y tiene suministros
         if (jugadorEnZona && estaActiva && capacidadActual > 0) IntentarSuministro();
     }
+
     void Update()
     {
-        // 1. Enfriamiento y regeneración de la caja[cite: 3]
         if (!estaActiva)
         {
             temporizador -= Time.deltaTime;
@@ -67,7 +76,6 @@ public class CajaMunicion : MonoBehaviour
             }
         }
 
-        // 2. Interacción Híbrida mediante Input System[cite: 3]
         if (jugadorEnZona && estaActiva && capacidadActual > 0)
         {
             if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
@@ -79,7 +87,6 @@ public class CajaMunicion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Detecta la colisión espacial de la zona invisible[cite: 3]
         if (other.CompareTag("Player"))
         {
             jugadorEnZona = true;
@@ -100,10 +107,8 @@ public class CajaMunicion : MonoBehaviour
     {
         if (jugadorReferencia == null) return;
 
-        // Búsqueda estructural: El arma suele ser un hijo de la cámara o del cuerpo del jugador
         Ammo scriptAmmo = jugadorReferencia.GetComponentInChildren<Ammo>();
 
-        // Prevención de errores si el jugador interactúa con las manos vacías o un arma cuerpo a cuerpo
         if (scriptAmmo == null)
         {
             Debug.LogWarning("Interacción rechazada: El jugador no tiene un arma con munición equipada.");
@@ -118,13 +123,11 @@ public class CajaMunicion : MonoBehaviour
             return;
         }
 
-        // Negociación de recursos
         int suministroReal = Mathf.Min(cargadoresPorInteraccion, cargadoresFaltantes);
         suministroReal = Mathf.Min(suministroReal, capacidadActual);
 
         capacidadActual -= suministroReal;
 
-        // Inyección segura al arma
         scriptAmmo.RecibirCargadores(suministroReal);
         Debug.Log($"Suministrados {suministroReal} cargadores. Reserva en caja: {capacidadActual}");
 
@@ -133,10 +136,20 @@ public class CajaMunicion : MonoBehaviour
             estaActiva = false;
             temporizador = tiempoRecarga;
             ActualizarBarraVisual(0f);
+
+            // Reproduce el audio de caja vacía
+            ReproducirAudio(audioSinMunicion);
         }
     }
 
-    // Motor de dibujado de la barra con fuente monoespaciada[cite: 3]
+    private void ReproducirAudio(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
     private void ActualizarBarraVisual(float porcentaje)
     {
         if (textoBarraRecarga == null) return;

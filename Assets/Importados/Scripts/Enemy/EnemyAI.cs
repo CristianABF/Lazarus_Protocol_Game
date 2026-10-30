@@ -18,6 +18,10 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float attackDistance = 2.5f;
     [SerializeField] private float damage = 10f;
 
+    [Header("Despeje Inicial")]
+    [SerializeField] private float minInitialDistance = 12f; // Distancia MÍNIMA a la que debe quedar el primer destino
+    [SerializeField] private float maxInitialDistance = 25f; // Distancia MÁXIMA para el despeje inicial
+
     [Header("Merodeo (Wander) - Solo para Hunters")]
     [SerializeField] private float wanderRadius = 15f;
     [SerializeField] private float wanderTimer = 5f;
@@ -59,6 +63,9 @@ public class EnemyAI : MonoBehaviour
             coreScript = coreObj.GetComponent<CoreBehaviour>();
         }
 
+        // Le damos una prioridad de evasión aleatoria a cada enemigo para que no colisionen en masa
+        navMeshAgent.avoidancePriority = UnityEngine.Random.Range(30, 80);
+
         timerWander = wanderTimer;
 
         if (enemyType == TargetType.CoreType)
@@ -68,7 +75,40 @@ public class EnemyAI : MonoBehaviour
         else
         {
             currentTarget = playerTarget;
+
+            // FORZAR DESPLAZAMIENTO A LARGA DISTANCIA AL SPAWNEAR:
+            Vector3 initialFarPoint = GetFarWanderPoint(transform.position, minInitialDistance, maxInitialDistance);
+            navMeshAgent.SetDestination(initialFarPoint);
+
+            Animator anim = GetComponentInChildren<Animator>();
+            if (anim != null)
+            {
+                anim.SetBool("isRunning", true);
+            }
         }
+    }
+
+    // Método auxiliar para garantizar un punto lejano
+    private Vector3 GetFarWanderPoint(Vector3 origin, float minDist, float maxDist)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 randDirection = UnityEngine.Random.insideUnitSphere * maxDist;
+            randDirection += origin;
+
+            NavMeshHit navHit;
+            if (NavMesh.SamplePosition(randDirection, out navHit, maxDist, -1))
+            {
+                // Verificamos que el punto en el NavMesh esté realmente más lejos que el mínimo solicitado
+                if (Vector3.Distance(origin, navHit.position) >= minDist)
+                {
+                    return navHit.position;
+                }
+            }
+        }
+
+        // Si tras 10 intentos no halla uno tan lejano (ej. pasillo muy cerrado), devuelve el punto más lejano posible
+        return origin + transform.forward * minDist;
     }
 
     private void Update()

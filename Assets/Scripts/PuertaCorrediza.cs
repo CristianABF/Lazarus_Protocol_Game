@@ -3,8 +3,8 @@ using UnityEngine;
 public class PuertaCorrediza : MonoBehaviour
 {
     [Header("Estado de la Puerta")]
-    public bool estaRota = false;     // Se queda quieta y bloqueada permanentemente
-    public bool estaFallando = false; // Se abre y cierra sola bruscamente, haciendo daño
+    public bool estaRota = false;
+    public bool estaFallando = false;
 
     [Header("Partes Móviles (Arrastrar desde Hierarchy)")]
     public Transform puertaIzquierda;
@@ -16,14 +16,14 @@ public class PuertaCorrediza : MonoBehaviour
 
     [Header("Ajustes de Fallo (Daño)")]
     public float danoPorAplastamiento = 25f;
-    public float ritmoFallo = 0.5f; // Cada cuánto tiempo invierte su dirección
+    public float ritmoFallo = 0.5f;
 
     private bool estaAbierta = false;
     private Vector3 posCerradaIzq, posAbiertaIzq;
     private Vector3 posCerradaDer, posAbiertaDer;
 
     private float timerFallo;
-    public float cooldownDano = 0f; // Para que no haga 60 veces de daño por segundo
+    public float cooldownDano = 0f;
 
     void Start()
     {
@@ -32,7 +32,6 @@ public class PuertaCorrediza : MonoBehaviour
             posCerradaIzq = puertaIzquierda.localPosition;
             posCerradaDer = puertaDerecha.localPosition;
 
-            // Recuerda cambiar left/right por forward/back si tu puerta se abre hacia el eje Z
             posAbiertaIzq = posCerradaIzq + (Vector3.forward * distanciaApertura);
             posAbiertaDer = posCerradaDer + (Vector3.back * distanciaApertura);
         }
@@ -42,25 +41,21 @@ public class PuertaCorrediza : MonoBehaviour
     {
         if (puertaIzquierda == null || puertaDerecha == null) return;
 
-        // --- SISTEMA ERRÁTICO (FALLO) ---
         if (estaFallando)
         {
             timerFallo -= Time.deltaTime;
             if (timerFallo <= 0)
             {
-                estaAbierta = !estaAbierta; // Invierte el estado bruscamente
-                // Le sumamos un valor aleatorio para que el fallo no sea un reloj perfecto
+                estaAbierta = !estaAbierta;
                 timerFallo = ritmoFallo + Random.Range(-0.2f, 0.4f);
             }
         }
 
-        // Reloj de gracia para el daño
         if (cooldownDano > 0) cooldownDano -= Time.deltaTime;
 
         Vector3 destinoIzq = estaAbierta ? posAbiertaIzq : posCerradaIzq;
         Vector3 destinoDer = estaAbierta ? posAbiertaDer : posCerradaDer;
 
-        // Si está fallando, multiplicamos la velocidad para que los "golpes" de la puerta sean más violentos
         float velActual = estaFallando ? velocidad * 4f : velocidad;
 
         puertaIzquierda.localPosition = Vector3.Lerp(puertaIzquierda.localPosition, destinoIzq, Time.deltaTime * velActual);
@@ -69,19 +64,21 @@ public class PuertaCorrediza : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Si la puerta está rota o fallando, ignora por completo la presencia para abrirse amablemente
         if (estaRota || estaFallando) return;
 
-        if (other.CompareTag("Player")) estaAbierta = true;
-        else if (other.CompareTag("Enemy")) estaAbierta = true;
+        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        {
+            estaAbierta = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (estaRota || estaFallando) return;
 
-        if (other.CompareTag("Player")) estaAbierta = false;
-        else if (other.CompareTag("Enemy")) estaAbierta = false;
+        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        {
+            estaAbierta = false;
+        }
     }
-
 }

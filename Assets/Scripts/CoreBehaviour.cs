@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CoreBehaviour : MonoBehaviour
@@ -13,7 +14,10 @@ public class CoreBehaviour : MonoBehaviour
     [SerializeField] private AudioClip audio50Percent;
     [SerializeField] private AudioClip audio25Percent;
 
-    // Banderas para evitar reproducción repetida por cada impacto
+    [Header("Configuración de Ataque")]
+    [SerializeField] private int maxAttackers = 3;
+    private List<Transform> currentAttackers = new List<Transform>();
+
     private bool played75 = false;
     private bool played50 = false;
     private bool played25 = false;
@@ -22,10 +26,32 @@ public class CoreBehaviour : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        // Auto-asignación si no se arrastró en el Inspector
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
+        }
+    }
+
+    public bool SolicitarnLugarParaAtacar(Transform enemigo)
+    {
+        currentAttackers.RemoveAll(a => a == null);
+
+        if (currentAttackers.Contains(enemigo)) return true;
+
+        if (currentAttackers.Count < maxAttackers)
+        {
+            currentAttackers.Add(enemigo);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void LiberarLugar(Transform enemigo)
+    {
+        if (currentAttackers.Contains(enemigo))
+        {
+            currentAttackers.Remove(enemigo);
         }
     }
 

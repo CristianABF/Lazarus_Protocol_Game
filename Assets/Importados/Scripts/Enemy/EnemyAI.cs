@@ -7,9 +7,24 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAI : MonoBehaviour
 {
-    [SerializeField] private float chaseRange = 5f;
-    [SerializeField] private float attackDistance = 2.5f; // Renombrado para mayor claridad
+    public enum TargetType { CoreType, PlayerHunter }
+
+    [Header("Tipo de Comportamiento")]
+    [Tooltip("CoreType = Va al Núcleo (Skulk). PlayerHunter = Busca y merodea al Jugador (Marauder/Bulwark).")]
+    [SerializeField] private TargetType enemyType = TargetType.CoreType;
+
+    [Header("Rango y Detección")]
+    [SerializeField] private float chaseRange = 10f; // Rango de visión/detección
+    [SerializeField] private float attackDistance = 2.5f;
     [SerializeField] private float damage = 10f;
+
+    [Header("Merodeo (Wander) - Solo para Hunters")]
+    [SerializeField] private float wanderRadius = 15f;
+    [SerializeField] private float wanderTimer = 5f;
+    private float timerWander;
+    [Header("Merodeo alrededor del Núcleo")]
+    [SerializeField] private float coreWanderRadius = 6f;
+    private CoreBehaviour coreScript;
 
     [Header("Attack Speed")]
     [SerializeField] private float attackRate = 2f;
@@ -26,7 +41,6 @@ public class EnemyAI : MonoBehaviour
     private bool isReloading = false;
     private bool isStunned = false;
 
-    // Fragmentación del objetivo
     private Transform playerTarget;
     private Transform coreTarget;
     private Transform currentTarget;
@@ -34,22 +48,39 @@ public class EnemyAI : MonoBehaviour
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        playerTarget = GameObject.FindGameObjectWithTag("Player").transform;
 
-        // Requiere que le asignes el tag "Core" al objeto de tu núcleo en el Inspector
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) playerTarget = playerObj.transform;
+
         GameObject coreObj = GameObject.FindGameObjectWithTag("Core");
         if (coreObj != null)
         {
             coreTarget = coreObj.transform;
+            coreScript = coreObj.GetComponent<CoreBehaviour>();
         }
 
-        // El objetivo primario al instanciarse es el núcleo
-        currentTarget = coreTarget;
+        timerWander = wanderTimer;
+
+        if (enemyType == TargetType.CoreType)
+        {
+            currentTarget = coreTarget;
+        }
+        else
+        {
+            currentTarget = playerTarget;
+        }
     }
 
     private void Update()
     {
         if (isStunned) return;
+
+        if (enemyType == TargetType.PlayerHunter && !isProvoked)
+        {
+            Wander(transform.position, wanderRadius);
+            CheckPlayerProximity();
+            return;
+        }
 
         if (currentTarget == null) return;
 
@@ -57,28 +88,114 @@ public class EnemyAI : MonoBehaviour
 
         if (isProvoked)
         {
+            // Si el enemigo atacaba el núcleo y cambia al jugador, libera el cupo
+            if (coreScript != null) coreScript.LiberarLugar(transform);
             EngageTarget();
 
-            // --- NUEVO: Límite de persecución ---
-            // Si está persiguiendo al jugador y este se aleja demasiado (ej. el doble del chaseRange)
-            if (currentTarget == playerTarget && distanceToTarget > chaseRange * 15f)
+            if (currentTarget == playerTarget && distanceToTarget > chaseRange * 2f)
             {
                 isProvoked = false;
-                currentTarget = coreTarget; // Vuelve a enfocar el Núcleo
-                Debug.Log("El enemigo ha perdido interés en Aris y regresa al núcleo.");
+                if (enemyType == TargetType.CoreType) currentTarget = coreTarget;
+                else navMeshAgent.ResetPath();
             }
         }
-        else if (distanceToTarget <= chaseRange)
+        else if (enemyType == TargetType.CoreType)
+        {
+            if (currentTarget != coreTarget) currentTarget = coreTarget;
+
+            // Comprobamos si tiene cupo para atacar
+            bool tieneCupo = coreScript != null && coreScript.SolicitarnLugarParaAtacar(transform);
+
+            if (tieneCupo)
+            {
+                // Hay lugar: avanza a rango de ataque y golpea
+                if (distanceToTarget > attackDistance)
+                {
+                    ChaseTarget();
+                }
+                else
+                {
+                    Wait();
+                    ShootTarget();
+                }
+            }
+            else
+            {
+                // No hay cupo: merodea EN VÍSPERAS del núcleo sin alejarse
+                WanderAroundCore();
+            }
+        }
+    }
+
+    private void WanderAroundCore()
+    {
+        if (coreTarget == null) return;
+
+        timerWander += Time.deltaTime;
+
+        if (timerWander >= wanderTimer)
+        {
+            // Busca un punto aleatorio pero usando la posición del NÚCLEO como centro
+            Vector3 randomPointAroundCore = RandomNavSphere(coreTarget.position, coreWanderRadius, -1);
+            navMeshAgent.SetDestination(randomPointAroundCore);
+            GetComponentInChildren<Animator>().SetBool("isRunning", true);
+            timerWander = 0f;
+        }
+
+        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            GetComponentInChildren<Animator>().SetBool("isRunning", false);
+        }
+    }
+
+    private void CheckPlayerProximity()
+    {
+        if (playerTarget == null) return;
+
+        float distToPlayer = Vector3.Distance(playerTarget.position, transform.position);
+        if (distToPlayer <= chaseRange)
         {
             isProvoked = true;
+            currentTarget = playerTarget;
         }
+    }
+
+    private void Wander(Vector3 origin, float radius)
+    {
+        timerWander += Time.deltaTime;
+
+        if (timerWander >= wanderTimer)
+        {
+            Vector3 newPos = RandomNavSphere(origin, radius, -1);
+            navMeshAgent.SetDestination(newPos);
+            GetComponentInChildren<Animator>().SetBool("isRunning", true);
+            timerWander = 0f;
+        }
+
+        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            GetComponentInChildren<Animator>().SetBool("isRunning", false);
+        }
+    }
+
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    {
+        Vector3 randDirection = UnityEngine.Random.insideUnitSphere * dist;
+        randDirection += origin;
+
+        NavMeshHit navHit;
+        if (NavMesh.SamplePosition(randDirection, out navHit, dist, layermask))
+        {
+            return navHit.position;
+        }
+
+        return origin;
     }
 
     public void OnDamageTaken(Transform attacker = null)
     {
         if (attacker == null) return;
 
-        // Comprueba si el atacante o cualquiera de sus padres tiene el tag "Player"
         if (attacker.CompareTag("Player") || attacker.GetComponentInParent<PlayerBehaviour>() != null)
         {
             currentTarget = playerTarget;
@@ -129,11 +246,7 @@ public class EnemyAI : MonoBehaviour
         if (currentTarget.CompareTag("Player"))
         {
             PlayerBehaviour jugador = currentTarget.GetComponent<PlayerBehaviour>();
-            if (jugador != null)
-            {
-                // Reemplazamos la vulneración directa por el método encapsulado
-                jugador.RecibirDano(damage);
-            }
+            if (jugador != null) jugador.RecibirDano(damage);
         }
         else if (currentTarget.CompareTag("Core"))
         {
@@ -162,6 +275,7 @@ public class EnemyAI : MonoBehaviour
     public void TargetDetected()
     {
         isProvoked = true;
+        currentTarget = playerTarget;
     }
 
     public void SetStunned(bool state)
@@ -198,5 +312,14 @@ public class EnemyAI : MonoBehaviour
         Vector3 direction = (currentTarget.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+    }
+
+    private void OnDestroy()
+    {
+        // Liberamos el cupo del núcleo de forma segura al destruir el objeto
+        if (coreScript != null)
+        {
+            coreScript.LiberarLugar(transform);
+        }
     }
 }

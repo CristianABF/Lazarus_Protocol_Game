@@ -470,6 +470,22 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 276856456141941892, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
   m_PrefabInstance: {fileID: 2100069584}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1119165796 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1976344070164528160, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+  m_PrefabInstance: {fileID: 2100069584}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1170427436 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5363745966081645728, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+  m_PrefabInstance: {fileID: 2100069584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1343106412 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5079355357857804870, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
@@ -577,6 +593,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1543008006 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7480637184095015068, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+  m_PrefabInstance: {fileID: 2100069584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2042283756 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6013379146688098980, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
@@ -751,9 +772,17 @@ PrefabInstance:
       value: -0.288
       objectReference: {fileID: 0}
     - target: {fileID: 5193690342326847336, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: maxHealth
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5193690342326847336, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 1426312830}
+    - target: {fileID: 5193690342326847336, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: currentHealth
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 5193690342326847336, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: audio25Percent
       value: 
@@ -772,11 +801,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6451887394403979596, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: m_Extents.x
-      value: 0.275
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 6451887394403979596, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: m_Extents.y
-      value: 0.275
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7207386097870543082, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -851,6 +880,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 028d3453e2673a64c8d02619c6e7fdef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2134535093 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6387762037793000708, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+  m_PrefabInstance: {fileID: 2100069584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3663703568982391437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -926,19 +960,19 @@ PrefabInstance:
     - target: {fileID: 7729207997523797471, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
       propertyPath: panelMejoras
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2134535093}
     - target: {fileID: 7729207997523797471, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
       propertyPath: pantallaGameOver
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1170427436}
     - target: {fileID: 7729207997523797471, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
       propertyPath: pantallaProtocoloLazaro
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1543008006}
     - target: {fileID: 7729207997523797471, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
       propertyPath: textoEstadisticasGameOver
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1119165796}
     m_RemovedComponents:
     - {fileID: 3961440542801167706, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
     m_RemovedGameObjects: []

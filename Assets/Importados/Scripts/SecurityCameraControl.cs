@@ -7,20 +7,10 @@ public class SecurityCameraControl : MonoBehaviour
     public float rotationAngle = 45f;
     public float rotationSpeed = 2f;
 
-    [Header("Detección del Jugador")]
-    public Transform player;
-    public float detectionRadius = 10f;
-    public float detectionAngle = 45f;
-    public LayerMask playerLayer;
-    public LayerMask obstacleLayer;
-
-    [Header("Indicadores Visuales")]
-    public Light spotLight;
-    public Color normalColor = Color.green;
-    public Color alertColor = Color.red;
+    [Header("POV / Vista de la Cámara")]
+    public Camera povCamera; // El componente Camera nativo pegado al cabezal
 
     private Quaternion startRotation;
-    private bool playerDetected = false;
 
     void Start()
     {
@@ -29,20 +19,16 @@ public class SecurityCameraControl : MonoBehaviour
             startRotation = cameraHead.localRotation;
         }
 
-        if (spotLight != null)
+        // Por defecto mantenemos el POV apagado hasta que el jugador ingrese
+        if (povCamera != null)
         {
-            spotLight.color = normalColor;
+            povCamera.enabled = false;
         }
     }
 
     void Update()
     {
-        DetectPlayer();
-
-        if (!playerDetected)
-        {
-            Patrol();
-        }
+        Patrol();
     }
 
     void Patrol()
@@ -53,67 +39,12 @@ public class SecurityCameraControl : MonoBehaviour
         cameraHead.localRotation = startRotation * Quaternion.Euler(0, angle, 0);
     }
 
-    void DetectPlayer()
+    // Método para que el jugador pase a ver en primera persona a través de esta cámara
+    public void ActivarPOV(bool activar)
     {
-        if (player == null) return;
-
-        Vector3 dirToPlayer = (player.position - cameraHead.position).normalized;
-        float distanceToPlayer = Vector3.Distance(cameraHead.position, player.position);
-
-        if (distanceToPlayer <= detectionRadius)
+        if (povCamera != null)
         {
-            if (Vector3.Angle(cameraHead.forward, dirToPlayer) < detectionAngle / 2f)
-            {
-                if (!Physics.Raycast(cameraHead.position, dirToPlayer, distanceToPlayer, obstacleLayer))
-                {
-                    OnPlayerSpotted();
-                    return;
-                }
-            }
+            povCamera.enabled = activar;
         }
-
-        if (playerDetected)
-        {
-            OnPlayerLost();
-        }
-    }
-
-    void OnPlayerSpotted()
-    {
-        if (!playerDetected)
-        {
-            playerDetected = true;
-            Debug.Log("¡Cámara: JUGADOR DETECTADO!");
-
-            if (spotLight != null)
-            {
-                spotLight.color = alertColor;
-            }
-        }
-    }
-
-    void OnPlayerLost()
-    {
-        playerDetected = false;
-        Debug.Log("Cámara: Jugador fuera de vista.");
-
-        if (spotLight != null)
-        {
-            spotLight.color = normalColor;
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (cameraHead == null) return;
-
-        Gizmos.color = playerDetected ? Color.red : Color.yellow;
-        Gizmos.DrawWireSphere(cameraHead.position, detectionRadius);
-
-        Vector3 fwdLeft = Quaternion.Euler(0, -detectionAngle / 2, 0) * cameraHead.forward;
-        Vector3 fwdRight = Quaternion.Euler(0, detectionAngle / 2, 0) * cameraHead.forward;
-
-        Gizmos.DrawRay(cameraHead.position, fwdLeft * detectionRadius);
-        Gizmos.DrawRay(cameraHead.position, fwdRight * detectionRadius);
     }
 }

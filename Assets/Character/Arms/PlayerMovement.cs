@@ -10,6 +10,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 1.2f;
 
+    [Header("Respawn / Caída al Vacío")]
+    [Tooltip("Punto de reaparición. Si no se asigna, usará la posición inicial del Player.")]
+    [SerializeField] private Transform respawnPoint;
+    [Tooltip("Límite en el eje Y a partir del cual el jugador respawnea.")]
+    [SerializeField] private float fallThresholdY = -20f;
+
     [Header("Cámara / Mirada")]
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private float mouseSensitivity = 0.1f;
@@ -151,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
         ReadInputs();
         Look();
         Move();
+        CheckFallInVoid();
         HandleArmsBobbing();
         UpdateAnimator();
     }
@@ -192,6 +199,31 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void CheckFallInVoid()
+    {
+        if (transform.position.y < fallThresholdY)
+        {
+            Respawn();
+        }
+    }
+
+    public void Respawn()
+    {
+        Vector3 targetPosition = respawnPoint != null ? respawnPoint.position : Vector3.zero;
+        Quaternion targetRotation = respawnPoint != null ? respawnPoint.rotation : Quaternion.identity;
+
+        // Desactivamos temporalmente el CharacterController para poder teletransportar al Player
+        controller.enabled = false;
+
+        transform.position = targetPosition;
+        transform.rotation = targetRotation;
+
+        // Reseteamos la velocidad acumulada para no salir disparados hacia abajo tras reaparecer
+        velocity = Vector3.zero;
+
+        controller.enabled = true;
     }
 
     private void HandleArmsBobbing()

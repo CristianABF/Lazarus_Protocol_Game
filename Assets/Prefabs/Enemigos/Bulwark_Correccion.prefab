@@ -672,7 +672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 1
-  chaseRange: 10
+  chaseRange: 15
   attackDistance: 3
   damage: 30
   minInitialDistance: 30

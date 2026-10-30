@@ -4,6 +4,9 @@ public class CheatManager : MonoBehaviour
 {
     public static bool municionInfinitaActiva = false;
 
+    [Header("Sonidos de Cheats")]
+    public AudioClip sonidoHesoyam;
+
     // Almacena las últimas letras presionadas
     private string inputBuffer = "";
 
@@ -57,7 +60,33 @@ public class CheatManager : MonoBehaviour
             AdelantarTiempo();
             ActivarModoDios();
             if (!municionInfinitaActiva) AlternarMunicionInfinita();
+            ReproducirAudioJugador();
             LimpiarBuffer();
+        }
+    }
+
+    private void ReproducirAudioJugador()
+    {
+        if (sonidoHesoyam == null) return;
+
+        PlayerBehaviour jugador = Object.FindFirstObjectByType<PlayerBehaviour>();
+        if (jugador != null)
+        {
+            // 1. Crear un GameObject temporal como hijo del jugador
+            GameObject audioObj = new GameObject("TempAudio_Hesoyam");
+            audioObj.transform.SetParent(jugador.transform);
+            audioObj.transform.localPosition = Vector3.zero; // Se posiciona exactamente en el jugador
+
+            // 2. Agregar y configurar el AudioSource
+            AudioSource source = audioObj.AddComponent<AudioSource>();
+            source.clip = sonidoHesoyam;
+            source.spatialBlend = 1.0f; // 1.0 = Sonido 3D
+            source.minDistance = 2f;
+            source.maxDistance = 25f;
+            source.Play();
+
+            // 3. Destruir el GameObject temporal automáticamente cuando finalice el audio
+            Destroy(audioObj, sonidoHesoyam.length);
         }
     }
 

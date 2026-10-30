@@ -266,66 +266,14 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 276856456141941892, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
   m_PrefabInstance: {fileID: 2100069584}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &904669464
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 6.3716164
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.1461525
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -9.021767
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389861635340202281, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3053914240751053715, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
-      propertyPath: m_Name
-      value: Marauder
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c6b33b05d051c8e408fd4cb07075e4de, type: 3}
 --- !u!224 &1343106412 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5079355357857804870, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+  m_PrefabInstance: {fileID: 2100069584}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2042283756 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6013379146688098980, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
   m_PrefabInstance: {fileID: 2100069584}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2100069584
@@ -476,6 +424,22 @@ PrefabInstance:
       propertyPath: 'elementsToShake.Array.data[2]'
       value: 
       objectReference: {fileID: 211753967}
+    - target: {fileID: 5013373006037703691, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: enableBobbing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013373006037703691, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: idleBobAmount
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013373006037703691, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: walkBobAmount
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013373006037703691, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
+      propertyPath: armsModelTransform
+      value: 
+      objectReference: {fileID: 2042283756}
     - target: {fileID: 5115301770094351463, guid: c541ef6632688c2438fcbf10e079ae5f, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.288
@@ -754,4 +718,3 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 3663703568982391437}
   - {fileID: 2100069584}
-  - {fileID: 904669464}

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro; // Obligatorio para controlar el texto 3D
+using TMPro;
 
 public class EstacionCuracion : MonoBehaviour
 {
@@ -9,11 +9,17 @@ public class EstacionCuracion : MonoBehaviour
     public float cantidadPorInteraccion = 25f;
     public float tiempoRecarga = 10f;
 
+    [Header("Configuración de Audio")]
+    [Tooltip("AudioSource de la estación de curación.")]
+    [SerializeField] private AudioSource audioSource;
+    [Tooltip("AudioClip que sonará cuando la estación se quede sin salud y empiece a recargar.")]
+    [SerializeField] private AudioClip audioSinSalud;
+
     [Header("Efectos Visuales (VFX)")]
     [Tooltip("Asigna aquí un Prefab de partículas. Se instanciará en el jugador cuando reciba curación.")]
     public GameObject vfxCuracionPrefab;
     [Tooltip("Desplazamiento para ajustar la altura o posición del VFX respecto al jugador.")]
-    public Vector3 offsetVfx = new Vector3(0f, 1f, 0f); // 1 metro hacia arriba por defecto
+    public Vector3 offsetVfx = new Vector3(0f, 1f, 0f);
     [Tooltip("Opcional: Si querés reproducir un ParticleSystem que forma parte de la estación.")]
     public ParticleSystem vfxEstacion;
 
@@ -29,19 +35,23 @@ public class EstacionCuracion : MonoBehaviour
 
     void Start()
     {
-        capacidadActual = capacidadMaxima; // O capacidadCargadores
+        capacidadActual = capacidadMaxima;
         ActualizarBarraVisual(1f);
 
         if (ControladorPartida.Instancia != null)
         {
-            // factorRecargaEstaciones es 1 por defecto. Si es 0.7 (30% más rápido), se multiplica.
             tiempoRecarga *= ControladorPartida.Instancia.factorRecargaEstaciones;
+        }
+
+        // Auto-asignación si no se arrastró en el Inspector
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
         }
     }
 
     private void OnEnable()
     {
-        // Suscripción a la acción de interacción general del juego
         if (InputController.Input != null)
         {
             InputController.Input.Player.Interact.performed += OnInteract;
@@ -69,8 +79,6 @@ public class EstacionCuracion : MonoBehaviour
         if (!estaActiva)
         {
             temporizador -= Time.deltaTime;
-
-            // 1. Cálculo matemático riguroso del progreso (de 0 a 1)
             float progresoRecarga = 1f - (temporizador / tiempoRecarga);
             ActualizarBarraVisual(progresoRecarga);
 
@@ -78,7 +86,7 @@ public class EstacionCuracion : MonoBehaviour
             {
                 estaActiva = true;
                 capacidadActual = capacidadMaxima;
-                ActualizarBarraVisual(1f); // Vuelve al estado de barra llena
+                ActualizarBarraVisual(1f);
                 Debug.Log("Estación reiniciada al 100%");
             }
         }
@@ -116,7 +124,7 @@ public class EstacionCuracion : MonoBehaviour
 
         float vidaFaltante = scriptJugador.maxHealth - scriptJugador.playerHealth;
 
-        if (vidaFaltante <= 0) return; // Rechaza si está al máximo
+        if (vidaFaltante <= 0) return;
 
         float curacionReal = Mathf.Min(cantidadPorInteraccion, vidaFaltante);
         curacionReal = Mathf.Min(curacionReal, capacidadActual);
@@ -124,43 +132,43 @@ public class EstacionCuracion : MonoBehaviour
         capacidadActual -= curacionReal;
         scriptJugador.RecibirCuracion(curacionReal);
 
-        // --- ACTIVACIÓN DEL VFX DE CURACIÓN ---
         ReproducirEfectoCuracion();
 
-        // Si se vacía, la barra comienza a vaciarse visualmente a 0
         if (capacidadActual <= 0)
         {
             estaActiva = false;
             temporizador = tiempoRecarga;
             ActualizarBarraVisual(0f);
+
+            // Reproduce el audio de estación agotada
+            ReproducirAudio(audioSinSalud);
         }
     }
 
     private void ReproducirEfectoCuracion()
     {
-        // 1. Instanciar un prefab en la posición con offset y rotación del jugador
         if (vfxCuracionPrefab != null && scriptJugador != null)
         {
-            // Sumamos el offset a la posición actual del jugador
             Vector3 posicionConOffset = scriptJugador.transform.position + scriptJugador.transform.TransformDirection(offsetVfx);
-
             GameObject vfxInstance = Instantiate(vfxCuracionPrefab, posicionConOffset, scriptJugador.transform.rotation);
-
-            // Emparentar para que el efecto siga al jugador
             vfxInstance.transform.SetParent(scriptJugador.transform);
-
-            // Destruir el objeto clonado tras 2 segundos
             Destroy(vfxInstance, 2f);
         }
 
-        // 2. Si tenés un ParticleSystem local en el GameObject de la estación
         if (vfxEstacion != null)
         {
             vfxEstacion.Play();
         }
     }
 
-    // --- MOTOR DE DIBUJADO DE LA BARRA ---
+    private void ReproducirAudio(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
     private void ActualizarBarraVisual(float porcentaje)
     {
         if (textoBarraRecarga == null) return;

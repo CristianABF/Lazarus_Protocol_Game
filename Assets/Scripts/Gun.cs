@@ -47,7 +47,13 @@ public class Gun : MonoBehaviour, IPickable, IEquipableUI
         gunSound = GetComponent<AudioSource>();
         ammo = GetComponent<Ammo>();
     }
-
+    private void Start()
+    {
+        if (ControladorPartida.Instancia != null)
+        {
+            damage += ControladorPartida.Instancia.dañoExtraArma;
+        }
+    }
     // Métodos de la interfaz IPickable
     public void OnPickedUp()
     {

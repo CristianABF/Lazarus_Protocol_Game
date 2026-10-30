@@ -18,6 +18,14 @@ public class Ammo : MonoBehaviour
     private void Awake()
     {
         maxAmmo = ammoAmount;
+
+        // --- INYECCIÓN DE CARGADOR DE LA TIENDA ---
+        if (ControladorPartida.Instancia != null)
+        {
+            // Ej. Pasar de 30 a 45 balas. Ajustamos el máximo y rellenamos.
+            maxAmmo += ControladorPartida.Instancia.balasExtraCargador;
+            ammoAmount = maxAmmo;
+        }
     }
 
     public int GetCurrentAmmo()
@@ -32,6 +40,9 @@ public class Ammo : MonoBehaviour
 
     public void ReduceCurrentAmmo()
     {
+        // Si el truco está encendido, abortamos la resta de balas
+        if (CheatManager.municionInfinitaActiva) return;
+
         ammoAmount--;
     }
 

@@ -23,4 +23,14 @@ public class MachineGunTurret : TurretBase
             bullet.Setup(damage);
         }
     }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        if (ControladorPartida.Instancia != null)
+        {
+            damage *= ControladorPartida.Instancia.factorDañoTorretas;
+        }
+    }
 }

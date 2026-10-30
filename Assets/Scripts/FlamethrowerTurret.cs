@@ -46,4 +46,14 @@ public class FlamethrowerTurret : TurretBase
             }
         }
     }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        if (ControladorPartida.Instancia != null)
+        {
+            continuousDamagePerSecond *= ControladorPartida.Instancia.factorDañoTorretas;
+        }
+    }
 }

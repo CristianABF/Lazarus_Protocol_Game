@@ -10,13 +10,24 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Awake()
     {
+        // 1. Preguntarle a la bóveda si compraste Mejoras de Salud
+        float bonoSalud = 0f;
+        if (ControladorPartida.Instancia != null)
+        {
+            bonoSalud = ControladorPartida.Instancia.saludExtraJugador;
+        }
+
+        // 2. Expandir el límite físico y rellenar la barra (tu código original adaptado)
+        maxHealth += bonoSalud;
         playerHealth = maxHealth;
+
+        Debug.Log($"Salud de Aris calibrada al nacer. Vida máxima: {maxHealth}");
     }
 
-//    private void Update()
-//    {
-//        PlayerDead();
-//    }
+    //    private void Update()
+    //    {
+    //        PlayerDead();
+    //    }
 
     private void PlayerDead()
     {

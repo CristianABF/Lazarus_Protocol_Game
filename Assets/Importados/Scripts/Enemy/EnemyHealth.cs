@@ -39,9 +39,23 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         isDead = true;
 
+        // Liberar cupo en el núcleo inmediatamente al morir
+        GameObject coreObj = GameObject.FindGameObjectWithTag("Core");
+        if (coreObj != null)
+        {
+            CoreBehaviour core = coreObj.GetComponent<CoreBehaviour>();
+            if (core != null)
+            {
+                core.LiberarLugar(transform);
+            }
+        }
+
         // Desactiva los componentes tácticos
-        GetComponent<EnemyAI>().enabled = false;
-        GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+        EnemyAI aiScript = GetComponent<EnemyAI>();
+        if (aiScript != null) aiScript.enabled = false;
+
+        UnityEngine.AI.NavMeshAgent agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (agent != null) agent.enabled = false;
 
         // --- CONEXIÓN A LAS ESTADÍSTICAS DEL GAME OVER ---
         if (ControladorPartida.Instancia != null)
@@ -54,13 +68,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             for (int i = 0; i < cantidadChatarra; i++)
             {
-                // Variación aleatoria para que las piezas no caigan apiladas exactamente en el mismo pixel
                 Vector3 variacionPosicion = new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, Random.Range(-0.5f, 0.5f));
                 Instantiate(chatarraPrefab, transform.position + variacionPosicion, Quaternion.identity);
             }
         }
 
-        // Se destruye el objeto (dejamos 0.1f para evitar errores de colisión en ese mismo frame)
         Destroy(gameObject, 0.1f);
     }
 }

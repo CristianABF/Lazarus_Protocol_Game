@@ -1,10 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class WaveManager : MonoBehaviour
 {
+    public static event Action<int> OnPhaseStarted;
+
     [Header("Elementos de UI")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI phaseText;
@@ -97,6 +101,7 @@ public class WaveManager : MonoBehaviour
             spawnTimer = 0f; // Para que el primer enemigo salga de inmediato
             isWaveActive = true;
 
+            OnPhaseStarted?.Invoke(currentPhaseIndex + 1);
             StartCoroutine(ShowPhaseMessage(currentPhase.phaseName, 3f));
         }
         else

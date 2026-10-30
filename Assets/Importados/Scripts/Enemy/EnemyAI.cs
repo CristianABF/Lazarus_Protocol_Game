@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,21 +13,20 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private TargetType enemyType = TargetType.CoreType;
 
     [Header("Rango y Detección")]
-    [SerializeField] private float chaseRange = 10f; // Rango de visión/detección
+    [SerializeField] private float chaseRange = 10f;
     [SerializeField] private float attackDistance = 2.5f;
     [SerializeField] private float damage = 10f;
 
-    [Header("Despeje Inicial")]
-    [SerializeField] private float minInitialDistance = 12f; // Distancia MÍNIMA a la que debe quedar el primer destino
-    [SerializeField] private float maxInitialDistance = 25f; // Distancia MÁXIMA para el despeje inicial
+    [Header("Ruta de Zonas (Patrulla) - Solo Hunters")]
+    [Tooltip("Lista de puntos/zonas por las que los enemigos irán transitando.")]
+    [SerializeField] private List<Transform> patrolZones = new List<Transform>();
+    [SerializeField] private float zoneArrivalRadius = 3f; // Distancia para considerar que "llegó" a la zona
+    [SerializeField] private float wanderRadius = 6f;       // Radio para merodear DENTRO de la zona actual
+    [SerializeField] private float wanderTimer = 4f;        // Tiempo entre pequeños pasos al merodear
 
-    [Header("Merodeo (Wander) - Solo para Hunters")]
-    [SerializeField] private float wanderRadius = 15f;
-    [SerializeField] private float wanderTimer = 5f;
+    private Transform currentZoneTarget;
     private float timerWander;
-    [Header("Merodeo alrededor del Núcleo")]
-    [SerializeField] private float coreWanderRadius = 6f;
-    private CoreBehaviour coreScript;
+    private bool isWanderingInZone = false;
 
     [Header("Attack Speed")]
     [SerializeField] private float attackRate = 2f;
@@ -39,6 +37,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private int ammoAmount = 5;
     [SerializeField] private int reloadAmount = 5;
 
+    [Header("Merodeo alrededor del Núcleo")]
+    [SerializeField] private float coreWanderRadius = 6f;
+
     private NavMeshAgent navMeshAgent;
     private float distanceToTarget = Mathf.Infinity;
     private bool isProvoked = false;
@@ -48,10 +49,14 @@ public class EnemyAI : MonoBehaviour
     private Transform playerTarget;
     private Transform coreTarget;
     private Transform currentTarget;
+    private CoreBehaviour coreScript;
 
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+
+        // Evitación física dinámica para que no colisionen en bloque
+        navMeshAgent.avoidancePriority = Random.Range(30, 80);
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) playerTarget = playerObj.transform;
@@ -63,9 +68,6 @@ public class EnemyAI : MonoBehaviour
             coreScript = coreObj.GetComponent<CoreBehaviour>();
         }
 
-        // Le damos una prioridad de evasión aleatoria a cada enemigo para que no colisionen en masa
-        navMeshAgent.avoidancePriority = UnityEngine.Random.Range(30, 80);
-
         timerWander = wanderTimer;
 
         if (enemyType == TargetType.CoreType)
@@ -76,48 +78,25 @@ public class EnemyAI : MonoBehaviour
         {
             currentTarget = playerTarget;
 
-            // FORZAR DESPLAZAMIENTO A LARGA DISTANCIA AL SPAWNEAR:
-            Vector3 initialFarPoint = GetFarWanderPoint(transform.position, minInitialDistance, maxInitialDistance);
-            navMeshAgent.SetDestination(initialFarPoint);
-
-            Animator anim = GetComponentInChildren<Animator>();
-            if (anim != null)
+            // Carga automática de zonas si no están asignadas manualmente
+            if (patrolZones.Count == 0)
             {
-                anim.SetBool("isRunning", true);
+                BuscarZonasDePatrullaEnEscena();
             }
+
+            // Selecciona la primera zona aleatoria al hacer Spawn
+            SeleccionarSiguienteZona();
         }
-    }
-
-    // Método auxiliar para garantizar un punto lejano
-    private Vector3 GetFarWanderPoint(Vector3 origin, float minDist, float maxDist)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            Vector3 randDirection = UnityEngine.Random.insideUnitSphere * maxDist;
-            randDirection += origin;
-
-            NavMeshHit navHit;
-            if (NavMesh.SamplePosition(randDirection, out navHit, maxDist, -1))
-            {
-                // Verificamos que el punto en el NavMesh esté realmente más lejos que el mínimo solicitado
-                if (Vector3.Distance(origin, navHit.position) >= minDist)
-                {
-                    return navHit.position;
-                }
-            }
-        }
-
-        // Si tras 10 intentos no halla uno tan lejano (ej. pasillo muy cerrado), devuelve el punto más lejano posible
-        return origin + transform.forward * minDist;
     }
 
     private void Update()
     {
         if (isStunned) return;
 
+        // Si es un Hunter y no ha detectado al jugador, navega por la red de zonas
         if (enemyType == TargetType.PlayerHunter && !isProvoked)
         {
-            Wander(transform.position, wanderRadius);
+            PatrullarYMerodear();
             CheckPlayerProximity();
             return;
         }
@@ -128,27 +107,32 @@ public class EnemyAI : MonoBehaviour
 
         if (isProvoked)
         {
-            // Si el enemigo atacaba el núcleo y cambia al jugador, libera el cupo
             if (coreScript != null) coreScript.LiberarLugar(transform);
             EngageTarget();
 
             if (currentTarget == playerTarget && distanceToTarget > chaseRange * 2f)
             {
                 isProvoked = false;
-                if (enemyType == TargetType.CoreType) currentTarget = coreTarget;
-                else navMeshAgent.ResetPath();
+
+                if (enemyType == TargetType.CoreType)
+                {
+                    currentTarget = coreTarget;
+                }
+                else
+                {
+                    // Al perder al jugador, retoma la marcha hacia una zona de patrulla
+                    SeleccionarSiguienteZona();
+                }
             }
         }
         else if (enemyType == TargetType.CoreType)
         {
             if (currentTarget != coreTarget) currentTarget = coreTarget;
 
-            // Comprobamos si tiene cupo para atacar
             bool tieneCupo = coreScript != null && coreScript.SolicitarnLugarParaAtacar(transform);
 
             if (tieneCupo)
             {
-                // Hay lugar: avanza a rango de ataque y golpea
                 if (distanceToTarget > attackDistance)
                 {
                     ChaseTarget();
@@ -161,30 +145,92 @@ public class EnemyAI : MonoBehaviour
             }
             else
             {
-                // No hay cupo: merodea EN VÍSPERAS del núcleo sin alejarse
                 WanderAroundCore();
             }
         }
     }
 
-    private void WanderAroundCore()
+    private void PatrullarYMerodear()
     {
-        if (coreTarget == null) return;
-
-        timerWander += Time.deltaTime;
-
-        if (timerWander >= wanderTimer)
+        if (currentZoneTarget == null)
         {
-            // Busca un punto aleatorio pero usando la posición del NÚCLEO como centro
-            Vector3 randomPointAroundCore = RandomNavSphere(coreTarget.position, coreWanderRadius, -1);
-            navMeshAgent.SetDestination(randomPointAroundCore);
-            GetComponentInChildren<Animator>().SetBool("isRunning", true);
-            timerWander = 0f;
+            SeleccionarSiguienteZona();
+            return;
         }
 
-        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        float distToZone = Vector3.Distance(transform.position, currentZoneTarget.position);
+
+        // 1. Si está en camino hacia la zona actual
+        if (!isWanderingInZone)
         {
-            GetComponentInChildren<Animator>().SetBool("isRunning", false);
+            navMeshAgent.SetDestination(currentZoneTarget.position);
+            SetRunningAnim(true);
+
+            // ¿Llegó a la zona objetivo?
+            if (distToZone <= zoneArrivalRadius)
+            {
+                isWanderingInZone = true;
+                timerWander = wanderTimer; // Fuerza el primer paso de merodeo
+            }
+        }
+        // 2. Si ya llegó a la zona, merodea un poco antes de ir a la siguiente
+        else
+        {
+            timerWander += Time.deltaTime;
+
+            if (timerWander >= wanderTimer)
+            {
+                // Un par de merodeos pequeños en la zona actual
+                Vector3 newWanderPos = RandomNavSphere(currentZoneTarget.position, wanderRadius, -1);
+                navMeshAgent.SetDestination(newWanderPos);
+                SetRunningAnim(true);
+                timerWander = 0f;
+
+                // Probabilidad de cambiar de zona tras merodear un tiempo
+                if (Random.value > 0.5f)
+                {
+                    isWanderingInZone = false;
+                    SeleccionarSiguienteZona();
+                }
+            }
+
+            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            {
+                SetRunningAnim(false);
+            }
+        }
+    }
+
+    private void SeleccionarSiguienteZona()
+    {
+        if (patrolZones.Count == 0) return;
+
+        // Elegir una zona aleatoria diferente a la actual si hay varias disponibles
+        Transform nuevaZona = patrolZones[Random.Range(0, patrolZones.Count)];
+
+        if (patrolZones.Count > 1 && nuevaZona == currentZoneTarget)
+        {
+            int index = (patrolZones.IndexOf(nuevaZona) + 1) % patrolZones.Count;
+            nuevaZona = patrolZones[index];
+        }
+
+        currentZoneTarget = nuevaZona;
+        isWanderingInZone = false;
+
+        if (currentZoneTarget != null)
+        {
+            navMeshAgent.SetDestination(currentZoneTarget.position);
+            SetRunningAnim(true);
+        }
+    }
+
+    private void BuscarZonasDePatrullaEnEscena()
+    {
+        // Busca automáticamente en la escena todos los GameObjects etiquetados como "PatrolZone"
+        GameObject[] zonas = GameObject.FindGameObjectsWithTag("PatrolZone");
+        foreach (GameObject z in zonas)
+        {
+            patrolZones.Add(z.transform);
         }
     }
 
@@ -200,35 +246,39 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void Wander(Vector3 origin, float radius)
+    private void WanderAroundCore()
     {
+        if (coreTarget == null) return;
+
         timerWander += Time.deltaTime;
 
         if (timerWander >= wanderTimer)
         {
-            Vector3 newPos = RandomNavSphere(origin, radius, -1);
-            navMeshAgent.SetDestination(newPos);
-            GetComponentInChildren<Animator>().SetBool("isRunning", true);
+            Vector3 randomPointAroundCore = RandomNavSphere(coreTarget.position, coreWanderRadius, -1);
+            navMeshAgent.SetDestination(randomPointAroundCore);
+            SetRunningAnim(true);
             timerWander = 0f;
         }
 
         if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
         {
-            GetComponentInChildren<Animator>().SetBool("isRunning", false);
+            SetRunningAnim(false);
         }
     }
 
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
-        Vector3 randDirection = UnityEngine.Random.insideUnitSphere * dist;
-        randDirection += origin;
-
-        NavMeshHit navHit;
-        if (NavMesh.SamplePosition(randDirection, out navHit, dist, layermask))
+        for (int i = 0; i < 5; i++)
         {
-            return navHit.position;
-        }
+            Vector3 randDirection = Random.insideUnitSphere * dist;
+            randDirection += origin;
 
+            NavMeshHit navHit;
+            if (NavMesh.SamplePosition(randDirection, out navHit, dist, layermask))
+            {
+                return navHit.position;
+            }
+        }
         return origin;
     }
 
@@ -327,22 +377,18 @@ public class EnemyAI : MonoBehaviour
             navMeshAgent.isStopped = state;
         }
 
-        Animator anim = GetComponentInChildren<Animator>();
-        if (anim != null)
-        {
-            anim.SetBool("isRunning", false);
-        }
+        SetRunningAnim(false);
     }
 
     private void Wait()
     {
-        GetComponentInChildren<Animator>().SetBool("isRunning", false);
+        SetRunningAnim(false);
         navMeshAgent.isStopped = true;
     }
 
     private void ChaseTarget()
     {
-        GetComponentInChildren<Animator>().SetBool("isRunning", true);
+        SetRunningAnim(true);
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(currentTarget.position);
     }
@@ -354,9 +400,14 @@ public class EnemyAI : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
+    private void SetRunningAnim(bool state)
+    {
+        Animator anim = GetComponentInChildren<Animator>();
+        if (anim != null) anim.SetBool("isRunning", state);
+    }
+
     private void OnDestroy()
     {
-        // Liberamos el cupo del núcleo de forma segura al destruir el objeto
         if (coreScript != null)
         {
             coreScript.LiberarLugar(transform);

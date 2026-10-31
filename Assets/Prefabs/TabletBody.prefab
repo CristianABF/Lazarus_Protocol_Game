@@ -29,10 +29,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.34, y: 0.2, z: 0.02}
+  m_LocalScale: {x: 0.3, y: 0.2, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8951076403432854750}
+  m_Father: {fileID: 5288957042877772506}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8847049546947911905
 MeshFilter:
@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1922309441978661419}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 3bd3f21942c38794cbc6115554204db0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -104,7 +104,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -118,6 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5288957042877772506}
   - component: {fileID: 2459360804613442450}
+  - component: {fileID: 5747409466818301427}
   m_Layer: 0
   m_Name: TabletBody
   m_TagString: Untagged
@@ -135,10 +136,11 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.25879657, y: 0.0150530515, z: -0.004034811, w: 0.9658062}
   m_LocalPosition: {x: -9.872, y: 1.73, z: -12.37}
-  m_LocalScale: {x: 0.32, y: 0.18, z: 1}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8951076403432854750}
+  - {fileID: 4087020712190647523}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -29.985, y: 2.062, z: -1.031}
 --- !u!114 &2459360804613442450
@@ -159,9 +161,34 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  teclaInteractuar: 101
+  teclaInteractuar: 99
+  teclaCamAnterior: 97
+  teclaCamSiguiente: 100
   manoJugador: {fileID: 0}
-  distanciaInteraccion: 5
+  distanciaInteraccion: 2
+  posicionEnMano: {x: 0, y: -0.1, z: 0.7}
+  rotacionEnMano: {x: 0, y: 0, z: 0}
+--- !u!65 &5747409466818301427
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3125653348391968495}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3, y: 0.2, z: 0.05}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7326788338781520929
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,10 +218,9 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.011}
-  m_LocalScale: {x: 0.32, y: 0, z: 1}
+  m_LocalScale: {x: 0.28, y: 0.18, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4087020712190647523}
+  m_Children: []
   m_Father: {fileID: 5288957042877772506}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7890860249380903691
@@ -213,7 +239,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7326788338781520929}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -267,7 +293,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30

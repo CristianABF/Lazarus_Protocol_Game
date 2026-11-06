@@ -69,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
             armsAnimator = GetComponentInChildren<Animator>();
         }
 
-        // Si no asignaste el Transform de los brazos en el Inspector, busca el padre del Animator
         if (armsModelTransform == null && armsAnimator != null)
         {
             armsModelTransform = armsAnimator.transform.parent != null ? armsAnimator.transform.parent : armsAnimator.transform;
@@ -117,7 +116,6 @@ public class PlayerMovement : MonoBehaviour
         InputController.Input.Player.Sprint.canceled += OnSprintCanceled;
         InputController.Input.Player.Reload.performed += OnReload;
 
-        // Entradas de disparo
         InputController.Input.Player.Shoot.performed += OnShootStart;
         InputController.Input.Player.Shoot.canceled += OnShootCanceled;
     }
@@ -170,13 +168,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Look()
     {
-        float mouseX = lookInput.x * mouseSensitivity;
+        // 1. INYECCIÓN EN TIEMPO REAL: Consultamos la configuración cada vez que el ratón se mueve
+        float multiplicadorSensibilidad = PlayerPrefs.GetInt("Pref_Sensibilidad", 4) / 4f;
+        int multiplicadorInvertirY = (PlayerPrefs.GetInt("Pref_InvertirY", 0) == 1) ? -1 : 1;
+
+        // 2. Calculamos la rotación horizontal
+        float mouseX = lookInput.x * mouseSensitivity * multiplicadorSensibilidad;
         transform.Rotate(Vector3.up * mouseX);
 
-        float mouseY = lookInput.y * mouseSensitivity;
+        // 3. Calculamos la rotación vertical aplicando el inversor (1 o -1)
+        float mouseY = lookInput.y * mouseSensitivity * multiplicadorSensibilidad * multiplicadorInvertirY;
+
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, bottomClamp, topClamp);
 
+        // 4. Aplicamos la rotación a la cámara
         if (cameraHolder != null)
         {
             cameraHolder.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
@@ -214,15 +220,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 targetPosition = respawnPoint != null ? respawnPoint.position : Vector3.zero;
         Quaternion targetRotation = respawnPoint != null ? respawnPoint.rotation : Quaternion.identity;
 
-        // Desactivamos temporalmente el CharacterController para poder teletransportar al Player
         controller.enabled = false;
-
         transform.position = targetPosition;
         transform.rotation = targetRotation;
-
-        // Reseteamos la velocidad acumulada para no salir disparados hacia abajo tras reaparecer
         velocity = Vector3.zero;
-
         controller.enabled = true;
     }
 
@@ -230,7 +231,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!enableBobbing || armsModelTransform == null) return;
 
-        // Si se mantiene presionado disparar o está en el aire, se reestablece la posición original de los brazos
         if (isShooting || !isGrounded)
         {
             armsModelTransform.localPosition = Vector3.Lerp(armsModelTransform.localPosition, defaultArmsPos, Time.deltaTime * bobSmoothness);
@@ -250,7 +250,6 @@ public class PlayerMovement : MonoBehaviour
 
         bobTimer += Time.deltaTime * frequency;
 
-        // Onda en forma de ocho vertical/horizontal aplicada exclusivamente al transform local del modelo de brazos
         float newY = defaultArmsPos.y + (Mathf.Sin(bobTimer) * amount);
         float newX = defaultArmsPos.x + (Mathf.Cos(bobTimer * 0.5f) * amount * 0.6f);
 

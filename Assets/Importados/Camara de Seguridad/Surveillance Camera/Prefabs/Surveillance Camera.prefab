@@ -391,7 +391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraHead: {fileID: 8051894795600161108}
   rotationAngle: 45
-  rotationSpeed: 2
+  rotationSpeed: 1
   povCamera: {fileID: 784254706075955474}
 --- !u!1 &7428213431903784499
 GameObject:

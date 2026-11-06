@@ -647,11 +647,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 1
-  chaseRange: 15
+  chaseRange: 18
   attackDistance: 8
   damage: 10
+  minInitialDistance: 30
+  maxInitialDistance: 45
   wanderRadius: 20
   wanderTimer: 3
+  coreWanderRadius: 6
   attackRate: 2
   reloadSpeed: 3.3
   ammoAmount: 5

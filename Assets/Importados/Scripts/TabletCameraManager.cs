@@ -6,131 +6,116 @@ public class TabletCameraManager : MonoBehaviour
     public RenderTexture cameraFeedRT;
     public SecurityCameraControl[] camaras;
 
-    [Header("Interacción con el Jugador")]
-    public KeyCode teclaInteractuar = KeyCode.E;
+    [Header("Interacción y Controles")]
+    public KeyCode teclaInteractuar = KeyCode.C;
+    public KeyCode teclaCamAnterior = KeyCode.A;
+    public KeyCode teclaCamSiguiente = KeyCode.D;
     public Transform manoJugador;
-    public float distanciaInteraccion = 3f;
+    public float distanciaInteraccion = 2f;
 
-    private Transform jugadorTransform;
+    [Header("Posición en la mano (valores locales)")]
+    public Vector3 posicionEnMano = new Vector3(0f, -0.15f, 0.45f);
+    public Vector3 rotacionEnMano = new Vector3(0f, 0f, 0f);
+
     private int indiceCamaraActual = 0;
-    private bool sostieneTablet = false;
-
+    private bool estaEquipada = false;
     private Vector3 posicionOriginal;
     private Quaternion rotacionOriginal;
     private Transform padreOriginal;
 
     void Start()
     {
-        posicionOriginal = transform.position;
-        rotacionOriginal = transform.rotation;
+        posicionOriginal = transform.localPosition;
+        rotacionOriginal = transform.localRotation;
         padreOriginal = transform.parent;
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            jugadorTransform = playerObj.transform;
-        }
-
-        DesactivarTodasLasCamaras();
+        ActivarCamaraActual();
     }
 
     void Update()
     {
-        DeteccionInteractuar();
-
-        if (sostieneTablet)
-        {
-            NavegacionCamaras();
-        }
-    }
-
-    void DeteccionInteractuar()
-    {
+        // Equipar / soltar con la tecla de interacción
         if (Input.GetKeyDown(teclaInteractuar))
         {
-            if (sostieneTablet)
+            if (estaEquipada)
             {
                 SoltarTablet();
             }
             else
             {
-                if (jugadorTransform != null)
+                float distancia = Vector3.Distance(transform.position, manoJugador.position);
+                if (distancia <= distanciaInteraccion)
                 {
-                    float distancia = Vector3.Distance(transform.position, jugadorTransform.position);
-                    if (distancia <= distanciaInteraccion)
-                    {
-                        TomarTablet();
-                    }
+                    EquiparTablet();
                 }
+            }
+        }
+
+        // Cambiar de cámara solo con la tablet en la mano
+        if (estaEquipada && camaras.Length > 0)
+        {
+            if (Input.GetKeyDown(teclaCamSiguiente))
+            {
+                CambiarCamara(1);
+            }
+            else if (Input.GetKeyDown(teclaCamAnterior))
+            {
+                CambiarCamara(-1);
             }
         }
     }
 
-    void TomarTablet()
+    void EquiparTablet()
     {
-        sostieneTablet = true;
+        estaEquipada = true;
+        ActivarColliders(false);
 
-        if (manoJugador != null)
-        {
-            transform.SetParent(manoJugador);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-        }
-
-        ActivarCamaraPorIndice(indiceCamaraActual);
+        transform.SetParent(manoJugador);
+        transform.localPosition = posicionEnMano;
+        transform.localRotation = Quaternion.Euler(rotacionEnMano);
     }
 
     void SoltarTablet()
     {
-        sostieneTablet = false;
+        estaEquipada = false;
 
         transform.SetParent(padreOriginal);
-        transform.position = posicionOriginal;
-        transform.rotation = rotacionOriginal;
+        transform.localPosition = posicionOriginal;
+        transform.localRotation = rotacionOriginal;
 
-        DesactivarTodasLasCamaras();
+        ActivarColliders(true);
     }
 
-    void NavegacionCamaras()
+    // Evita que los colliders de la tablet empujen al jugador mientras la tiene en la mano
+    void ActivarColliders(bool activo)
     {
-        if (camaras == null || camaras.Length == 0) return;
-
-        if (Input.GetKeyDown(KeyCode.D))
+        foreach (Collider col in GetComponentsInChildren<Collider>())
         {
-            indiceCamaraActual = (indiceCamaraActual + 1) % camaras.Length;
-            ActivarCamaraPorIndice(indiceCamaraActual);
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            indiceCamaraActual = (indiceCamaraActual - 1 + camaras.Length) % camaras.Length;
-            ActivarCamaraPorIndice(indiceCamaraActual);
+            col.enabled = activo;
         }
     }
 
-    void ActivarCamaraPorIndice(int indice)
+    void CambiarCamara(int direccion)
     {
-        DesactivarTodasLasCamaras();
+        indiceCamaraActual += direccion;
 
-        if (camaras != null && indice >= 0 && indice < camaras.Length)
+        if (indiceCamaraActual >= camaras.Length)
+            indiceCamaraActual = 0;
+        else if (indiceCamaraActual < 0)
+            indiceCamaraActual = camaras.Length - 1;
+
+        ActivarCamaraActual();
+    }
+
+    void ActivarCamaraActual()
+    {
+        for (int i = 0; i < camaras.Length; i++)
         {
-            if (camaras[indice] != null && camaras[indice].povCamera != null)
+            if (camaras[i] != null && camaras[i].povCamera != null)
             {
-                camaras[indice].povCamera.targetTexture = cameraFeedRT;
-                camaras[indice].ActivarPOV(true);
-            }
-        }
-    }
-
-    void DesactivarTodasLasCamaras()
-    {
-        if (camaras == null) return;
-
-        foreach (var cam in camaras)
-        {
-            if (cam != null && cam.povCamera != null)
-            {
-                cam.povCamera.targetTexture = null;
-                cam.ActivarPOV(false);
+                bool esLaActiva = (i == indiceCamaraActual);
+                camaras[i].povCamera.targetTexture = esLaActiva ? cameraFeedRT : null;
+                camaras[i].povCamera.enabled = esLaActiva;
             }
         }
     }

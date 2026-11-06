@@ -1269,6 +1269,10 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 5106864479789344446, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 7551
+      objectReference: {fileID: 0}
     - target: {fileID: 6136816468491178605, guid: 7ddb85f3717438d42928c78c679c0510, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -1428,6 +1432,10 @@ PrefabInstance:
     - target: {fileID: 2035127298640475798, guid: 39a98770b84664d4c89079cb8c5ceea5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 5649835867683014810, guid: 39a98770b84664d4c89079cb8c5ceea5, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 10241
       objectReference: {fileID: 0}
     - target: {fileID: 8149799801752953294, guid: 39a98770b84664d4c89079cb8c5ceea5, type: 3}
       propertyPath: m_RendererIndex

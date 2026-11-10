@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2389861635340202281}
@@ -740,15 +740,15 @@ MonoBehaviour:
   chaseRange: 18
   attackDistance: 8
   damage: 10
-  minInitialDistance: 30
-  maxInitialDistance: 45
+  patrolZones: []
+  zoneArrivalRadius: 3
   wanderRadius: 20
   wanderTimer: 3
-  coreWanderRadius: 6
   attackRate: 2
   reloadSpeed: 3.3
   ammoAmount: 5
   reloadAmount: 5
+  coreWanderRadius: 6
 --- !u!114 &4117215093195046664
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,16 +5,17 @@ using UnityEngine.EventSystems;
 public class PauseControl : MonoBehaviour
 {
     [Header("Paneles de UI")]
-    public GameObject pauseMenuUI; // El Canvas principal de la pausa
+    public GameObject pauseMenuUI;
     public GameObject pauseBlurVolume;
 
-    [Header("Sub-Menús (Arrastrar desde la jerarquía)")]
+    [Header("Sub-Menús")]
     public GameObject listaBotones;
     public GameObject panelGuardar;
     public GameObject panelAjustes;
 
-    [Header("HUD")]
-    public PlayerHealthBar hudSalud; // Arrastrar la barra de salud desde la jerarquía
+    [Header("Referencias del Jugador y HUD")]
+    public GameObject jugador; // Variable nueva para saber a quién guardar
+    public PlayerHealthBar hudSalud;
 
     public static bool isPaused = false;
 
@@ -29,72 +30,73 @@ public class PauseControl : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenuUI.SetActive(false); // oculta el canvas
+        pauseMenuUI.SetActive(false);
         if (pauseBlurVolume != null) pauseBlurVolume.SetActive(false);
-
-        // Asegurar que los sub-menús se apaguen
         if (listaBotones != null) listaBotones.SetActive(false);
         if (panelGuardar != null) panelGuardar.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
+        if (hudSalud != null) hudSalud.SetHUDVisible(true);
 
-        // MOSTRAR LA VIDA AL REANUDAR EL JUEGO
-        if (hudSalud != null)
-        {
-            hudSalud.SetHUDVisible(true);
-        }
-
-        Time.timeScale = 1f; // el tiempo vuelve a la normalidad
+        Time.timeScale = 1f;
         isPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        if (EventSystem.current != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
     }
 
-    // Función interna para Pausar
     void Pause()
     {
-        pauseMenuUI.SetActive(true); // muestra el canvas
+        pauseMenuUI.SetActive(true);
         if (pauseBlurVolume != null) pauseBlurVolume.SetActive(true);
-
-        // Mostrar la lista de botones y ocultar los otros paneles
         if (listaBotones != null) listaBotones.SetActive(true);
         if (panelGuardar != null) panelGuardar.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
+        if (hudSalud != null) hudSalud.SetHUDVisible(false);
 
-        // OCULTAR LA VIDA AL PONER PAUSA
-        if (hudSalud != null)
-        {
-            hudSalud.SetHUDVisible(false);
-        }
-
-        Time.timeScale = 0f; // congela el tiempo
+        Time.timeScale = 0f;
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    public void AbrirGuardar()
+    public void AbrirGuardar() { listaBotones.SetActive(false); panelGuardar.SetActive(true); }
+    public void AbrirAjustes() { listaBotones.SetActive(false); panelAjustes.SetActive(true); }
+    public void VolverMenuPausa() { panelGuardar.SetActive(false); panelAjustes.SetActive(false); listaBotones.SetActive(true); }
+
+    // --- NUEVO: SISTEMA DE GUARDADO ---
+    public void GuardarPartida()
     {
-        listaBotones.SetActive(false);
-        panelGuardar.SetActive(true);
+        if (jugador != null)
+        {
+            PlayerPrefs.SetFloat("PlayerX", jugador.transform.position.x);
+            PlayerPrefs.SetFloat("PlayerY", jugador.transform.position.y);
+            PlayerPrefs.SetFloat("PlayerZ", jugador.transform.position.z);
+            PlayerPrefs.Save();
+            Debug.Log("¡Partida Guardada!");
+        }
     }
 
-    public void AbrirAjustes()
+    public void CargarPartida()
     {
-        listaBotones.SetActive(false);
-        panelAjustes.SetActive(true);
-    }
+        if (PlayerPrefs.HasKey("PlayerX") && jugador != null)
+        {
+            float x = PlayerPrefs.GetFloat("PlayerX");
+            float y = PlayerPrefs.GetFloat("PlayerY");
+            float z = PlayerPrefs.GetFloat("PlayerZ");
 
-    public void VolverMenuPausa()
-    {
-        panelGuardar.SetActive(false);
-        panelAjustes.SetActive(false);
-        listaBotones.SetActive(true);
+            CharacterController controller = jugador.GetComponent<CharacterController>();
+            if (controller != null) controller.enabled = false;
+
+            jugador.transform.position = new Vector3(x, y, z);
+
+            if (controller != null) controller.enabled = true;
+
+            Debug.Log("¡Partida Cargada!");
+            Resume(); // Reanuda el juego automáticamente
+        }
     }
+    // ---------------------------------
 
     public void IrMenuPrincipal(string nombreEscenaMenu)
     {
@@ -102,9 +104,5 @@ public class PauseControl : MonoBehaviour
         SceneManager.LoadScene(nombreEscenaMenu);
     }
 
-    public void SalirJuego()
-    {
-        Debug.Log("Saliendo de Lazarus Protocol...");
-        Application.Quit();
-    }
+    public void SalirJuego() { Application.Quit(); }
 }

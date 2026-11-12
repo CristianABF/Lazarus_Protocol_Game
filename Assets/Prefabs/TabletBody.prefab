@@ -166,7 +166,7 @@ MonoBehaviour:
   teclaCamAnterior: 97
   teclaCamSiguiente: 100
   manoJugador: {fileID: 0}
-  distanciaInteraccion: 2
+  distanciaInteraccion: 5
   posicionEnMano: {x: 0, y: -0.1, z: 0.7}
   rotacionEnMano: {x: 0, y: 0, z: 0}
 --- !u!65 &5747409466818301427

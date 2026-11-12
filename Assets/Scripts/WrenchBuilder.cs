@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public struct BuildableItem
 {
-    public string id;            // Identificador único (ej: "Turret_Flamethrower", "Mine_Electric")
+    public string id;             // Identificador único (ej: "Turret_Flamethrower", "Mine_Electric")
     public string itemName;
     public GameObject realPrefab;
     public GameObject hologramPrefab;
@@ -15,7 +15,7 @@ public struct BuildableItem
     [HideInInspector] public int currentAmount;
 
     [Header("Desbloqueo")]
-    public bool isUnlocked;     // Determina si el jugador ya puede seleccionar y construir esto
+    public bool isUnlocked;      // Determina si el jugador ya puede seleccionar y construir esto
 }
 
 public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
@@ -31,8 +31,8 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
     [Header("Configuración de Construcción")]
     [SerializeField] private float buildRange = 10f;
-    [SerializeField] private LayerMask buildableLayer;     // Capa del Suelo
-    [SerializeField] private LayerMask destroyableLayer;   // Capa de las Torretas construidas
+    [SerializeField] private LayerMask buildableLayer;      // Capa del Suelo
+    [SerializeField] private LayerMask destroyableLayer;    // Capa de las Torretas construidas
 
     [Header("Materiales / Colores del Holograma")]
     [SerializeField] private Material validHologramMaterial;
@@ -53,6 +53,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     {
         GetNextUnlockedIndex(0);
     }
+
     private void Awake()
     {
         // Si no se asignó manualmente en el Inspector, busca el Animator en el personaje o sus padres
@@ -62,6 +63,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         }
         hasWrenchHash = Animator.StringToHash(hasWrenchBool);
     }
+
     private void SetHologramMaterial(Material mat)
     {
         if (currentHologram == null || mat == null) return;
@@ -86,7 +88,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             animator.SetBool(hasWrenchHash, true);
         }
 
-        if (buildableItems.Count > 0 && !!buildableItems[currentIndex].isUnlocked)
+        if (buildableItems.Count > 0 && !buildableItems[currentIndex].isUnlocked)
         {
             GetNextUnlockedIndex(1);
         }
@@ -441,5 +443,41 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
                 break;
             }
         }
+    }
+
+    // --- CONEXIÓN CON EL WORKBENCH ---
+
+    public void DesbloquearOAumentarDesdeWorkbench(string id, int cantidadExtra = 1)
+    {
+        for (int i = 0; i < buildableItems.Count; i++)
+        {
+            if (buildableItems[i].id == id)
+            {
+                BuildableItem item = buildableItems[i];
+
+                if (!item.isUnlocked)
+                {
+                    item.isUnlocked = true;
+                    if (item.maxAmount <= 0) item.maxAmount = cantidadExtra;
+                }
+                else
+                {
+                    item.maxAmount += cantidadExtra;
+                }
+
+                buildableItems[i] = item;
+
+                if (i == currentIndex)
+                {
+                    UpdateHologram();
+                    UpdateHologramPosition();
+                }
+
+                Debug.Log($"[WrenchBuilder] Crafteo aplicado a '{item.itemName}'. Desbloqueado: {item.isUnlocked} | Cupo: {item.currentAmount}/{item.maxAmount}");
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[WrenchBuilder] No se encontró ningún item con id '{id}' en la llave inglesa.");
     }
 }

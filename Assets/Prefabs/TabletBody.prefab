@@ -163,8 +163,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   teclaInteractuar: 99
-  teclaCamAnterior: 97
-  teclaCamSiguiente: 100
+  teclaCamAnterior: 324
+  teclaCamSiguiente: 324
   manoJugador: {fileID: 0}
   distanciaInteraccion: 5
   posicionEnMano: {x: 0, y: -0.1, z: 0.7}

@@ -41,7 +41,7 @@ public class AjustesManager : MonoBehaviour
     private bool ayudasVisuales = false;
     private bool subtitulos = false;
 
-    void Start()
+    public void CargarAjustes()
     {
         // 1. LECTURA DEL DISCO DURO
         volMaestro = PlayerPrefs.GetInt("Pref_VolMaestro", 8);

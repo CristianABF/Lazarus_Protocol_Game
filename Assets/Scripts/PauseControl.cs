@@ -13,9 +13,8 @@ public class PauseControl : MonoBehaviour
     public GameObject panelGuardar;
     public GameObject panelAjustes;
 
-    [Header("Referencias del Jugador y HUD")]
-    public GameObject jugador; // Variable nueva para saber a quién guardar
-    public PlayerHealthBar hudSalud;
+    [Header("Referencias del HUD")]
+    public PlayerHealthBar hudSalud; // Mantenemos solo el HUD para ocultarlo en pausa
 
     public static bool isPaused = false;
 
@@ -25,6 +24,19 @@ public class PauseControl : MonoBehaviour
         {
             if (isPaused) Resume();
             else Pause();
+        }
+    }
+
+    [Header("Conexión Interna")]
+    public AjustesManager scriptAjustes; // Referencia al script dormido
+
+    void Start()
+    {
+        // Al arrancar el nivel, obligamos al script a cargar el sonido y gráficos
+        // directamente desde el disco duro, sin necesidad de encender la pantalla visual.
+        if (scriptAjustes != null)
+        {
+            scriptAjustes.CargarAjustes();
         }
     }
 
@@ -60,43 +72,24 @@ public class PauseControl : MonoBehaviour
         Cursor.visible = true;
     }
 
-    public void AbrirGuardar() { listaBotones.SetActive(false); panelGuardar.SetActive(true); }
-    public void AbrirAjustes() { listaBotones.SetActive(false); panelAjustes.SetActive(true); }
-    public void VolverMenuPausa() { panelGuardar.SetActive(false); panelAjustes.SetActive(false); listaBotones.SetActive(true); }
-
-    // --- NUEVO: SISTEMA DE GUARDADO ---
-    public void GuardarPartida()
+    public void AbrirGuardar()
     {
-        if (jugador != null)
-        {
-            PlayerPrefs.SetFloat("PlayerX", jugador.transform.position.x);
-            PlayerPrefs.SetFloat("PlayerY", jugador.transform.position.y);
-            PlayerPrefs.SetFloat("PlayerZ", jugador.transform.position.z);
-            PlayerPrefs.Save();
-            Debug.Log("¡Partida Guardada!");
-        }
+        listaBotones.SetActive(false);
+        panelGuardar.SetActive(true);
     }
 
-    public void CargarPartida()
+    public void AbrirAjustes()
     {
-        if (PlayerPrefs.HasKey("PlayerX") && jugador != null)
-        {
-            float x = PlayerPrefs.GetFloat("PlayerX");
-            float y = PlayerPrefs.GetFloat("PlayerY");
-            float z = PlayerPrefs.GetFloat("PlayerZ");
-
-            CharacterController controller = jugador.GetComponent<CharacterController>();
-            if (controller != null) controller.enabled = false;
-
-            jugador.transform.position = new Vector3(x, y, z);
-
-            if (controller != null) controller.enabled = true;
-
-            Debug.Log("¡Partida Cargada!");
-            Resume(); // Reanuda el juego automáticamente
-        }
+        listaBotones.SetActive(false);
+        panelAjustes.SetActive(true);
     }
-    // ---------------------------------
+
+    public void VolverMenuPausa()
+    {
+        panelGuardar.SetActive(false);
+        panelAjustes.SetActive(false);
+        listaBotones.SetActive(true);
+    }
 
     public void IrMenuPrincipal(string nombreEscenaMenu)
     {
@@ -104,5 +97,8 @@ public class PauseControl : MonoBehaviour
         SceneManager.LoadScene(nombreEscenaMenu);
     }
 
-    public void SalirJuego() { Application.Quit(); }
+    public void SalirJuego()
+    {
+        Application.Quit();
+    }
 }

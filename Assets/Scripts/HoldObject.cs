@@ -133,4 +133,27 @@ public class HoldObject : MonoBehaviour
     {
         return heldObj;
     }
+
+    // NUEVO: Método público para que el Motor de Carga asigne un arma directamente
+    public void ForzarAgarre(GameObject nuevoObjeto)
+    {
+        if (heldObj != null) DropObject(); // Suelta lo que tenga antes de equipar
+
+        heldObj = nuevoObjeto;
+        heldObjRb = heldObj.GetComponent<Rigidbody>();
+
+        if (heldObjRb != null) heldObjRb.isKinematic = true;
+
+        Collider objCollider = heldObj.GetComponent<Collider>();
+        if (objCollider != null) objCollider.enabled = false;
+
+        heldObj.transform.SetParent(holdPoint);
+        heldObj.transform.localPosition = Vector3.zero;
+        heldObj.transform.localRotation = Quaternion.identity;
+
+        IPickable pickableItem = heldObj.GetComponent<IPickable>();
+        if (pickableItem != null) pickableItem.OnPickedUp();
+
+        if (animator != null) animator.SetBool(HasWeaponHash, true);
+    }
 }

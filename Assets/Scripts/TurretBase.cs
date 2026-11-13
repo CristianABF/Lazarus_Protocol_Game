@@ -26,7 +26,7 @@ public abstract class TurretBase : MonoBehaviour
         // Programa la autodestrucción del objeto raíz para liberar el cupo en WrenchBuilder
         if (duracionDeVida > 0f)
         {
-            Destroy(transform.root.gameObject, duracionDeVida);
+            Destroy(gameObject, duracionDeVida);
         }
     }
 

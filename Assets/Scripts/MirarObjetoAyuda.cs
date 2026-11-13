@@ -3,7 +3,7 @@ using UnityEngine;
 public class MirarObjetoAyuda : MonoBehaviour
 {
     [Header("Configuración")]
-    [SerializeField] private float distanciaRaycast = 3f;
+    [SerializeField] private float distanciaRaycast = 5f;
     [SerializeField] private GameObject burbujaAyudaUI;
 
     private Camera camaraPrincipal;
@@ -11,29 +11,29 @@ public class MirarObjetoAyuda : MonoBehaviour
     void Start()
     {
         camaraPrincipal = Camera.main;
-        if (burbujaAyudaUI != null)
-        {
-            burbujaAyudaUI.SetActive(false);
-        }
+        if (burbujaAyudaUI != null) burbujaAyudaUI.SetActive(false);
     }
 
     void Update()
     {
-        Ray ray = camaraPrincipal.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        RaycastHit hit;
+        if (camaraPrincipal == null) return;
 
-        if (Physics.Raycast(ray, out hit, distanciaRaycast))
+        Ray ray = camaraPrincipal.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        RaycastHit[] hits = Physics.RaycastAll(ray, distanciaRaycast, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
+
+        bool mirandoObjeto = false;
+
+        foreach (RaycastHit hit in hits)
         {
-            if (hit.collider.CompareTag("Interactuable"))
+            // Ahora detecta las armas (Pickable) Y TAMBIÉN tus detectores (Interactuable)
+            if (hit.collider.CompareTag("Pickable") || hit.collider.CompareTag("Interactuable"))
             {
-                if (burbujaAyudaUI != null) burbujaAyudaUI.SetActive(true);
-                return;
+                mirandoObjeto = true;
+                break;
             }
         }
 
-        if (burbujaAyudaUI != null)
-        {
-            burbujaAyudaUI.SetActive(false);
-        }
+        if (burbujaAyudaUI != null) burbujaAyudaUI.SetActive(mirandoObjeto);
     }
 }

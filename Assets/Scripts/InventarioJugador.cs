@@ -9,4 +9,15 @@ public class InventarioJugador : MonoBehaviour
         chatarraAcumulada += cantidad;
         Debug.Log("Chatarra recolectada. Total interno: " + chatarraAcumulada);
     }
+
+    public bool GastarChatarra(int cantidad)
+    {
+        if (chatarraAcumulada >= cantidad)
+        {
+            chatarraAcumulada -= cantidad;
+            Debug.Log("Chatarra gastada: " + cantidad + ". Restante: " + chatarraAcumulada);
+            return true;
+        }
+        return false;
+    }
 }

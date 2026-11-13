@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,15 +6,16 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public struct BuildableItem
 {
-    public string id;            // Identificador único (ej: "Turret_Flamethrower", "Mine_Electric")
+    public string id;             // Identificador único (ej: "barricada", "t_sniper")
     public string itemName;
     public GameObject realPrefab;
     public GameObject hologramPrefab;
-    public int maxAmount;
-    [HideInInspector] public int currentAmount;
+    public int maxAmount;         // Límite máximo permitido (ej: 4)
+    [HideInInspector] public int stockDisponible; // Cuántas tenés fabricadas listas para poner (el 1/4, 2/4...)
+    [HideInInspector] public int placedCount;     // Cuántas hay actualmente puestas en el mapa
 
     [Header("Desbloqueo")]
-    public bool isUnlocked;     // Determina si el jugador ya puede seleccionar y construir esto
+    public bool isUnlocked;       // Determina si el jugador ya puede seleccionar y construir esto
 }
 
 public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
@@ -31,8 +31,8 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
     [Header("Configuración de Construcción")]
     [SerializeField] private float buildRange = 10f;
-    [SerializeField] private LayerMask buildableLayer;     // Capa del Suelo
-    [SerializeField] private LayerMask destroyableLayer;   // Capa de las Torretas construidas
+    [SerializeField] private LayerMask buildableLayer;      // Capa del Suelo
+    [SerializeField] private LayerMask destroyableLayer;    // Capa de las Torretas construidas
 
     [Header("Materiales / Colores del Holograma")]
     [SerializeField] private Material validHologramMaterial;
@@ -53,15 +53,16 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     {
         GetNextUnlockedIndex(0);
     }
+
     private void Awake()
     {
-        // Si no se asignó manualmente en el Inspector, busca el Animator en el personaje o sus padres
         if (animator == null)
         {
             animator = GetComponentInParent<Animator>();
         }
         hasWrenchHash = Animator.StringToHash(hasWrenchBool);
     }
+
     private void SetHologramMaterial(Material mat)
     {
         if (currentHologram == null || mat == null) return;
@@ -80,18 +81,17 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         this.enabled = true;
         isEquipped = true;
 
-        // Activamos la animación en el Animator
         if (animator != null)
         {
             animator.SetBool(hasWrenchHash, true);
         }
 
-        if (buildableItems.Count > 0 && !!buildableItems[currentIndex].isUnlocked)
+        if (buildableItems.Count > 0 && !buildableItems[currentIndex].isUnlocked)
         {
             GetNextUnlockedIndex(1);
         }
 
-        UpdateHologram(); // Instancia el holograma del objeto seleccionado actualmente
+        UpdateHologram();
     }
 
     public void OnDropped()
@@ -100,13 +100,11 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         isEquipped = false;
         isTryingToBuild = false;
 
-        // Desactivamos la animación en el Animator
         if (animator != null)
         {
             animator.SetBool(hasWrenchHash, false);
         }
 
-        // Destruimos el holograma al soltar la herramienta para liberar memoria
         if (currentHologram != null)
         {
             Destroy(currentHologram);
@@ -150,7 +148,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         if (isTryingToBuild && isValidBuildPosition)
         {
             BuildObject();
-            isTryingToBuild = false; // Evita construir múltiples objetos con un solo clic
+            isTryingToBuild = false;
         }
     }
 
@@ -181,8 +179,8 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             currentHologram.transform.position = currentBuildPosition;
             currentHologram.transform.rotation = currentBuildRotation;
 
-            // Si sobrepasa la cantidad máxima
-            if (currentItem.currentAmount >= currentItem.maxAmount)
+            // Solo es válido construir si tenemos stock fabricado (> 0) y no superamos el límite en escena
+            if (currentItem.stockDisponible <= 0 || currentItem.placedCount >= currentItem.maxAmount)
             {
                 isValidBuildPosition = false;
                 SetHologramMaterial(invalidHologramMaterial);
@@ -205,8 +203,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     private void RotateObject(InputAction.CallbackContext context)
     {
         if (PauseControl.isPaused || !isEquipped) return;
-
-        // Sumamos 90 grados en el eje Y
         yRotationOffset = (yRotationOffset + 90f) % 360f;
     }
 
@@ -225,9 +221,9 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
     {
         BuildableItem currentItem = buildableItems[currentIndex];
 
-        if (!currentItem.isUnlocked || currentItem.currentAmount >= currentItem.maxAmount)
+        if (!currentItem.isUnlocked || currentItem.stockDisponible <= 0 || currentItem.placedCount >= currentItem.maxAmount)
         {
-            Debug.LogWarning($"[WrenchBuilder] No se puede construir {currentItem.itemName}. Desbloqueado: {currentItem.isUnlocked}, Cantidad: {currentItem.currentAmount}/{currentItem.maxAmount}");
+            Debug.LogWarning($"[WrenchBuilder] No se puede construir {currentItem.itemName}. Stock: {currentItem.stockDisponible}, Colocados: {currentItem.placedCount}/{currentItem.maxAmount}");
             return;
         }
 
@@ -235,17 +231,16 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         {
             GameObject newObj = Instantiate(currentItem.realPrefab, currentBuildPosition, currentBuildRotation);
 
-            // Aumentamos el contador
-            currentItem.currentAmount++;
+            // Gastamos 1 del stock fabricado y sumamos 1 a los colocados en el mapa
+            currentItem.stockDisponible--;
+            currentItem.placedCount++;
             buildableItems[currentIndex] = currentItem;
 
-            // Si es una barricada, ejecutamos OnPlaced
             if (newObj.TryGetComponent<BarricadeObstacle>(out BarricadeObstacle barricade))
             {
                 barricade.OnPlaced();
             }
 
-            // Nos aseguramos de que el objeto tenga el componente notificador
             BuildableObject buildableObj = newObj.GetComponent<BuildableObject>();
             if (buildableObj == null)
             {
@@ -254,20 +249,19 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
             int itemIndex = currentIndex;
 
-            // Escuchamos cuando el objeto se destruya
+            // Al destruirse el objeto colocado, libera el cupo en el mapa (y te devuelve 1 al stock si lo desarmaste)
             buildableObj.OnObjectDestroyed += (obj) =>
             {
                 BuildableItem item = buildableItems[itemIndex];
-                if (item.currentAmount > 0)
+                if (item.placedCount > 0)
                 {
-                    item.currentAmount--;
+                    item.placedCount--;
                     buildableItems[itemIndex] = item;
                 }
             };
 
-            if (currentItem.currentAmount >= currentItem.maxAmount && currentHologram != null)
+            if ((currentItem.stockDisponible <= 0 || currentItem.placedCount >= currentItem.maxAmount) && currentHologram != null)
             {
-                // Cambia el holograma a rojo o lo oculta si se alcanzó el tope
                 SetHologramMaterial(invalidHologramMaterial);
             }
         }
@@ -289,9 +283,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, buildRange, destroyableLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject targetObject = hit.collider.transform.root.gameObject;
-
-            // Al destruir el GameObject, saltará automáticamente el evento OnObjectDestroyed 
-            // y restará 1 a la cuenta de buildableItems sin importar qué tipo de estructura sea.
             Destroy(targetObject);
         }
 
@@ -311,7 +302,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
                 item.isUnlocked = true;
                 buildableItems[i] = item;
 
-                // Si desbloqueamos el ítem que estaba seleccionado, refrescamos el holograma
                 if (i == currentIndex)
                 {
                     UpdateHologram();
@@ -328,7 +318,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         if (PauseControl.isPaused || !isEquipped || buildableItems.Count == 0) return;
 
         Vector2 scrollValue = context.ReadValue<Vector2>();
-
         int previousIndex = currentIndex;
 
         if (scrollValue.y > 0)
@@ -347,7 +336,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         }
     }
 
-    // Avanza o retrocede en la lista saltando los objetos bloqueados
     private void GetNextUnlockedIndex(int direction)
     {
         int attempts = 0;
@@ -359,7 +347,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             if (currentIndex < 0) currentIndex = buildableItems.Count - 1;
 
             if (buildableItems[currentIndex].isUnlocked)
-                return; // Encontró uno válido unlocked
+                return;
 
             attempts++;
         }
@@ -392,15 +380,17 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         return "Llave Inglesa";
     }
 
+    // Muestra el stock disponible fabricado (el primer número de "1/4", "2/4", etc.)
     public int GetCantidadDisponible()
     {
         if (buildableItems != null && buildableItems.Count > currentIndex)
         {
-            return buildableItems[currentIndex].currentAmount;
+            return buildableItems[currentIndex].stockDisponible;
         }
         return 0;
     }
 
+    // Muestra el límite máximo configurado en el Inspector (el "4" de "1/4")
     public int GetCantidadMaxima()
     {
         if (buildableItems != null && buildableItems.Count > currentIndex)
@@ -410,7 +400,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         return 0;
     }
 
-    // Métodos vacíos requeridos por la interfaz para armas
     public int GetMunicionActual() => 0;
     public int GetMaxMunicion() => 0;
     public int GetCargadores() => 0;
@@ -422,17 +411,10 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             if (buildableItems[i].id == id)
             {
                 BuildableItem item = buildableItems[i];
-
-                if (item.maxAmount >= absoluteMaxLimit)
-                {
-                    Debug.Log($"[WrenchBuilder] {item.itemName} ya alcanzó su límite máximo absoluto ({absoluteMaxLimit}).");
-                    return;
-                }
+                if (item.maxAmount >= absoluteMaxLimit) return;
 
                 item.maxAmount = Mathf.Min(item.maxAmount + extraAmount, absoluteMaxLimit);
                 buildableItems[i] = item;
-
-                Debug.Log($"[WrenchBuilder] Límite aumentado para {item.itemName}. Nuevo máximo: {item.maxAmount}/{absoluteMaxLimit}");
 
                 if (i == currentIndex)
                 {
@@ -441,5 +423,55 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
                 break;
             }
         }
+    }
+
+    // --- CONEXIÓN CON EL WORKBENCH ---
+
+    public bool PuedeFabricarDesdeWorkbench(string id)
+    {
+        for (int i = 0; i < buildableItems.Count; i++)
+        {
+            if (buildableItems[i].id == id)
+            {
+                BuildableItem item = buildableItems[i];
+                // No deja fabricar más si la suma entre lo que tenés en mano y lo colocado ya llegó al límite (ej: 4/4)
+                return (item.stockDisponible + item.placedCount) < item.maxAmount;
+            }
+        }
+        return false;
+    }
+
+    public bool DesbloquearOAumentarDesdeWorkbench(string id, int cantidadExtra = 1)
+    {
+        for (int i = 0; i < buildableItems.Count; i++)
+        {
+            if (buildableItems[i].id == id)
+            {
+                BuildableItem item = buildableItems[i];
+
+                // Si ya alcanzó el límite máximo (ej: 4), no permite sumar más
+                if ((item.stockDisponible + item.placedCount) >= item.maxAmount)
+                {
+                    Debug.LogWarning($"[WrenchBuilder] '{item.itemName}' ya alcanzó su límite máximo ({item.maxAmount}).");
+                    return false;
+                }
+
+                item.isUnlocked = true;
+                item.stockDisponible = Mathf.Min(item.stockDisponible + cantidadExtra, item.maxAmount - item.placedCount);
+                buildableItems[i] = item;
+
+                if (i == currentIndex)
+                {
+                    UpdateHologram();
+                    UpdateHologramPosition();
+                }
+
+                Debug.Log($"[WrenchBuilder] '{item.itemName}' fabricada. Disponibles: {item.stockDisponible}/{item.maxAmount}");
+                return true;
+            }
+        }
+
+        Debug.LogWarning($"[WrenchBuilder] No se encontró ningún item con id '{id}' en la llave inglesa.");
+        return false;
     }
 }

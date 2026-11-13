@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Core
   - PatrolZone
+  - Interactuable
   layers:
   - Default
   - TransparentFX

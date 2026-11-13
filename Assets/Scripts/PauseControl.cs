@@ -5,16 +5,16 @@ using UnityEngine.EventSystems;
 public class PauseControl : MonoBehaviour
 {
     [Header("Paneles de UI")]
-    public GameObject pauseMenuUI; // El Canvas principal de la pausa
+    public GameObject pauseMenuUI;
     public GameObject pauseBlurVolume;
 
-    [Header("Sub-Menús (Arrastrar desde la jerarquía)")]
+    [Header("Sub-Menús")]
     public GameObject listaBotones;
     public GameObject panelGuardar;
     public GameObject panelAjustes;
 
-    [Header("HUD")]
-    public PlayerHealthBar hudSalud; // Arrastrar la barra de salud desde la jerarquía
+    [Header("Referencias del HUD")]
+    public PlayerHealthBar hudSalud; // Mantenemos solo el HUD para ocultarlo en pausa
 
     public static bool isPaused = false;
 
@@ -27,51 +27,46 @@ public class PauseControl : MonoBehaviour
         }
     }
 
+    [Header("Conexión Interna")]
+    public AjustesManager scriptAjustes; // Referencia al script dormido
+
+    void Start()
+    {
+        // Al arrancar el nivel, obligamos al script a cargar el sonido y gráficos
+        // directamente desde el disco duro, sin necesidad de encender la pantalla visual.
+        if (scriptAjustes != null)
+        {
+            scriptAjustes.CargarAjustes();
+        }
+    }
+
     public void Resume()
     {
-        pauseMenuUI.SetActive(false); // oculta el canvas
+        pauseMenuUI.SetActive(false);
         if (pauseBlurVolume != null) pauseBlurVolume.SetActive(false);
-
-        // Asegurar que los sub-menús se apaguen
         if (listaBotones != null) listaBotones.SetActive(false);
         if (panelGuardar != null) panelGuardar.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
+        if (hudSalud != null) hudSalud.SetHUDVisible(true);
 
-        // MOSTRAR LA VIDA AL REANUDAR EL JUEGO
-        if (hudSalud != null)
-        {
-            hudSalud.SetHUDVisible(true);
-        }
-
-        Time.timeScale = 1f; // el tiempo vuelve a la normalidad
+        Time.timeScale = 1f;
         isPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        if (EventSystem.current != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
     }
 
-    // Función interna para Pausar
     void Pause()
     {
-        pauseMenuUI.SetActive(true); // muestra el canvas
+        pauseMenuUI.SetActive(true);
         if (pauseBlurVolume != null) pauseBlurVolume.SetActive(true);
-
-        // Mostrar la lista de botones y ocultar los otros paneles
         if (listaBotones != null) listaBotones.SetActive(true);
         if (panelGuardar != null) panelGuardar.SetActive(false);
         if (panelAjustes != null) panelAjustes.SetActive(false);
+        if (hudSalud != null) hudSalud.SetHUDVisible(false);
 
-        // OCULTAR LA VIDA AL PONER PAUSA
-        if (hudSalud != null)
-        {
-            hudSalud.SetHUDVisible(false);
-        }
-
-        Time.timeScale = 0f; // congela el tiempo
+        Time.timeScale = 0f;
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -104,7 +99,6 @@ public class PauseControl : MonoBehaviour
 
     public void SalirJuego()
     {
-        Debug.Log("Saliendo de Lazarus Protocol...");
         Application.Quit();
     }
 }

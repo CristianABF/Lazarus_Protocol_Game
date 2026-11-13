@@ -41,7 +41,13 @@ public class AjustesManager : MonoBehaviour
     private bool ayudasVisuales = false;
     private bool subtitulos = false;
 
-    void Start()
+    void OnEnable()
+    {
+        // Cada vez que el jugador abre la ventana de Ajustes, forzamos la lectura del disco duro
+        CargarAjustes();
+    }
+
+    public void CargarAjustes()
     {
         // 1. LECTURA DEL DISCO DURO
         volMaestro = PlayerPrefs.GetInt("Pref_VolMaestro", 8);

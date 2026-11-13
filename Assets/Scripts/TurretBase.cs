@@ -9,8 +9,10 @@ public abstract class TurretBase : MonoBehaviour
 
     [Header("Atributos de Torreta")]
     [SerializeField] protected float range = 15f;          // Alcance de detección
-    [SerializeField] protected float rotationSpeed = 5f;  // Velocidad de giro
-    [SerializeField] protected float fireRate = 1f;       // Disparos o pulsos por segundo
+    [SerializeField] protected float rotationSpeed = 5f;   // Velocidad de giro
+    [SerializeField] protected float fireRate = 1f;        // Disparos o pulsos por segundo
+    [Tooltip("Segundos que dura la torreta activa antes de destruirse (0 o menos = infinita)")]
+    [SerializeField] protected float duracionDeVida = 30f; // Tiempo de vida antes de destruirse
 
     [Header("Ajuste de Orientación")]
     [Tooltip("Ajusta si el modelo 3D no apunta de frente al objetivo (ej. 90, -90, 180)")]
@@ -18,6 +20,15 @@ public abstract class TurretBase : MonoBehaviour
 
     protected Transform target;
     protected float fireCountdown = 0f;
+
+    protected virtual void Awake()
+    {
+        // Programa la autodestrucción del objeto raíz para liberar el cupo en WrenchBuilder
+        if (duracionDeVida > 0f)
+        {
+            Destroy(transform.root.gameObject, duracionDeVida);
+        }
+    }
 
     protected virtual void Start()
     {

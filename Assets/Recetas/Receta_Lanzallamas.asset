@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdd7fdd95bf0f9944a67ee03acf5e0fd, type: 3}
   m_Name: Receta_Lanzallamas
   m_EditorClassIdentifier: 
+  idEnLlaveInglesa: t_lanzallamas
   nombreItem: Torreta Lanzallamas
   imagenPlano: {fileID: 0}
-  costoChatarra: 100
-  prefabAEntregar: {fileID: 0}
+  costoChatarra: 300
+  prefabAEntregar: {fileID: 919132149155446097, guid: 97e4766c0271a1946b33fc6401f6870b, type: 3}

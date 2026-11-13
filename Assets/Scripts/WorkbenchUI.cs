@@ -64,11 +64,18 @@ public class WorkbenchUI : MonoBehaviour
         }
 
         bool alcanza = chatarra >= actual.costoChatarra;
+        bool hayCupo = llaveInglesa == null || llaveInglesa.PuedeFabricarDesdeWorkbench(actual.idEnLlaveInglesa);
+
         if (textoCosto != null)
-            textoCosto.text = $"COSTE: [{chatarra} / {actual.costoChatarra}] {(alcanza ? "[OK]" : "[FALTA]")}";
+        {
+            if (!hayCupo)
+                textoCosto.text = $"COSTE: [{chatarra} / {actual.costoChatarra}] [MAX]";
+            else
+                textoCosto.text = $"COSTE: [{chatarra} / {actual.costoChatarra}] {(alcanza ? "[OK]" : "[FALTA]")}";
+        }
 
         if (botonCrear != null)
-            botonCrear.interactable = alcanza;
+            botonCrear.interactable = alcanza && hayCupo;
     }
 
     public void SiguienteReceta()
@@ -90,6 +97,12 @@ public class WorkbenchUI : MonoBehaviour
         if (recetas.Count == 0 || inventario == null) return;
 
         RecetaCrafteo actual = recetas[indiceActual];
+
+        if (llaveInglesa != null && !llaveInglesa.PuedeFabricarDesdeWorkbench(actual.idEnLlaveInglesa))
+        {
+            ActualizarPantalla();
+            return;
+        }
 
         if (inventario.GastarChatarra(actual.costoChatarra))
         {

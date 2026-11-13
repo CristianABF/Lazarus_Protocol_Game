@@ -23,7 +23,6 @@ public abstract class TurretBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        // Programa la autodestrucción del objeto raíz para liberar el cupo en WrenchBuilder
         if (duracionDeVida > 0f)
         {
             Destroy(gameObject, duracionDeVida);
@@ -32,13 +31,11 @@ public abstract class TurretBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        // 1. INYECCIÓN DE MEJORAS DESDE LA BÓVEDA INMORTAL
         if (ControladorPartida.Instancia != null)
         {
             fireRate /= ControladorPartida.Instancia.factorRecargaTorretas;
         }
 
-        // 2. Busca objetivos periódicamente para optimizar rendimiento
         InvokeRepeating(nameof(UpdateTarget), 0f, 0.5f);
     }
 
@@ -94,7 +91,7 @@ public abstract class TurretBase : MonoBehaviour
         if (target == null || turretHead == null) return;
 
         Vector3 dir = target.position - turretHead.position;
-        dir.y = 0f; // Forzamos el plano horizontal
+        dir.y = 0f; // Fuerza el plano horizontal
 
         if (dir == Vector3.zero) return;
 
@@ -104,7 +101,6 @@ public abstract class TurretBase : MonoBehaviour
         turretHead.rotation = Quaternion.Slerp(turretHead.rotation, offsetRotation, Time.deltaTime * rotationSpeed);
     }
 
-    // Cada tipo de torreta implementa su propia lógica de ataque
     protected abstract void Attack();
 
     protected virtual void OnDrawGizmosSelected()

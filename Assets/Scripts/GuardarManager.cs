@@ -13,7 +13,7 @@ public class GuardarManager : MonoBehaviour
 
     [Header("Referencias Físicas del Jugador")]
     public Transform transformJugador;
-    public HoldObject scriptAgarre; // <-- Referencia nueva para leer las manos
+    public HoldObject scriptAgarre;
 
     private int slotSeleccionado = -1;
 
@@ -22,14 +22,14 @@ public class GuardarManager : MonoBehaviour
         ActualizarPantalla();
     }
 
-    // --- 1. SELECCIÓN DE SLOT ---
+    // --- SELECCIÓN DE SLOT ---
     public void SeleccionarSlot(int numeroSlot)
     {
         slotSeleccionado = numeroSlot;
         if (textoEstado != null) textoEstado.text = $">> SLOT {numeroSlot} SELECCIONADO <<";
     }
 
-    // --- 2. ACCIÓN DE GUARDAR ---
+    // --- ACCIÓN DE GUARDAR ---
     public void ClicGuardarPartida()
     {
         if (slotSeleccionado == -1)
@@ -38,7 +38,7 @@ public class GuardarManager : MonoBehaviour
             return;
         }
 
-        // 1. Guardar la Meta-Progresión y Economía actual
+        // Guardar la Meta-Progresión y Economía actual
         int saludActual = 100;
         int minutosSobrevividos = 0;
         int chatarraActual = 0;
@@ -55,7 +55,7 @@ public class GuardarManager : MonoBehaviour
         PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_Tiempo", minutosSobrevividos);
         PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_Salud", saludActual);
 
-        // 2. Tomar la Foto Física (Posición de Aris en el mapa)
+        // (Posición de Aris en el mapa)
         if (transformJugador != null)
         {
             PlayerPrefs.SetFloat("Slot" + slotSeleccionado + "_PosX", transformJugador.position.x);
@@ -65,7 +65,7 @@ public class GuardarManager : MonoBehaviour
             PlayerPrefs.SetFloat("Slot" + slotSeleccionado + "_RotY", transformJugador.eulerAngles.y);
         }
 
-        // 3. Tomar Foto de las Manos (Inventario)
+        // (Inventario)
         if (scriptAgarre != null)
         {
             GameObject objetoEnMano = scriptAgarre.GetHeldObject();
@@ -84,11 +84,10 @@ public class GuardarManager : MonoBehaviour
 
         if (textoEstado != null) textoEstado.text = $"PARTIDA GUARDADA EN SLOT {slotSeleccionado}";
 
-        // 4. Forzar el redibujado visual de los botones
         ActualizarPantalla();
     }
 
-    // --- 3. DIBUJADO VISUAL ---
+    // --- DIBUJADO VISUAL ---
     private void ActualizarPantalla()
     {
         DibujarDatosSlot(1, textoSlot1);

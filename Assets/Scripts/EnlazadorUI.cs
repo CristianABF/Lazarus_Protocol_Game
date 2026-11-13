@@ -12,7 +12,7 @@ public class EnlazadorUI : MonoBehaviour
     public TextMeshProUGUI textoSaldoBilletera;
 
     [Header("Referencia de Salud")]
-    public PlayerHealthBar hudSalud; // Arrastrar la barra de salud aquí
+    public PlayerHealthBar hudSalud;
 
     [Header("Botones a Reconectar Dinámicamente")]
     public Button btnActivarLazaro;
@@ -26,7 +26,7 @@ public class EnlazadorUI : MonoBehaviour
     {
         if (ControladorPartida.Instancia != null)
         {
-            // 1. Reconectar las variables visuales
+            // Reconectar las variables visuales
             ControladorPartida.Instancia.pantallaProtocoloLazaro = panelLazaroNuevo;
             ControladorPartida.Instancia.pantallaGameOver = panelGameOverNuevo;
             ControladorPartida.Instancia.panelMejoras = panelMejorasNuevo;
@@ -37,7 +37,7 @@ public class EnlazadorUI : MonoBehaviour
                 textoSaldoBilletera.text = $"CRÉDITOS: {ControladorPartida.Instancia.creditosActuales} PTS";
             }
 
-            // 2. Reconectar las vías de escape
+            // Reconectar las vías de escape
             if (btnActivarLazaro != null)
             {
                 btnActivarLazaro.onClick.RemoveAllListeners();
@@ -76,8 +76,7 @@ public class EnlazadorUI : MonoBehaviour
 
     private void Update()
     {
-        // Detecta si cualquiera de los paneles especiales está activo para ocultar el HUD de salud
-        if (hudSalud != null)
+        // Detecta paneles activos para ocultar hud
         {
             bool algunPanelActivo = (panelLazaroNuevo != null && panelLazaroNuevo.activeSelf) ||
                                    (panelGameOverNuevo != null && panelGameOverNuevo.activeSelf) ||

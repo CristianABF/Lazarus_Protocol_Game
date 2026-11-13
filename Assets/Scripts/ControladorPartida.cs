@@ -1,7 +1,7 @@
 using UnityEngine;
-using TMPro; // Obligatorio para modificar textos de la UI
+using TMPro; //Para modificar textos de la UI
 using UnityEngine.SceneManagement;
-using System.Collections.Generic; // NUEVO: Obligatorio para usar listas (List<>)
+using System.Collections.Generic; //Para usar listas (List<>)
 
 public class ControladorPartida : MonoBehaviour
 {
@@ -29,7 +29,7 @@ public class ControladorPartida : MonoBehaviour
 
     [Header("Inventario de Estadísticas (Memoria Inmortal)")]
 
-    // NUEVO: Registro visual para que los botones de la UI recuerden si fueron comprados
+    //Registro visual para que los botones de la UI recuerden si fueron comprados
     public List<string> mejorasCompradas = new List<string>();
 
     // --- SALUD ---
@@ -51,13 +51,12 @@ public class ControladorPartida : MonoBehaviour
 
     public void RegistrarMejoraAdquirida(string nombreMejora)
     {
-        // 1. Guardar el nombre exacto de la mejora para que los nuevos botones UI lo recuerden al recargar la escena
+        //Guarda el nombre exacto de la mejora para que los nuevos botones UI lo recuerden al recargar la escena
         if (!mejorasCompradas.Contains(nombreMejora))
         {
             mejorasCompradas.Add(nombreMejora);
         }
 
-        // 2. Inyectar la matemática de combate
         switch (nombreMejora)
         {
             // --- RAMA SALUD ---
@@ -89,7 +88,7 @@ public class ControladorPartida : MonoBehaviour
         if (Instancia == null)
         {
             Instancia = this;
-            DontDestroyOnLoad(gameObject); // El escudo contra el borrado de escena
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -103,7 +102,7 @@ public class ControladorPartida : MonoBehaviour
         tiempoInicioOleada = Time.time;
     }
 
-    // --- NUEVOS RECEPTORES DE DATOS ---
+    // --- RECEPTOR DE DATOS ---
     public void RegistrarEnemigoDerrotado()
     {
         enemigosDerrotados++;
@@ -119,19 +118,16 @@ public class ControladorPartida : MonoBehaviour
 
     public void ProcesarDerrotaOleada()
     {
-        // 1. Congela la acción y libera el ratón
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // 2. LIQUIDACIÓN ECONÓMICA (NUEVO)
-        // Calculamos cuánto tiempo real pasó desde el Start() hasta esta muerte
+        // Se calcula cuánto tiempo real pasó desde el Start() hasta la muerte
         float tiempoSobrevivido = Time.time - tiempoInicioOleada;
 
-        // Ejecutamos el pago inyectando los segundos en tu función
+        // Ejecuta una inyeccion de puntos en la función
         LiquidarTiempoDeAsedio(tiempoSobrevivido);
 
-        // 3. Consecuencias del colapso
         saludPermanenteNucleo -= penalidadPorColapso;
 
         if (saludPermanenteNucleo <= 0f)
@@ -181,7 +177,7 @@ public class ControladorPartida : MonoBehaviour
         SceneManager.LoadScene(nombreEscenaMenu);
     }
 
-    // --- EL MOTOR DE DIBUJADO DE ESTADÍSTICAS ---
+    // --- MOTOR DE DIBUJADO DE ESTADÍSTICAS ---
     private void ActualizarTextoEstadisticas()
     {
         if (textoEstadisticasGameOver == null) return;

@@ -18,7 +18,7 @@ public class CheatManager : MonoBehaviour
 
     private void RegistrarTeclado()
     {
-        // Atrapamos cualquier letra presionada en este frame y la pasamos a mayúsculas
+        // Atrapa cualquier letra presionada y pasa a mayúsculas
         foreach (char c in Input.inputString)
         {
             if (char.IsLetter(c))
@@ -27,7 +27,7 @@ public class CheatManager : MonoBehaviour
             }
         }
 
-        // Limitamos el historial a 15 caracteres para no saturar la memoria RAM
+        // Limitamos el historial a 15 caracteres
         if (inputBuffer.Length > 15)
         {
             inputBuffer = inputBuffer.Substring(inputBuffer.Length - 15);
@@ -54,7 +54,6 @@ public class CheatManager : MonoBehaviour
             LimpiarBuffer();
         }
 
-        // El clásico absoluto que activa todo a la vez
         if (inputBuffer.EndsWith("HESOYAM"))
         {
             AdelantarTiempo();
@@ -72,27 +71,25 @@ public class CheatManager : MonoBehaviour
         PlayerBehaviour jugador = Object.FindFirstObjectByType<PlayerBehaviour>();
         if (jugador != null)
         {
-            // 1. Crear un GameObject temporal como hijo del jugador
+
             GameObject audioObj = new GameObject("TempAudio_Hesoyam");
             audioObj.transform.SetParent(jugador.transform);
-            audioObj.transform.localPosition = Vector3.zero; // Se posiciona exactamente en el jugador
+            audioObj.transform.localPosition = Vector3.zero;
 
-            // 2. Agregar y configurar el AudioSource
             AudioSource source = audioObj.AddComponent<AudioSource>();
             source.clip = sonidoHesoyam;
-            source.spatialBlend = 1.0f; // 1.0 = Sonido 3D
+            source.spatialBlend = 1.0f;
             source.minDistance = 2f;
             source.maxDistance = 25f;
             source.Play();
 
-            // 3. Destruir el GameObject temporal automáticamente cuando finalice el audio
             Destroy(audioObj, sonidoHesoyam.length);
         }
     }
 
     private void LimpiarBuffer()
     {
-        // Borramos el historial para que no se active el truco dos veces seguidas
+        // Borra el historial para que no se active el truco dos veces seguidas
         inputBuffer = "";
     }
 

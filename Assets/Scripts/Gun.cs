@@ -129,11 +129,11 @@ public class Gun : MonoBehaviour, IPickable, IEquipableUI
             return;
         }
 
-        // 1. Calcular el centro exacto de la pantalla de la cámara
+        // Calcula el centro exacto de la pantalla de la cámara
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         Vector3 targetPoint;
 
-        // Usamos QueryTriggerInteraction.Ignore para ignorar triggers y evitar colisionar con el jugador
+        // ignorar triggers y evitar colisionar con el jugador
         if (Physics.Raycast(ray, out RaycastHit hit, range, layerMaskDisparo, QueryTriggerInteraction.Ignore))
         {
             targetPoint = hit.point;
@@ -143,20 +143,19 @@ public class Gun : MonoBehaviour, IPickable, IEquipableUI
             targetPoint = ray.GetPoint(range);
         }
 
-        // 2. Punto de origen de la bala
+        // Origen bala
         Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
 
-        // 3. Dirección real del disparo hacia el objetivo
+        //  Dirección real
         Vector3 direction = (targetPoint - spawnPosition).normalized;
         Quaternion bulletRotation = Quaternion.LookRotation(direction);
 
-        // 4. Instanciar la bala y configurar daño
+        // Instanciar bala y daño
         GameObject bulletObj = Instantiate(bulletPrefab, spawnPosition, bulletRotation);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
 
         if (bulletScript != null)
         {
-            // Pasamos el transform de la cámara o la referencia directa que ya tienes al jugador
             bulletScript.Setup(damage, playerAnimator != null ? playerAnimator.transform : transform.root);
         }
     }

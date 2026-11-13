@@ -8,7 +8,6 @@ public class MotorCargaNivel : MonoBehaviour
 
     void Start()
     {
-        // 1. Leemos el "post-it" que dejó el Menú Principal
         int slotAIniciar = PlayerPrefs.GetInt("SlotAIniciar", -1);
 
         if (slotAIniciar != -1)
@@ -26,7 +25,7 @@ public class MotorCargaNivel : MonoBehaviour
     {
         if (jugador != null)
         {
-            // Apagamos las físicas temporalmente para que Unity permita el teletransporte
+            // Apaga las físicas temporalmente
             CharacterController cc = jugador.GetComponent<CharacterController>();
             if (cc != null) cc.enabled = false;
 
@@ -41,17 +40,17 @@ public class MotorCargaNivel : MonoBehaviour
             if (cc != null) cc.enabled = true;
         }
 
-        // Recuperar la chatarra a la bóveda central
+        // Recupera la chatarra a la bóveda central
         if (ControladorPartida.Instancia != null)
         {
             ControladorPartida.Instancia.creditosActuales = PlayerPrefs.GetInt("Slot" + slot + "_Chatarra", 0);
         }
 
-        // Buscar el arma guardada en el mapa y forzar su agarre
+        // Busca el arma guardada y la coloca en el jugador
         string objetoMano = PlayerPrefs.GetString("Slot" + slot + "_ObjetoMano", "Vacio");
         if (objetoMano != "Vacio" && scriptAgarre != null)
         {
-            // Busca físicamente el objeto por su nombre exacto en la escena
+            // Busca físicamente el objeto
             GameObject itemEnMapa = GameObject.Find(objetoMano);
 
             if (itemEnMapa != null)

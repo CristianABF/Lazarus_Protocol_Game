@@ -43,7 +43,6 @@ public class EstacionCuracion : MonoBehaviour
             tiempoRecarga *= ControladorPartida.Instancia.factorRecargaEstaciones;
         }
 
-        // Auto-asignación si no se arrastró en el Inspector
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();

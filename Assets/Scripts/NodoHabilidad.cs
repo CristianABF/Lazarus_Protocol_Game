@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Necesario para acceder al texto del botón
+using TMPro;
 
 public class NodoHabilidad : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class NodoHabilidad : MonoBehaviour
     public NodoHabilidad nodoRequisito;
 
     [Header("Interfaz Visual")]
-    public TextMeshProUGUI textoDelBoton; // NUEVO: Arrastra el Text(TMP) hijo de este botón aquí
+    public TextMeshProUGUI textoDelBoton;
 
     private VisorTienda visor;
 
@@ -29,14 +29,12 @@ public class NodoHabilidad : MonoBehaviour
         }
 
         // INTERROGATORIO A LA BÓVEDA INMORTAL
-        // ¿Mi nombre exacto está en la lista de compras del ControladorPartida?
         if (ControladorPartida.Instancia != null && ControladorPartida.Instancia.mejorasCompradas.Contains(tituloMejora))
         {
-            MarcarComoComprado(); // Me pinto de verde instantáneamente
+            MarcarComoComprado();
         }
         else if (estaDesbloqueado)
         {
-            // Respaldo por si marcaste uno como desbloqueado manualmente en el editor
             MarcarComoComprado();
         }
     }
@@ -46,13 +44,13 @@ public class NodoHabilidad : MonoBehaviour
         if (visor != null) visor.MostrarDetalles(this);
     }
 
-    // NUEVA FUNCIÓN: Cambia el color del texto a verde neón
+    //Cambia el color del texto
     public void MarcarComoComprado()
     {
         estaDesbloqueado = true;
         if (textoDelBoton != null)
         {
-            textoDelBoton.color = Color.green; // Asignación matemática directa y sin margen de error
+            textoDelBoton.color = Color.green;
         }
     }
 }

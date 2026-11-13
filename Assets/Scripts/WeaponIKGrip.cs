@@ -79,8 +79,6 @@ public class WeaponIKGrip : MonoBehaviour
             chestBone.rotation = Quaternion.Slerp(baseRotation, targetRotation, aimWeight);
         }
 
-        // Sincroniza el contenedor de la cámara con la posición física del hueso, 
-        // arrastrando a la Main Camera de forma segura.
         if (cameraHolder != null && headPositionBone != null)
         {
             cameraHolder.position = headPositionBone.position;

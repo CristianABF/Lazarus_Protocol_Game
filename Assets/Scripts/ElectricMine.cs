@@ -12,7 +12,7 @@ public class ElectricMine : Landmine
 
     protected override void OnDetonate(GameObject target)
     {
-        // 1. Instanciar VFX y Audio
+        // Instanciar VFX y Audio
         if (explosionEffect != null)
         {
             GameObject vfxInstance = Instantiate(explosionEffect, transform.position, Quaternion.identity);
@@ -24,26 +24,26 @@ public class ElectricMine : Landmine
             AudioSource.PlayClipAtPoint(soundEffect, transform.position, 1.0f);
         }
 
-        // 2. Ocultar la mina y desactivar colisiones
+        // Ocultar la mina y desactivar colisiones
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer r in renderers) r.enabled = false;
 
         Collider[] colliders = GetComponentsInChildren<Collider>();
         foreach (Collider c in colliders) c.enabled = false;
 
-        // 3. Iniciar rutina de daño y stun en área
+        // Iniciar rutina de daño y stun en área
         StartCoroutine(ElectricAoERoutine());
     }
 
     private IEnumerator ElectricAoERoutine()
     {
-        // Escanear enemigos dentro del radio
+        // Escanea enemigos dentro del radio
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, stunRadius, enemyLayer);
 
         List<EnemyHealth> enemiesHealth = new List<EnemyHealth>();
         List<EnemyAI> enemiesAI = new List<EnemyAI>();
 
-        // Agrupar referencias únicas de enemigos
+        // Agrupa referencias únicas de enemigos
         foreach (Collider hit in hitColliders)
         {
             EnemyHealth health = hit.GetComponentInParent<EnemyHealth>();

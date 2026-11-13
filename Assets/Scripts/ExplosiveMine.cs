@@ -9,7 +9,7 @@ public class ExplosiveMine : Landmine
 
     protected override void OnDetonate(GameObject target)
     {
-        // 1. Instanciar VFX y Audio
+        // Instanciar VFX y Audio
         if (explosionEffect != null)
         {
             GameObject vfxInstance = Instantiate(explosionEffect, transform.position, Quaternion.identity);
@@ -21,7 +21,7 @@ public class ExplosiveMine : Landmine
             AudioSource.PlayClipAtPoint(soundEffect, transform.position, 1.0f);
         }
 
-        // 2. Detectar a TODOS los enemigos dentro del radio de explosión
+        // Detecta a TODOS los enemigos dentro del radio de explosión
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius, enemyLayer);
 
         foreach (Collider hit in hitColliders)
@@ -33,7 +33,7 @@ public class ExplosiveMine : Landmine
             }
         }
 
-        // 3. Destruir la mina
+        // Destruir la mina
         Destroy(gameObject);
     }
 

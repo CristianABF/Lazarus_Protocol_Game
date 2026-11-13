@@ -14,7 +14,7 @@ public class PauseControl : MonoBehaviour
     public GameObject panelAjustes;
 
     [Header("Referencias del HUD")]
-    public PlayerHealthBar hudSalud; // Mantenemos solo el HUD para ocultarlo en pausa
+    public PlayerHealthBar hudSalud;
 
     public static bool isPaused = false;
 
@@ -28,12 +28,11 @@ public class PauseControl : MonoBehaviour
     }
 
     [Header("Conexión Interna")]
-    public AjustesManager scriptAjustes; // Referencia al script dormido
+    public AjustesManager scriptAjustes;
 
     void Start()
     {
-        // Al arrancar el nivel, obligamos al script a cargar el sonido y gráficos
-        // directamente desde el disco duro, sin necesidad de encender la pantalla visual.
+        // Carga el sonido y gráficos
         if (scriptAjustes != null)
         {
             scriptAjustes.CargarAjustes();

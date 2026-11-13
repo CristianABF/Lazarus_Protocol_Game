@@ -26,12 +26,11 @@ public class HoldObjectUI : MonoBehaviour
     {
         if (holdObjectScript == null) return;
 
-        // Obtenemos el objeto que el jugador sostiene actualmente
         GameObject heldObj = holdObjectScript.GetHeldObject();
 
         if (heldObj != null)
         {
-            // Buscamos IEquipableUI en el objeto sostenido o en cualquiera de sus hijos
+            // Buscam IEquipableUI
             IEquipableUI equipable = heldObj.GetComponent<IEquipableUI>();
             if (equipable == null)
             {

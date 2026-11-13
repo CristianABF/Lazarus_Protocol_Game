@@ -61,10 +61,9 @@ public class CoreBehaviour : MonoBehaviour
 
         currentHealth -= amount;
 
-        // Feedback por consola
         Debug.Log($"[NÚCLEO] Impacto enemigo. Integridad restante: {currentHealth}/{maxHealth}");
 
-        // Evaluar umbrales de salud para reproducir los audios
+        // Evalua umbrales de salud para reproducir los audios
         VerificarUmbralesSalud();
 
         if (currentHealth <= 0)

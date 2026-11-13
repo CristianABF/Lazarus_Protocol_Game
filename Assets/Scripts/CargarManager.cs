@@ -13,7 +13,6 @@ public class CargarManager : MonoBehaviour
     public TextMeshProUGUI textoEstado;
 
     [Header("Configuración de Escena")]
-    // IMPORTANTE: Asegúrate de que diga "main" o el nombre exacto de tu escena de juego
     public string nombreEscenaJuego = "main";
 
     private int slotSeleccionado = -1;
@@ -48,15 +47,13 @@ public class CargarManager : MonoBehaviour
             return;
         }
 
-        // 1. Le dejamos un "post-it" al nivel avisándole qué partida debe leer al nacer
         PlayerPrefs.SetInt("SlotAIniciar", slotSeleccionado);
         PlayerPrefs.Save();
 
-        // 2. Cargamos la escena 3D
         SceneManager.LoadScene(nombreEscenaJuego);
     }
 
-    // --- 3. NUEVA PARTIDA (Para tu botón del Menú Principal) ---
+    // NUEVA PARTIDA (Botón del Menú Principal) ---
     public void ClicNuevaPartida()
     {
         // Le avisamos al motor que ignore los guardados y arranque de cero
@@ -65,7 +62,7 @@ public class CargarManager : MonoBehaviour
         SceneManager.LoadScene(nombreEscenaJuego);
     }
 
-    // --- 4. DIBUJADO VISUAL ---
+    // DIBUJADO VISUAL ---
     private void ActualizarPantalla()
     {
         DibujarDatosSlot(1, textoSlot1);

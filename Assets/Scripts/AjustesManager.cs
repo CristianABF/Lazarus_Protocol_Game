@@ -43,7 +43,7 @@ public class AjustesManager : MonoBehaviour
 
     void OnEnable()
     {
-        // Cada vez que el jugador abre la ventana de Ajustes, forzamos la lectura del disco duro
+        // Cada vez que el jugador abre la ventana de Ajustes, se fuerza una lectura del disco duro
         CargarAjustes();
     }
 

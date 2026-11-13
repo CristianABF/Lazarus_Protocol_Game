@@ -10,14 +10,14 @@ public class MachineGunTurret : TurretBase
     {
         if (target == null || firePoint == null || bulletPrefab == null) return;
 
-        // 1. Instanciar la bala en la posición y rotación del firePoint
+        // 1. Instanciar la bala
         GameObject bulletGO = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-        // 2. Orientar la bala exactamente hacia la posición del enemigo (centro/pecho)
+        // 2. Orientar la bala 
         Vector3 direction = (target.position - firePoint.position).normalized;
         bulletGO.transform.rotation = Quaternion.LookRotation(direction);
 
-        // 3. Pasar el daño configurado en la torreta a la bala
+        // 3. Pasa daño a la bala
         if (bulletGO.TryGetComponent(out Bullet bullet))
         {
             bullet.Setup(damage);

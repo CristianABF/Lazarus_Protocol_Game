@@ -10,7 +10,6 @@ public class Ammo : MonoBehaviour
     [SerializeField] private int reloadAmount = 10;
     [SerializeField] private int clips = 5;
 
-    // NUEVO
     [SerializeField] private int maxClips = 5;
 
     private int maxAmmo;
@@ -22,7 +21,7 @@ public class Ammo : MonoBehaviour
         // --- INYECCIÓN DE CARGADOR DE LA TIENDA ---
         if (ControladorPartida.Instancia != null)
         {
-            // Ej. Pasar de 30 a 45 balas. Ajustamos el máximo y rellenamos.
+            // Ej. Pasar de 30 a 45 balas. Ajusta el máximo y rellena.
             maxAmmo += ControladorPartida.Instancia.balasExtraCargador;
             ammoAmount = maxAmmo;
         }
@@ -40,7 +39,7 @@ public class Ammo : MonoBehaviour
 
     public void ReduceCurrentAmmo()
     {
-        // Si el truco está encendido, abortamos la resta de balas
+        // Si el truco está encendido, aborta la resta de balas
         if (CheatManager.municionInfinitaActiva) return;
 
         ammoAmount--;
@@ -51,7 +50,7 @@ public class Ammo : MonoBehaviour
         return maxAmmo;
     }
 
-    // NUEVO: Permite que agentes externos consulten el límite sin poder modificarlo
+    //Permite que agentes externos consulten el límite sin poder modificarlo
     public int GetMaxClips()
     {
         return maxClips;
@@ -71,7 +70,7 @@ public class Ammo : MonoBehaviour
         ammoAmount = reloadAmount;
     }
 
-    // NUEVO: El único método autorizado para alterar la reserva desde afuera
+    //El único método autorizado para alterar la reserva desde afuera
     public void RecibirCargadores(int cantidadSuministrada)
     {
         clips += cantidadSuministrada;

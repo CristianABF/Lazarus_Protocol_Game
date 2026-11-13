@@ -4,7 +4,7 @@ using UnityEngine;
 public class RecetaCrafteo : ScriptableObject
 {
     [Header("Datos del Ítem")]
-    public string idEnLlaveInglesa; // Debe ser IGUAL al 'id' en WrenchBuilder
+    public string idEnLlaveInglesa;
     public string nombreItem;
     public Sprite imagenPlano;
 

@@ -6,16 +6,16 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public struct BuildableItem
 {
-    public string id;             // Identificador único (ej: "barricada", "t_sniper")
+    public string id;
     public string itemName;
     public GameObject realPrefab;
     public GameObject hologramPrefab;
-    public int maxAmount;         // Límite máximo permitido (ej: 4)
-    [HideInInspector] public int stockDisponible; // Cuántas tenés fabricadas listas para poner (el 1/4, 2/4...)
-    [HideInInspector] public int placedCount;     // Cuántas hay actualmente puestas en el mapa
+    public int maxAmount;
+    [HideInInspector] public int stockDisponible;
+    [HideInInspector] public int placedCount;
 
     [Header("Desbloqueo")]
-    public bool isUnlocked;       // Determina si el jugador ya puede seleccionar y construir esto
+    public bool isUnlocked;
 }
 
 public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
@@ -31,8 +31,8 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
     [Header("Configuración de Construcción")]
     [SerializeField] private float buildRange = 10f;
-    [SerializeField] private LayerMask buildableLayer;      // Capa del Suelo
-    [SerializeField] private LayerMask destroyableLayer;    // Capa de las Torretas construidas
+    [SerializeField] private LayerMask buildableLayer;
+    [SerializeField] private LayerMask destroyableLayer;
 
     [Header("Materiales / Colores del Holograma")]
     [SerializeField] private Material validHologramMaterial;
@@ -179,7 +179,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             currentHologram.transform.position = currentBuildPosition;
             currentHologram.transform.rotation = currentBuildRotation;
 
-            // Solo es válido construir si tenemos stock fabricado (> 0) y no superamos el límite en escena
             if (currentItem.stockDisponible <= 0 || currentItem.placedCount >= currentItem.maxAmount)
             {
                 isValidBuildPosition = false;
@@ -231,7 +230,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         {
             GameObject newObj = Instantiate(currentItem.realPrefab, currentBuildPosition, currentBuildRotation);
 
-            // Gastamos 1 del stock fabricado y sumamos 1 a los colocados en el mapa
             currentItem.stockDisponible--;
             currentItem.placedCount++;
             buildableItems[currentIndex] = currentItem;
@@ -249,7 +247,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
 
             int itemIndex = currentIndex;
 
-            // Al destruirse el objeto colocado, libera el cupo en el mapa (y te devuelve 1 al stock si lo desarmaste)
             buildableObj.OnObjectDestroyed += (obj) =>
             {
                 BuildableItem item = buildableItems[itemIndex];
@@ -380,7 +377,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         return "Llave Inglesa";
     }
 
-    // Muestra el stock disponible fabricado (el primer número de "1/4", "2/4", etc.)
+    // Muestra el stock disponible fabricado
     public int GetCantidadDisponible()
     {
         if (buildableItems != null && buildableItems.Count > currentIndex)
@@ -390,7 +387,7 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
         return 0;
     }
 
-    // Muestra el límite máximo configurado en el Inspector (el "4" de "1/4")
+    // Muestra el límite máximo configurado en el Inspector
     public int GetCantidadMaxima()
     {
         if (buildableItems != null && buildableItems.Count > currentIndex)
@@ -434,7 +431,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             if (buildableItems[i].id == id)
             {
                 BuildableItem item = buildableItems[i];
-                // No deja fabricar más si la suma entre lo que tenés en mano y lo colocado ya llegó al límite (ej: 4/4)
                 return (item.stockDisponible + item.placedCount) < item.maxAmount;
             }
         }
@@ -449,7 +445,6 @@ public class WrenchBuilder : MonoBehaviour, IPickable, IEquipableUI
             {
                 BuildableItem item = buildableItems[i];
 
-                // Si ya alcanzó el límite máximo (ej: 4), no permite sumar más
                 if ((item.stockDisponible + item.placedCount) >= item.maxAmount)
                 {
                     Debug.LogWarning($"[WrenchBuilder] '{item.itemName}' ya alcanzó su límite máximo ({item.maxAmount}).");

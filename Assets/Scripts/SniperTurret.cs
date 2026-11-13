@@ -22,7 +22,7 @@ public class SniperTurret : TurretBase
     }
     protected override void Start()
     {
-        base.Start(); // Obligatorio para ejecutar la lógica de recarga del padre
+        base.Start();
 
         if (ControladorPartida.Instancia != null)
         {

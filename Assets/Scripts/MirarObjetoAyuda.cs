@@ -26,7 +26,7 @@ public class MirarObjetoAyuda : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            // Ahora detecta las armas (Pickable) Y TAMBIÉN tus detectores (Interactuable)
+            // Detecta las armas (Pickable) Y detectores (Interactuable)
             if (hit.collider.CompareTag("Pickable") || hit.collider.CompareTag("Interactuable"))
             {
                 mirandoObjeto = true;

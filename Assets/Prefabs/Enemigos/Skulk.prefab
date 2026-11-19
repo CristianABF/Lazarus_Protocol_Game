@@ -608,7 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   chaseRange: 50
-  attackDistance: 3
+  attackDistance: 5
   damage: 3
   patrolZones: []
   zoneArrivalRadius: 3

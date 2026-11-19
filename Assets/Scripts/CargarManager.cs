@@ -76,9 +76,14 @@ public class CargarManager : MonoBehaviour
 
         if (PlayerPrefs.HasKey("Slot" + numeroSlot + "_Tiempo"))
         {
-            int tiempo = PlayerPrefs.GetInt("Slot" + numeroSlot + "_Tiempo");
+            int segundosTotales = PlayerPrefs.GetInt("Slot" + numeroSlot + "_Tiempo");
             int salud = PlayerPrefs.GetInt("Slot" + numeroSlot + "_Salud");
-            textoSlot.text = $"Tiempo: {tiempo} MIN\nSalud: {salud}%";
+
+            int minutos = segundosTotales / 60;
+            int segundos = segundosTotales % 60;
+            string tiempoFormateado = string.Format("{0:00}:{1:00}", minutos, segundos);
+
+            textoSlot.text = $"Tiempo: {tiempoFormateado}\nSalud: {salud}%";
         }
         else
         {

@@ -1,3 +1,9 @@
+/*
+Gun controla el comportamiento completo del arma de fuego del jugador en primera persona: 
+cuándo puede disparar, cómo apunta, cómo instancia proyectiles físicos,
+cómo se conecta con la interfaz (UI) y cómo reacciona al ser agarrada o soltada.
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

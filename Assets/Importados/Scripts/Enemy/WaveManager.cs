@@ -101,12 +101,17 @@ public class WaveManager : MonoBehaviour
             spawnTimer = 0f; // Para que el primer enemigo salga de inmediato
             isWaveActive = true;
 
+            // Si spawnInterval es 0 (o menor), es fase de descanso y permite guardar.
+            // Si es mayor a 0, hay oleada activa y bloquea el guardado.
+            GuardarManager.enDescanso = (currentPhase.spawnInterval <= 0f);
+
             OnPhaseStarted?.Invoke(currentPhaseIndex + 1);
             StartCoroutine(ShowPhaseMessage(currentPhase.phaseName, 3f));
         }
         else
         {
             isWaveActive = false;
+            GuardarManager.enDescanso = false; // Ya terminó la partida
             StartCoroutine(ShowPhaseMessage("¡Supervivencia Completada!", 5f));
         }
     }

@@ -3,6 +3,9 @@ using TMPro;
 
 public class GuardarManager : MonoBehaviour
 {
+    // Bandera global: tu script de oleadas la pondrá en true durante el descanso y false al iniciar la oleada
+    public static bool enDescanso = false;
+
     [Header("Textos de los Slots (Arrastrar desde Inspector)")]
     public TextMeshProUGUI textoSlot1;
     public TextMeshProUGUI textoSlot2;
@@ -32,30 +35,37 @@ public class GuardarManager : MonoBehaviour
     // --- ACCIÓN DE GUARDAR ---
     public void ClicGuardarPartida()
     {
+        // 1. Validar que estemos en tiempo de descanso entre oleadas
+        if (!enDescanso)
+        {
+            if (textoEstado != null) textoEstado.text = "ERROR: SOLO PUEDES GUARDAR ENTRE OLEADAS";
+            return;
+        }
+
         if (slotSeleccionado == -1)
         {
             if (textoEstado != null) textoEstado.text = "ERROR: SELECCIONA UN SLOT PRIMERO";
             return;
         }
 
-        // Guardar la Meta-Progresión y Economía actual
+        // 2. Guardar la Meta-Progresión y Economía actual
         int saludActual = 100;
-        int minutosSobrevividos = 0;
+        int segundosTotales = Mathf.FloorToInt(Time.timeSinceLevelLoad);
         int chatarraActual = 0;
 
         if (ControladorPartida.Instancia != null)
         {
             saludActual = Mathf.RoundToInt(ControladorPartida.Instancia.saludPermanenteNucleo);
-            minutosSobrevividos = Mathf.FloorToInt(Time.timeSinceLevelLoad / 60f);
             chatarraActual = ControladorPartida.Instancia.creditosActuales;
 
             PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_Chatarra", chatarraActual);
         }
 
-        PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_Tiempo", minutosSobrevividos);
+        // Ahora guardamos el total de segundos para no perder precisión
+        PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_Tiempo", segundosTotales);
         PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_Salud", saludActual);
 
-        // (Posición de Aris en el mapa)
+        // 3. Posición de Aris en el mapa
         if (transformJugador != null)
         {
             PlayerPrefs.SetFloat("Slot" + slotSeleccionado + "_PosX", transformJugador.position.x);
@@ -65,13 +75,12 @@ public class GuardarManager : MonoBehaviour
             PlayerPrefs.SetFloat("Slot" + slotSeleccionado + "_RotY", transformJugador.eulerAngles.y);
         }
 
-        // (Inventario)
+        // 4. Inventario
         if (scriptAgarre != null)
         {
             GameObject objetoEnMano = scriptAgarre.GetHeldObject();
             if (objetoEnMano != null)
             {
-                // Guarda el nombre del objeto para reequiparlo luego
                 PlayerPrefs.SetString("Slot" + slotSeleccionado + "_ObjetoMano", objetoEnMano.name);
             }
             else
@@ -101,10 +110,14 @@ public class GuardarManager : MonoBehaviour
 
         if (PlayerPrefs.HasKey("Slot" + numeroSlot + "_Tiempo"))
         {
-            int tiempo = PlayerPrefs.GetInt("Slot" + numeroSlot + "_Tiempo");
+            int segundosTotales = PlayerPrefs.GetInt("Slot" + numeroSlot + "_Tiempo");
             int salud = PlayerPrefs.GetInt("Slot" + numeroSlot + "_Salud");
 
-            textoSlot.text = $"Tiempo: {tiempo} MIN\nSalud: {salud}%";
+            int minutos = segundosTotales / 60;
+            int segundos = segundosTotales % 60;
+            string tiempoFormateado = string.Format("{0:00}:{1:00}", minutos, segundos);
+
+            textoSlot.text = $"Tiempo: {tiempoFormateado}\nSalud: {salud}%";
         }
         else
         {

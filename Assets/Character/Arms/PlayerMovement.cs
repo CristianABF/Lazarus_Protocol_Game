@@ -1,3 +1,11 @@
+/*
+ * Controla el movimiento en primera persona del jugador (caminar, correr, saltar y gravedad)
+ * mediante un CharacterController y el New Input System,
+ * además de gestionar la rotación de la cámara,
+ * el balanceo procedural y animaciones de los brazos, 
+ * el bloqueo del cursor y el respawn por caída al vacío.
+*/
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 

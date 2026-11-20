@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
     private float bobTimer;
     private Vector3 defaultArmsPos;
 
-    // Hash de animación optimizado
+    // Hash de animación
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
     private static readonly int ReloadHash = Animator.StringToHash("Reload");
     private static readonly int HasWeaponHash = Animator.StringToHash("HasWeapon");

@@ -15,5 +15,5 @@ MonoBehaviour:
   idEnLlaveInglesa: t_lanzallamas
   nombreItem: Torreta Lanzallamas
   imagenPlano: {fileID: 0}
-  costoChatarra: 300
+  costoChatarra: 350
   prefabAEntregar: {fileID: 919132149155446097, guid: 97e4766c0271a1946b33fc6401f6870b, type: 3}

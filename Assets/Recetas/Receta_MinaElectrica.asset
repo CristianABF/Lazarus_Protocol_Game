@@ -15,5 +15,5 @@ MonoBehaviour:
   idEnLlaveInglesa: m_electrica
   nombreItem: Mina Electrica
   imagenPlano: {fileID: 0}
-  costoChatarra: 125
+  costoChatarra: 150
   prefabAEntregar: {fileID: 6951046956331133198, guid: b0f222a6beb4f86429798b0c4daf8664, type: 3}

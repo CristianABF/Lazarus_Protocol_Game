@@ -15,5 +15,5 @@ MonoBehaviour:
   idEnLlaveInglesa: t_sniper
   nombreItem: Torreta Sniper
   imagenPlano: {fileID: 0}
-  costoChatarra: 200
+  costoChatarra: 400
   prefabAEntregar: {fileID: 919132149155446097, guid: 6ec2461ff818add488a8ff1389a6d850, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Receta_TorretaBasica
   m_EditorClassIdentifier: 
   idEnLlaveInglesa: t_metralladora
-  nombreItem: Torreta Sniper
+  nombreItem: Torreta Metralladora
   imagenPlano: {fileID: 0}
-  costoChatarra: 250
+  costoChatarra: 300
   prefabAEntregar: {fileID: 919132149155446097, guid: 599c3216ca004a7439d8d8bea6cbb19d, type: 3}

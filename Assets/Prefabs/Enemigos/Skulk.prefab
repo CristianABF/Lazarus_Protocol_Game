@@ -609,7 +609,7 @@ MonoBehaviour:
   enemyType: 0
   chaseRange: 50
   attackDistance: 5
-  damage: 3
+  damage: 25
   patrolZones: []
   zoneArrivalRadius: 3
   wanderRadius: 15

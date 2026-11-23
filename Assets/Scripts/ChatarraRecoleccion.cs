@@ -15,10 +15,21 @@ public class ChatarraRecoleccion : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            InventarioJugador inventario = other.GetComponent<InventarioJugador>();
+            if (inventario == null)
+            {
+                inventario = other.GetComponentInParent<InventarioJugador>();
+            }
 
-            Debug.Log("Chatarra recolectada: +" + valorChatarra);
-
-            Destroy(gameObject);
+            if (inventario != null)
+            {
+                inventario.SumarChatarra(valorChatarra);
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.LogWarning("[ChatarraRecoleccion] El objeto con tag Player no tiene el componente InventarioJugador.");
+            }
         }
     }
 }

@@ -42,9 +42,36 @@ public class WaveManager : MonoBehaviour
             phaseText.gameObject.SetActive(false);
         }
 
-        if (gamePhases.Length > 0)
+        // Solo arranca desde la fase 0 si no se restauró una partida guardada antes
+        if (gamePhases.Length > 0 && currentPhaseIndex == -1)
         {
             StartNextPhase();
+        }
+    }
+
+    public float GetTiempoTranscurrido()
+    {
+        return timeElapsed;
+    }
+
+    public void RestaurarTiempoYFase(float segundosGuardados)
+    {
+        timeElapsed = segundosGuardados;
+        UpdateTimerUI();
+
+        float tiempoAcumulado = 0f;
+        for (int i = 0; i < gamePhases.Length; i++)
+        {
+            if (segundosGuardados < tiempoAcumulado + gamePhases[i].phaseDuration)
+            {
+                currentPhaseIndex = i;
+                phaseTimer = (tiempoAcumulado + gamePhases[i].phaseDuration) - segundosGuardados;
+                spawnTimer = 0f;
+                isWaveActive = true;
+                GuardarManager.enDescanso = (gamePhases[i].spawnInterval <= 0f);
+                return;
+            }
+            tiempoAcumulado += gamePhases[i].phaseDuration;
         }
     }
 

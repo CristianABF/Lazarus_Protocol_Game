@@ -3,7 +3,7 @@ using TMPro;
 
 public class GuardarManager : MonoBehaviour
 {
-    // Bandera global: tu script de oleadas la pondrá en true durante el descanso y false al iniciar la oleada
+    // Bandera global: true durante el descanso y false al iniciar la oleada
     public static bool enDescanso = false;
 
     [Header("Textos de los Slots (Arrastrar desde Inspector)")]
@@ -50,8 +50,18 @@ public class GuardarManager : MonoBehaviour
 
         // 2. Guardar la Meta-Progresión y Economía actual
         int saludActual = 100;
-        int segundosTotales = Mathf.FloorToInt(Time.timeSinceLevelLoad);
+        WaveManager waveManager = FindFirstObjectByType<WaveManager>();
+        int segundosTotales = waveManager != null
+            ? Mathf.FloorToInt(waveManager.GetTiempoTranscurrido())
+            : Mathf.FloorToInt(Time.timeSinceLevelLoad);
         int chatarraActual = 0;
+
+        if (transformJugador != null)
+        {
+            InventarioJugador inv = transformJugador.GetComponent<InventarioJugador>();
+            int chatarraWorkbench = inv != null ? inv.chatarraAcumulada : 0;
+            PlayerPrefs.SetInt("Slot" + slotSeleccionado + "_ChatarraWorkbench", chatarraWorkbench);
+        }
 
         if (ControladorPartida.Instancia != null)
         {

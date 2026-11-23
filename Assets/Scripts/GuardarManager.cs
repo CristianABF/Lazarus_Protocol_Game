@@ -99,6 +99,26 @@ public class GuardarManager : MonoBehaviour
             }
         }
 
+        // 5. Guardar enemigos vivos y sus posiciones
+        ListaEnemigosGuardados lista = new ListaEnemigosGuardados();
+        EnemyAI[] enemigosVivos = FindObjectsByType<EnemyAI>(FindObjectsSortMode.None);
+
+        foreach (EnemyAI enemigo in enemigosVivos)
+        {
+            DatosEnemigo datos = new DatosEnemigo
+            {
+                nombrePrefab = enemigo.gameObject.name.Replace("(Clone)", "").Trim(),
+                posX = enemigo.transform.position.x,
+                posY = enemigo.transform.position.y,
+                posZ = enemigo.transform.position.z,
+                rotY = enemigo.transform.eulerAngles.y
+            };
+            lista.enemigos.Add(datos);
+        }
+
+        string jsonEnemigos = JsonUtility.ToJson(lista);
+        PlayerPrefs.SetString("Slot" + slotSeleccionado + "_Enemigos", jsonEnemigos);
+
         PlayerPrefs.Save();
 
         if (textoEstado != null) textoEstado.text = $"PARTIDA GUARDADA EN SLOT {slotSeleccionado}";

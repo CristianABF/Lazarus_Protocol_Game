@@ -3,7 +3,6 @@ using UnityEngine;
 public class WorkbenchController : MonoBehaviour
 {
     [Header("Configuración de Interacción")]
-    public KeyCode teclaInteractuar = KeyCode.H;
     public float distanciaInteraccion = 3.0f;
 
     [Header("Interfaz (UI)")]
@@ -45,8 +44,8 @@ public class WorkbenchController : MonoBehaviour
             return;
         }
 
-        // Abrir o cerrar con la tecla H
-        if (distancia <= distanciaInteraccion && Input.GetKeyDown(teclaInteractuar))
+        bool presionoInteractuar = InputController.Input != null && InputController.Input.Player.Interact.WasPressedThisFrame();
+        if (distancia <= distanciaInteraccion && presionoInteractuar)
         {
             if (estaAbierto)
             {

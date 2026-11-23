@@ -59,7 +59,7 @@ PrefabInstance:
     - target: {fileID: -83665950244040663, guid: 1991b2743c1a186479140ca82ce243ed, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 2e8e243a3f5e913449e07a369d789913, type: 2}
+      objectReference: {fileID: 2100000, guid: 6f24269f9fcc95a4d91528fb14bfce4b, type: 2}
     - target: {fileID: 919132149155446097, guid: 1991b2743c1a186479140ca82ce243ed, type: 3}
       propertyPath: m_Name
       value: Mini_Nucleo1

@@ -408466,9 +408466,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7083929329637896371, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3663703568982391439}
-    - targetCorrespondingSourceObject: {fileID: 7083929329637896371, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3663703568982391440}
   m_SourcePrefab: {fileID: 100100000, guid: 80b6cdfdc346a2442aa49e09b880a123, type: 3}
 --- !u!1 &3663703568982391438 stripped
 GameObject:
@@ -408580,20 +408577,6 @@ MonoBehaviour:
     extraMaxAmount: 1
     absoluteMaxLimit: 2
     isApplied: 0
---- !u!114 &3663703568982391440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663703568982391438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87ab2146ca944d646aebf46a568f9de2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jugador: {fileID: 5824786838526462365}
-  scriptAgarre: {fileID: 8496742922949905035}
 --- !u!23 &3664135773348350794
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -466586,6 +466569,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 169347394003286596}
+  - component: {fileID: 4172995548624604846}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -466593,6 +466577,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &4172995548624604846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4172995548624604845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ab2146ca944d646aebf46a568f9de2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 5824786838526462365}
+  scriptAgarre: {fileID: 8496742922949905035}
 --- !u!4 &4173149831516240146
 Transform:
   m_ObjectHideFlags: 0

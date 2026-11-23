@@ -15,6 +15,7 @@ public class WaveManager : MonoBehaviour
 
     [Header("Configuración de Enemigos")]
     [SerializeField] private GameObject[] enemyPrefabs;
+    public GameObject[] GetEnemyPrefabs() => enemyPrefabs;
     [SerializeField] private Transform[] spawnPoints;
     public int enemiesPerWave = 5;
 
